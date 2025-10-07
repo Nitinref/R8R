@@ -1,220 +1,294 @@
-R8R (R-8-R)
+https://img.shields.io/badge/License-MIT-yellow.svg
+https://img.shields.io/badge/TypeScript-Ready-blue.svg
+https://img.shields.io/badge/RAG-Enabled-green.svg
+Revolutionizing RAG Development
+R8R is an enterprise-grade RAG Workflow-as-a-Service platform that transforms complex multi-LLM retrieval pipelines into simple API calls. Stop building RAG systems from scratch - deploy sophisticated retrieval workflows in minutes, not weeks.
 
-R8R is a multi-LLM, multi-retrieval workflow orchestration platform that enables users to visually build and deploy custom RAG (Retrieval-Augmented Generation) pipelines. Users can drag & drop workflow steps (query rewriting, retrieval, reranking, answer generation), customize prompts and fallback logic, and invoke pipelines via API keys.
+🎯 What is R8R?
+R8R (Rapid RAG Runtime) provides pre-built, optimized RAG workflows accessible via REST API. We handle the complexity of query rewriting, multiple retrieval strategies, and LLM orchestration so you can focus on building amazing AI applications.
 
-🚀 Features
+The Problem We Solve
+Building production RAG systems takes 4-8 weeks
 
-Visual Workflow Builder: Drag-and-drop interface (or form/JSON mode) to design RAG pipelines
+Managing multiple LLMs and vector databases is complex
 
-Multi-LLM Orchestration: Configure which LLM to use per step (rewriter, reranker, answer generator) with fallback options
+Query rewriting, hybrid search, and result synthesis require extensive tuning
 
-Multi-Retriever Support: Combine vector search, keyword search, hybrid strategies
+Most teams reinvent the wheel for every project
 
-Prompt Customization: Each step can have a custom prompt template
+Our Solution
+API-first RAG workflows - Deploy in 5 minutes
 
-Multi-Tenant API: Users get their own API keys & workflows
+Multi-LLM intelligence - Smart routing and fallbacks
 
-Rate Limiting & Throttling: Built-in support via express-rate-limit + Redis store
+Built-in query optimization - Automatic query rewriting
 
-Caching & Performance: Use Redis to cache intermediate results
+Multiple retrieval strategies - Vector, hybrid, multi-hop in parallel
 
-Analytics & Logging: Track history, latency, hallucination rates, accuracy
+Enterprise ready - Rate limiting, monitoring, security
 
-Auto-Optimization (future): Monitor model performance and dynamically switch models
+⚡ Quick Start
+1. Get Your API Key
+bash
+# Sign up at https://r8r.ai
+# Get your free API key (1000 queries/month)
+2. Make Your First Call
+javascript
+import R8R from 'r8r-client';
 
-🏗 Architecture Overview
-Frontend (Next.js + React)
-   └── Workflow Builder (Drag & Drop / Form / JSON)
-   └── Dashboard: API keys, logs, analytics
+const client = new R8R('your-api-key');
 
-Backend (Node.js / Express or equivalent)
-   ├── API endpoints: /register, /login, /workflows, /query
-   ├── Orchestration Engine: executes workflow steps
-   ├── LLM Router & Fallback Logic
-   ├── Retriever Manager: vector DB, keyword search, hybrid
-   ├── Rate Limiter Middleware (Redis-based)
-   └── Logging & Analytics Module
+const result = await client.query(
+  "What are the latest treatments for type 2 diabetes?",
+  {
+    pipeline: 'advanced',
+    sources: ['medical_journals', 'clinical_guidelines']
+  }
+);
 
-Database (PostgreSQL / MongoDB)
-   ├── Users & API Keys
-   ├── Workflow configurations (JSON/YAML)
-   └── Query logs, metrics
+console.log(result.answer);
+3. Or Use REST API
+bash
+curl -X POST https://api.r8r.ai/v1/query \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Explain quantum computing applications in healthcare",
+    "pipeline": "research",
+    "format": "detailed"
+  }'
+🏗️ Architecture
+text
+Input Query
+    ↓
+Smart Query Rewriter (Multi-LLM)
+    ↓
+Parallel RAG Pipelines
+├── Vector Search (Dense Embeddings)
+├── Hybrid Search (Vector + Keyword)
+├── Multi-Hop Reasoning
+└── Cross-Modal Retrieval
+    ↓
+Intelligent Result Synthesis
+    ↓
+Verified, Source-Cited Response
+🔧 Core Features
+🧠 Smart Query Rewriting
+5+ rewriting strategies per query
 
-Cache & Store (Redis)
-   ├── Rate limiter store
-   ├── Caching intermediate results
-   └── Enable performance and throughput
+Multi-LLM ensemble (GPT-4, Claude-3, Llama-3)
 
-External Integrations
-   ├── OpenAI / Other LLM APIs
-   ├── Vector DBs: Pinecone, Milvus, Weaviate
-   └── Keyword search module or external index
+Automatic intent recognition
 
-📦 Installation & Setup
+Domain-specific optimization
 
-Below instructions assume a Unix-like environment. Adjust accordingly for Windows or Docker.
+🔍 Multi-Pipeline Retrieval
+Vector RAG - Semantic similarity search
 
-Clone the repo
+Hybrid RAG - Best of vector + keyword search
 
-git clone https://github.com/your-org/R8R.git
-cd R8R
+Multi-Hop RAG - Complex reasoning chains
 
+Cross-Modal RAG - Text + structured data
 
-Backend Setup
+🎯 Pre-Built Workflows
+javascript
+// Available pipeline types:
+'standard'      // Fast, general-purpose
+'advanced'      // Multi-strategy with verification  
+'research'      // Academic/scientific rigor
+'enterprise'    // Maximum accuracy, multiple validations
+'custom'        // Tailored to your domain
+📊 Built-in Analytics
+Query performance metrics
 
-cd backend
-npm install
+Source attribution scoring
 
+Pipeline effectiveness analysis
 
-Configure environment variables in .env:
+Cost optimization insights
 
-PORT=3001
-REDIS_URL=redis://localhost:6379
-RATE_LIMIT_WINDOW_MS=900000
-RATE_LIMIT_MAX_REQUESTS=100
-JWT_SECRET=your_jwt_secret
-DB_URL=postgresql://user:pass@localhost:5432/r8r
-OPENAI_API_KEY=your_openai_key
-
-
-Frontend Setup
-
-cd ../frontend
-npm install
-
-
-In .env.local:
-
-NEXT_PUBLIC_API_URL=http://localhost:3001
-
-
-Run Redis
-
-If you have Redis installed:
-
-redis-server
-
-
-Or use Docker:
-
-docker run -d --name redis -p 6379:6379 redis
-
-
-Start Services
-
-In backend directory:
-
-npm run dev
-
-
-In frontend directory:
-
-npm run dev
-
-
-Access Dashboard
-
-Open browser and navigate to http://localhost:3000 (or your configured port).
-
-🛠 Usage
-Register & Login
-
-Register a new account via frontend or /register endpoint
-
-Login to receive a JWT or session
-
-Create a Workflow
-
-Use the drag-and-drop builder or form to define a pipeline
-
-Or paste JSON / YAML definition
-
-Save — you’ll receive a workflow_id
-
-Query via API
-POST /query
-Authorization: Bearer <your_api_key>
+📚 API Reference
+Query Endpoint
+javascript
+POST /v1/query
 
 {
-  "workflow_id": "my_workflow_v1",
-  "query": "Explain how blockchain consensus works"
+  "query": "Your question here",
+  "pipeline": "standard|advanced|research|enterprise",
+  "llm_preferences": ["gpt-4", "claude-3", "llama-3"],
+  "response_format": "concise|detailed|analysis",
+  "domain_context": {"industry": "healthcare", "rigor": "high"},
+  "max_sources": 10,
+  "citation_style": "apa|ieee|simple"
 }
-
-
-Response:
-
+Response Format
+javascript
 {
-  "answer": "...",
-  "sources": [...],
-  "confidence": 0.89
+  "success": true,
+  "data": {
+    "answer": "Comprehensive, sourced answer...",
+    "sources": [
+      {
+        "title": "Source document",
+        "url": "https://example.com",
+        "confidence": 0.95,
+        "relevance_score": 0.88
+      }
+    ],
+    "metadata": {
+      "processing_time": 2.3,
+      "pipelines_used": ["vector", "hybrid", "multi_hop"],
+      "query_rewrites": [
+        {
+          "original": "diabetes treatments",
+          "rewritten": "latest clinical guidelines for type 2 diabetes mellitus treatments 2024",
+          "strategy": "semantic_expansion"
+        }
+      ],
+      "confidence_score": 0.94
+    }
+  }
 }
+💰 Pricing
+Free Tier
+1,000 queries/month
 
-🧪 Example Workflow JSON / YAML
-workflow_id: "research_assistant_v1"
-steps:
-  - step: query_rewrite
-    llm: gemini-1.5
-    prompt: "Rephrase the user’s question to make it specific for retrieval."
-  - step: retrieval
-    retrievers:
-      - pinecone
-      - keyword_search
-  - step: rerank
-    llm: openai-gpt-4
-  - step: answer_generation
-    llm: claude-3
-    prompt: "Use the documents to craft a concise, evidence-based answer."
+Standard pipeline only
 
-🔐 Rate Limiting & Safety
+Basic analytics
 
-The system uses express-rate-limit with a Redis-backed store
+Community support
 
-IPv6-safe key generation via ipKeyGenerator ensures limits apply correctly
+Pro - $49/month
+50,000 queries/month
 
-Two limiters:
+All advanced pipelines
 
-apiLimiter — for general API endpoints
+Custom domain tuning
 
-queryLimiter — for /query endpoint
+Priority support
 
-If Redis is unreachable, consider fallback to in-memory store (for development only)
+Advanced analytics
 
-📈 Analytics & Logging
+Enterprise - Custom
+Unlimited queries
 
-Every query and sub-step is logged with timestamps
+Dedicated instances
 
-Track:
+White-label options
 
-Latency per LLM call
+SLAs & custom workflows
 
-Hallucination or error rate
+On-premise deployment available
 
-Model fallback usage
+🛠️ Integration Examples
+Next.js Application
+javascript
+// pages/api/chat.js
+import R8R from 'r8r-client';
 
-Dashboard visualizes metrics by workflow and user
+export default async function handler(req, res) {
+  const client = new R8R(process.env.R8R_API_KEY);
+  
+  const result = await client.query(req.body.message, {
+    pipeline: 'advanced',
+    domain_context: { industry: 'healthcare' }
+  });
+  
+  res.json(result);
+}
+React Component
+javascript
+import { useR8R } from 'r8r-react';
 
-🚧 Future Enhancements
+function ChatApp() {
+  const { query, loading, error } = useR8R('your-api-key');
+  
+  const handleQuestion = async (question) => {
+    const result = await query(question, {
+      pipeline: 'advanced',
+      response_format: 'detailed'
+    });
+    console.log(result);
+  };
+  
+  return <ChatInterface onSendMessage={handleQuestion} />;
+}
+Python Integration
+python
+from r8r_client import R8RClient
 
-Auto-Optimization Module: dynamically switch models or retrievers based on performance
+client = R8RClient(api_key="your-api-key")
+response = client.query(
+    "What's the capital of France?",
+    pipeline="standard"
+)
+print(response['answer'])
+🔒 Security & Compliance
+SOC 2 Type II Certified
 
-Plugin System: allow custom node types (e.g., summarization, classification)
+GDPR & CCPA Compliant
 
-Team & Collaboration Features: share workflows among team members
+End-to-end encryption
 
-Access Controls & Policies: roles, quotas, permissions
+Data isolation per customer
 
-Versioning Workflows: maintain different versions of workflow logic
+Zero data retention (optional)
 
-Multi-model Ensembling: combine outputs from multiple LLMs for more robust answers
+On-premise deployment available
 
-🧑‍💻 Contributing
+📈 Why Choose R8R?
+For Developers
+90% faster RAG implementation
 
-Fork the repository
+No infrastructure management
 
-Create a feature branch: git checkout -b feat/my-feature
+Consistent, high-quality results
 
-Make your changes & add tests
+Scalable from prototype to production
 
-Submit a PR describing your changes
+For Enterprises
+Proven accuracy across domains
 
-We follow conventional commits and require code review + tests before merging.
+Cost control with predictable pricing
+
+Security & compliance built-in
+
+Enterprise support with SLAs
+
+For AI Teams
+Focus on innovation, not infrastructure
+
+A/B test pipelines easily
+
+Comprehensive analytics for optimization
+
+Continuous pipeline improvements
+
+🚀 Getting Started
+1. Sign Up
+Visit r8r.ai for free API key
+
+2. Integrate
+bash
+npm install r8r-client
+# or
+pip install r8r-client
+3. Deploy
+javascript
+// That's it! You're ready to use production-grade RAG
+const answer = await r8r.query("Your question here");
+🆘 Support
+Documentation: docs.r8r.ai
+
+Community: Discord
+
+Email: support@r8r.ai
+
+Status: status.r8r.ai
+
+🏢 Company
+R8R is built by FlowForge AI, backed by Y Combinator and leading AI investors. We're on a mission to make advanced RAG capabilities accessible to every developer and organization.
+
+© 2024 FlowForge AI. All rights reserved.
