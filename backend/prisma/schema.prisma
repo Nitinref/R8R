@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String      @id @default(uuid())
+  email         String      @unique
+  password      String
+  name          String?
+  apiKeys       ApiKey[]
+  workflows     Workflow[]
+  queryLogs     QueryLog[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model ApiKey {
+  id          String    @id @default(uuid())
+  key         String    @unique
+  name        String
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive    Boolean   @default(true)
+  lastUsedAt  DateTime?
+  createdAt   DateTime  @default(now())
+  
+  @@index([key])
+  @@index([userId])
+}
+
+model Workflow {
+  id              String      @id @default(uuid())
+  name            String
+  description     String?
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuration   Json        // Stores workflow steps and config
+  status          String      @default("draft") // draft, active, archived
+  version         Int         @default(1)
+  queryLogs       QueryLog[]
+  analytics       WorkflowAnalytics?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@index([userId])
+  @@index([status])
+}
+
+model QueryLog {
+  id              String    @id @default(uuid())
+  workflowId      String
+  workflow        Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  query           String
+  rewrittenQuery  String?
+  answer          String
+  sources         Json      // Array of source documents
+  confidence      Float?
+  latency         Int       // milliseconds
+  llmsUsed        Json      // Array of LLMs used in pipeline
+  retrieversUsed  Json      // Array of retrievers used
+  status          String    // success, error, partial
+  errorMessage    String?
+  metadata        Json?     // Additional metadata
+  createdAt       DateTime  @default(now())
+  
+  @@index([workflowId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model WorkflowAnalytics {
+  id                    String    @id @default(uuid())
+  workflowId            String    @unique
+  workflow              Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  totalQueries          Int       @default(0)
+  successfulQueries     Int       @default(0)
+  failedQueries         Int       @default(0)
+  avgLatency            Float     @default(0)
+  avgConfidence         Float     @default(0)
+  hallucinationRate     Float     @default(0)
+  totalTokensUsed       Int       @default(0)
+  estimatedCost         Float     @default(0)
+  lastQueryAt           DateTime?
+  updatedAt             DateTime  @updatedAt
+}
+
+model SystemMetrics {
+  id                String    @id @default(uuid())
+  date              DateTime  @unique @default(now())
+  totalQueries      Int       @default(0)
+  activeUsers       Int       @default(0)
+  activeWorkflows   Int       @default(0)
+  avgSystemLatency  Float     @default(0)
+  errorRate         Float     @default(0)
+  createdAt         DateTime  @default(now())
+  
+  @@index([date])
+}
