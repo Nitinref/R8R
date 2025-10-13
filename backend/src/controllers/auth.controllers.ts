@@ -5,32 +5,37 @@ import { v4 as uuidv4 } from 'uuid';
 import { prisma } from '../server.js';
 import { AppError } from '../middleware/error-handler.middleware.js';
 
+// Extend Express Request type to include user
+declare global {
+  namespace Express {
+    interface Request {
+      user?: {
+        userId: string;
+        email: string;
+      };
+    }
+  }
+}
+
 export const register = async (req: Request, res: Response) => {
   try {
     const { email, password, name } = req.body;
+
+    if (!email || !password || !name) {
+      throw new AppError('Email, password, and name are required', 400);
+    }
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       throw new AppError('Email already registered', 400);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    const hashedPassword = await bcrypt.hash(password, 12);
     const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        name,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true
-      }
+      data: { email, password: hashedPassword, name },
+      select: { id: true, email: true, name: true, createdAt: true }
     });
-
-    // @ts-ignore
+// @ts-ignore
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET!,
@@ -60,8 +65,7 @@ export const login = async (req: Request, res: Response) => {
     if (!validPassword) {
       throw new AppError('Invalid credentials', 401);
     }
-
-    // @ts-ignore
+// @ts-ignore
     const token = jwt.sign(
       { userId: user.id, email: user.email },
       process.env.JWT_SECRET!,
@@ -69,11 +73,7 @@ export const login = async (req: Request, res: Response) => {
     );
 
     res.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        name: user.name
-      },
+      user: { id: user.id, email: user.email, name: user.name },
       token,
       message: 'Login successful'
     });
@@ -85,16 +85,14 @@ export const login = async (req: Request, res: Response) => {
 export const createApiKey = async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
-    const userId = req.user!.userId;
+    
+    if (!req.user?.userId) {
+      throw new AppError('Authentication required', 401);
+    }
 
     const apiKey = `rag_${uuidv4().replace(/-/g, '')}`;
-
     const keyRecord = await prisma.apiKey.create({
-      data: {
-        key: apiKey,
-        name,
-        userId
-      }
+      data: { key: apiKey, name, userId: req.user.userId }
     });
 
     res.status(201).json({
@@ -110,17 +108,15 @@ export const createApiKey = async (req: Request, res: Response) => {
 
 export const listApiKeys = async (req: Request, res: Response) => {
   try {
-    const userId = req.user!.userId;
+    if (!req.user?.userId) {
+      throw new AppError('Authentication required', 401);
+    }
 
     const apiKeys = await prisma.apiKey.findMany({
-      where: { userId },
+      where: { userId: req.user.userId },
       select: {
-        id: true,
-        name: true,
-        key: true,
-        isActive: true,
-        lastUsedAt: true,
-        createdAt: true
+        id: true, name: true, key: true, isActive: true, 
+        lastUsedAt: true, createdAt: true
       },
       orderBy: { createdAt: 'desc' }
     });
@@ -134,14 +130,14 @@ export const listApiKeys = async (req: Request, res: Response) => {
 export const deleteApiKey = async (req: Request, res: Response) => {
   try {
     const { keyId } = req.params;
-    const userId = req.user!.userId;
+    
+    if (!req.user?.userId) {
+      throw new AppError('Authentication required', 401);
+    }
 
     await prisma.apiKey.deleteMany({
-        // @ts-ignore
-      where: {
-        id: keyId,
-        userId
-      }
+      // @ts-ignore
+      where: { id: keyId, userId: req.user.userId }
     });
 
     res.json({ message: 'API key deleted successfully' });

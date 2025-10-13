@@ -20,6 +20,39 @@ export enum RetrieverType {
   HYBRID = 'hybrid'
 }
 
+// Frontend node structure (what the UI creates)
+export interface WorkflowNode {
+  id: string;
+  type: StepType;
+  position: { x: number; y: number };
+  data: {
+    label: string;
+    config: {
+      llm?: {
+        provider: LLMProvider;
+        model: string;
+        fallback?: { provider: LLMProvider; model: string }[];
+        temperature?: number;
+        maxTokens?: number;
+      };
+      retriever?: {
+        type: RetrieverType;
+        config: Record<string, any>;
+      };
+      prompt?: string;
+      [key: string]: any;
+    };
+  };
+}
+
+export interface WorkflowEdge {
+  id: string;
+  source: string;
+  target: string;
+  type?: string;
+}
+
+// Backend executable step structure
 export interface WorkflowStep {
   id: string;
   type: StepType;
@@ -41,11 +74,16 @@ export interface WorkflowStep {
   nextSteps?: string[];
 }
 
+// Complete workflow configuration
 export interface WorkflowConfig {
   id: string;
   name: string;
   description?: string;
-  steps: WorkflowStep[];
+  // Store both representations
+  nodes: WorkflowNode[];
+  edges: WorkflowEdge[];
+  steps: WorkflowStep[]; // Computed from nodes + edges
+  entryPoint?: string; // ID of the first step
   cacheEnabled?: boolean;
   cacheTTL?: number;
 }
@@ -68,4 +106,19 @@ export interface QueryResponse {
   llmsUsed: string[];
   retrieversUsed: string[];
   cached?: boolean;
+}
+
+// Execution context passed between steps
+export interface ExecutionContext {
+  originalQuery: string;
+  currentQuery: string;
+  retrievedDocs: Array<{
+    id: string;
+    content: string;
+    metadata: Record<string, any>;
+    score: number;
+  }>;
+  answer?: string;
+  confidence?: number;
+  metadata: Record<string, any>;
 }

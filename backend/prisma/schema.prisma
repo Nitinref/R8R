@@ -22,39 +22,79 @@ model User {
   apiKeys       ApiKey[]
   workflows     Workflow[]
   queryLogs     QueryLog[]
+  documents     Document[]
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
 
 model ApiKey {
-  id          String    @id @default(uuid())
-  key         String    @unique
-  name        String
-  userId      String
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  isActive    Boolean   @default(true)
-  lastUsedAt  DateTime?
-  createdAt   DateTime  @default(now())
+  id              String              @id @default(uuid())
+  key             String              @unique
+  name            String
+  userId          String
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  isActive        Boolean             @default(true)
+  canRead         Boolean             @default(true)
+  canWrite        Boolean             @default(false)
+  lastUsedAt      DateTime?
+  createdAt       DateTime            @default(now())
+  workflows       ApiKeyWorkflow[]
   
   @@index([key])
   @@index([userId])
 }
 
+model ApiKeyWorkflow {
+  id          String   @id @default(uuid())
+  apiKeyId    String
+  workflowId  String
+  apiKey      ApiKey   @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  workflow    Workflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  
+  @@unique([apiKeyId, workflowId])
+  @@index([apiKeyId])
+  @@index([workflowId])
+}
+
 model Workflow {
-  id              String      @id @default(uuid())
+  id              String              @id @default(uuid())
   name            String
   description     String?
   userId          String
-  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  configuration   Json        // Stores workflow steps and config
-  status          String      @default("draft") // draft, active, archived
-  version         Int         @default(1)
+  user            User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  configuration   Json
+  status          String              @default("draft")
+  version         Int                 @default(1)
+  vectorIndexName String?
+  vectorNamespace String?
   queryLogs       QueryLog[]
   analytics       WorkflowAnalytics?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  apiKeys         ApiKeyWorkflow[]
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
   
   @@index([userId])
+  @@index([status])
+}
+
+model Document {
+  id              String    @id @default(uuid())
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workflowId      String?
+  filename        String
+  content         String    @db.Text
+  metadata        Json      @default("{}")
+  vectorIds       Json      @default("[]")
+  status          String    @default("pending")
+  errorMessage    String?
+  chunkCount      Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@index([userId])
+  @@index([workflowId])
   @@index([status])
 }
 
@@ -64,22 +104,25 @@ model QueryLog {
   workflow        Workflow  @relation(fields: [workflowId], references: [id], onDelete: Cascade)
   userId          String
   user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  query           String
-  rewrittenQuery  String?
-  answer          String
-  sources         Json      // Array of source documents
+  query           String    @db.Text
+  rewrittenQuery  String?   @db.Text
+  answer          String    @db.Text
+  sources         Json      @default("[]")
   confidence      Float?
-  latency         Int       // milliseconds
-  llmsUsed        Json      // Array of LLMs used in pipeline
-  retrieversUsed  Json      // Array of retrievers used
-  status          String    // success, error, partial
-  errorMessage    String?
-  metadata        Json?     // Additional metadata
+  latency         Int
+  llmsUsed        Json      @default("[]")
+  retrieversUsed  Json      @default("[]")
+  tokensUsed      Int       @default(0)
+  estimatedCost   Float     @default(0)
+  status          String
+  errorMessage    String?   @db.Text
+  metadata        Json?
   createdAt       DateTime  @default(now())
   
   @@index([workflowId])
   @@index([userId])
   @@index([createdAt])
+  @@index([status])
 }
 
 model WorkflowAnalytics {
@@ -91,22 +134,8 @@ model WorkflowAnalytics {
   failedQueries         Int       @default(0)
   avgLatency            Float     @default(0)
   avgConfidence         Float     @default(0)
-  hallucinationRate     Float     @default(0)
   totalTokensUsed       Int       @default(0)
   estimatedCost         Float     @default(0)
   lastQueryAt           DateTime?
   updatedAt             DateTime  @updatedAt
-}
-
-model SystemMetrics {
-  id                String    @id @default(uuid())
-  date              DateTime  @unique @default(now())
-  totalQueries      Int       @default(0)
-  activeUsers       Int       @default(0)
-  activeWorkflows   Int       @default(0)
-  avgSystemLatency  Float     @default(0)
-  errorRate         Float     @default(0)
-  createdAt         DateTime  @default(now())
-  
-  @@index([date])
 }

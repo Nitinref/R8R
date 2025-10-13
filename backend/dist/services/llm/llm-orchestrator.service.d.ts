@@ -5,6 +5,7 @@ interface LLMRequest {
     prompt: string;
     temperature?: number;
     maxTokens?: number;
+    systemPrompt?: string;
     fallback?: Array<{
         provider: LLMProvider;
         model: string;
@@ -24,6 +25,20 @@ export declare class LLMOrchestrator {
     generateCompletion(request: LLMRequest): Promise<LLMResponse>;
     private executeWithFallback;
     private callLLM;
+    private delay;
+    healthCheck(): Promise<{
+        openai: boolean;
+        anthropic: boolean;
+        google: boolean;
+    }>;
+    private testOpenAI;
+    private testAnthropic;
+    private testGoogle;
+    getAvailableModels(): Promise<{
+        openai: string[];
+        anthropic: string[];
+        google: string[];
+    }>;
 }
 export {};
 //# sourceMappingURL=llm-orchestrator.service.d.ts.map

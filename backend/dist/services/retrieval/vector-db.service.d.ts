@@ -6,6 +6,7 @@ interface VectorSearchResult {
 }
 export declare class VectorDBService {
     private pinecone;
+    private openai;
     constructor();
     searchPinecone(indexName: string, embedding: number[], topK?: number, filter?: Record<string, any>): Promise<VectorSearchResult[]>;
     getEmbedding(text: string): Promise<number[]>;

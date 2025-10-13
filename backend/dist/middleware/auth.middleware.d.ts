@@ -1,16 +1,16 @@
 import type { Request, Response, NextFunction } from 'express';
-interface JwtPayload {
-    userId: string;
-    email: string;
-}
 declare global {
     namespace Express {
         interface Request {
-            user?: JwtPayload;
+            user?: {
+                userId: string;
+                email: string;
+            };
         }
     }
 }
-export declare const authenticateJWT: (req: Request, res: Response, next: NextFunction) => Promise<Response<any, Record<string, any>> | undefined>;
-export declare const authenticateApiKey: (req: Request, res: Response, next: NextFunction) => Promise<Response<any, Record<string, any>> | undefined>;
-export {};
+export declare const authenticateJWT: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const authenticateApiKey: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const optionalAuth: (req: Request, res: Response, next: NextFunction) => Promise<void>;
+export declare const requireAdmin: (req: Request, res: Response, next: NextFunction) => Promise<void>;
 //# sourceMappingURL=auth.middleware.d.ts.map

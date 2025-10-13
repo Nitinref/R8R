@@ -1,4 +1,5 @@
 import { Pinecone } from '@pinecone-database/pinecone';
+import { OpenAI } from 'openai';
 
 interface VectorSearchResult {
   id: string;
@@ -9,10 +10,14 @@ interface VectorSearchResult {
 
 export class VectorDBService {
   private pinecone: Pinecone;
+  private openai: OpenAI;
 
   constructor() {
     this.pinecone = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY!
+    });
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
     });
   }
 
@@ -41,16 +46,12 @@ export class VectorDBService {
   }
 
   async getEmbedding(text: string): Promise<number[]> {
-    // Using OpenAI for embeddings
-    const openai = new (require('openai')).OpenAI({
-      apiKey: process.env.OPENAI_API_KEY
-    });
-
-    const response = await openai.embeddings.create({
+    const response = await this.openai.embeddings.create({
       model: 'text-embedding-3-small',
       input: text
     });
 
+    // @ts-ignore
     return response.data[0].embedding;
   }
 }
