@@ -1391,3 +1391,717 @@
 {"level":"info","message":"HTTP server closed","timestamp":"2025-10-13T08:25:51.613Z"}
 {"level":"info","message":"Database disconnected","timestamp":"2025-10-13T08:25:51.615Z"}
 {"level":"info","message":"Redis client disconnected","timestamp":"2025-10-13T08:25:51.617Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-13T08:33:05.332Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.336Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-13T08:33:05.336Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.337Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-13T08:33:05.337Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-13T08:33:05.338Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-13T08:33:05.338Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-13T08:33:05.338Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-13T08:33:05.339Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-13T08:33:05.339Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-13T08:33:05.339Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-13T08:33:05.340Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-13T08:33:05.340Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-13T08:33:05.340Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-13T08:33:05.340Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-13T08:33:05.340Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T08:33:05.340Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-13T08:33:05.341Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-13T08:33:05.341Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T08:33:05.341Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.341Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-13T08:33:05.341Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.341Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.342Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-13T08:33:05.342Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.342Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-13T08:33:05.342Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-13T08:33:05.342Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-13T08:33:05.342Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-13T08:33:05.343Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-13T08:33:05.343Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-13T08:33:05.344Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:05.344Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-13T08:33:05.344Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-13T08:33:08.381Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-13T08:33:08.381Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T08:33:08.382Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T08:33:08.423Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T08:33:08.443Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T08:33:08.443Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-13T08:33:08.448Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:08.458Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-13T08:33:08.458Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-13T08:33:08.459Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-13T08:33:08.459Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T08:33:08.459Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-13T08:33:08.640Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:33:10.453Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:33:10.457Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:33:10.459Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:33:14.515Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:33:14.521Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:33:15.198Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T08:33:57.952Z"}
+{"body":{"name":"nitin"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T08:34:12.579Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T08:34:13.740Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-13T08:34:43.242Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:34:44.650Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:34:44.652Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:34:44.655Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:34:46.152Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:34:46.473Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:34:46.664Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/5104dfdd-a7fd-4c27-8971-645a3532fab9","query":{},"timestamp":"2025-10-13T08:34:51.850Z"}
+{"body":{"query":"hi","workflowId":"5104dfdd-a7fd-4c27-8971-645a3532fab9"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T08:35:04.565Z"}
+{"level":"info","message":"Executing query","queryLength":2,"timestamp":"2025-10-13T08:35:05.836Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"5104dfdd-a7fd-4c27-8971-645a3532fab9"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T08:35:05.840Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T08:35:05.844Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T08:35:05.854Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T08:35:05.855Z"}
+{"key":"workflow:workflow-1760339145467:query:8f434346648f6b96","level":"debug","message":"Cache miss","timestamp":"2025-10-13T08:35:05.857Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T08:35:05.858Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T08:35:05.859Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T08:35:07.540Z","tokensUsed":40}
+{"contentLength":79,"duration":1681,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T08:35:07.540Z","tokensUsed":40}
+{"level":"info","message":"Query rewritten","original":"hi","rewritten":"Hello, I would like to search for documents related to artificial intelligence.","timestamp":"2025-10-13T08:35:07.540Z"}
+{"level":"info","message":"Executing step: retrieval","stepId":"2","timestamp":"2025-10-13T08:35:07.541Z"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Retrieval failed","timestamp":"2025-10-13T08:35:09.553Z"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Step execution failed: retrieval","stepId":"2","timestamp":"2025-10-13T08:35:09.553Z"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Workflow execution failed","stack":"PineconeNotFoundError: A call to https://api.pinecone.io/indexes/default returned HTTP status 404.\n    at mapHttpStatusError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\http.js:179:20)\n    at handleApiError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\handling.js:16:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.post (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\utils\\middleware.js:80:29)\n    at async BaseAPI.fetchApi (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:109:32)\n    at async ManageIndexesApi.request (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:152:26)\n    at async ManageIndexesApi.describeIndexRaw (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:396:26)\n    at async ManageIndexesApi.describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:409:26)\n    at async C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\control\\describeIndex.js:19:24\n    at async _describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\data\\indexHostSingleton.js:14:34)","timestamp":"2025-10-13T08:35:09.554Z","workflowId":"workflow-1760339145467"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Query execution failed","timestamp":"2025-10-13T08:35:09.554Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"5104dfdd-a7fd-4c27-8971-645a3532fab9"}
+{"body":{"query":"hi","workflowId":"5104dfdd-a7fd-4c27-8971-645a3532fab9"},"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"PineconeNotFoundError: A call to https://api.pinecone.io/indexes/default returned HTTP status 404.\n    at mapHttpStatusError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\http.js:179:20)\n    at handleApiError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\handling.js:16:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.post (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\utils\\middleware.js:80:29)\n    at async BaseAPI.fetchApi (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:109:32)\n    at async ManageIndexesApi.request (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:152:26)\n    at async ManageIndexesApi.describeIndexRaw (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:396:26)\n    at async ManageIndexesApi.describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:409:26)\n    at async C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\control\\describeIndex.js:19:24\n    at async _describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\data\\indexHostSingleton.js:14:34)","timestamp":"2025-10-13T08:35:10.879Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:36:14.224Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/5104dfdd-a7fd-4c27-8971-645a3532fab9","query":{},"timestamp":"2025-10-13T08:36:20.048Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:36:21.684Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:36:21.687Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:36:21.689Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:36:23.488Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:36:23.492Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:36:24.082Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[],"id":"workflow-1760344662334","name":"hell","steps":[{"config":{"llm":{"maxTokens":1000,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1","name":"Query Rewrite","position":{"x":288,"y":160},"status":"active","type":"query_rewrite"}]},"description":"","name":"hell","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T08:37:42.376Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:37:44.701Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/c67e2896-f055-40d9-8a7a-ccc717849ef8","query":{},"timestamp":"2025-10-13T08:37:52.110Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:37:53.901Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/c67e2896-f055-40d9-8a7a-ccc717849ef8","query":{},"timestamp":"2025-10-13T08:37:58.822Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:38:47.979Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:38:49.470Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:38:49.474Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:38:49.807Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:38:50.592Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T08:38:55.104Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T08:38:55.597Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:39:00.913Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/c67e2896-f055-40d9-8a7a-ccc717849ef8","query":{},"timestamp":"2025-10-13T08:39:01.120Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:39:02.210Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T08:42:23.188Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T08:42:24.548Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T08:42:40.887Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T09:09:02.966Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:09:03.006Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T09:09:03.012Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T09:09:07.074Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:09:07.241Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T09:09:09.963Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-13T09:09:12.434Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T09:09:14.629Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:09:14.632Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T09:09:14.634Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:09:16.308Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T09:09:16.620Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T09:09:16.626Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[],"id":"workflow-1760346583268","name":"hi","steps":[{"config":{"llm":{"maxTokens":1000,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1","name":"Query Rewrite","position":{"x":256,"y":112},"status":"active","type":"query_rewrite"}]},"description":"","name":"hi","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T09:09:43.287Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:09:44.860Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:09:46.789Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:09:48.199Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:09:51.186Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:09:51.190Z"}
+{"body":{"name":"hi"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:10:14.195Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:10:15.493Z"}
+{"body":{"query":"gello my name is nitin","workflowId":"d511ccd7-2fab-44ce-bf18-e0a74fb360e8"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:10:31.279Z"}
+{"level":"info","message":"Executing query","queryLength":22,"timestamp":"2025-10-13T09:10:32.961Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"d511ccd7-2fab-44ce-bf18-e0a74fb360e8"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:10:32.987Z","url":"redis://localhost:6379"}
+{"error":"Configuration errors: Workflow must include an answer generation step","level":"error","message":"Workflow execution failed","stack":"Error: Configuration errors: Workflow must include an answer generation step\n    at WorkflowExecutor.validateConfiguration (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:108:19)\n    at WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:21:18)\n    at executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:39)","timestamp":"2025-10-13T09:10:33.002Z","workflowId":"workflow-1760346583268"}
+{"error":"Configuration errors: Workflow must include an answer generation step","level":"error","message":"Query execution failed","timestamp":"2025-10-13T09:10:33.002Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"d511ccd7-2fab-44ce-bf18-e0a74fb360e8"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:10:33.008Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:10:33.070Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:10:33.071Z"}
+{"body":{"query":"gello my name is nitin","workflowId":"d511ccd7-2fab-44ce-bf18-e0a74fb360e8"},"error":"Configuration errors: Workflow must include an answer generation step","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"Error: Configuration errors: Workflow must include an answer generation step\n    at WorkflowExecutor.validateConfiguration (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:108:19)\n    at WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:21:18)\n    at executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:39)","timestamp":"2025-10-13T09:10:34.074Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:11:34.819Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:18:10.764Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:18:49.838Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:18:49.843Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:18:52.276Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:18:55.584Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:18:55.586Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:18:57.737Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/d511ccd7-2fab-44ce-bf18-e0a74fb360e8","query":{},"timestamp":"2025-10-13T09:19:00.106Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:19:00.109Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:19:01.573Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"i want that if i give any queary it should rewritew the queary and enhance it ","edges":[{"animated":true,"id":"xy-edge__1-2","source":"1","style":{"stroke":"#dc2626","strokeWidth":2},"target":"2"}],"id":"workflow-1760347198060","name":"hello","steps":[{"config":{"retriever":{"config":{"indexName":"default","topK":5},"type":"pinecone"}},"id":"1","name":"Retrieval","position":{"x":224,"y":48},"status":"active","type":"retrieval"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"2","name":"Answer Generation","position":{"x":224,"y":240},"status":"active","type":"answer_generation"}]},"description":"i want that if i give any queary it should rewritew the queary and enhance it ","name":"hello","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T09:19:58.094Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:19:59.944Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:20:02.271Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:20:03.512Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:20:07.464Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:20:07.466Z"}
+{"body":{"name":"lala"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:20:17.856Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:20:19.031Z"}
+{"body":{"query":"hello my name is nitin ","workflowId":"9389e46b-b08c-4489-87fe-28295d908639"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:20:40.277Z"}
+{"level":"info","message":"Executing query","queryLength":23,"timestamp":"2025-10-13T09:20:41.374Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"9389e46b-b08c-4489-87fe-28295d908639"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:20:41.377Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:20:41.381Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:20:41.395Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:20:41.396Z"}
+{"key":"workflow:workflow-1760347198060:query:90e6e656a8b53510","level":"debug","message":"Cache miss","timestamp":"2025-10-13T09:20:41.399Z"}
+{"level":"info","message":"Executing step: retrieval","stepId":"1","timestamp":"2025-10-13T09:20:41.400Z"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Retrieval failed","timestamp":"2025-10-13T09:20:44.736Z"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Step execution failed: retrieval","stepId":"1","timestamp":"2025-10-13T09:20:44.736Z"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Workflow execution failed","stack":"PineconeNotFoundError: A call to https://api.pinecone.io/indexes/default returned HTTP status 404.\n    at mapHttpStatusError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\http.js:179:20)\n    at handleApiError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\handling.js:16:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.post (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\utils\\middleware.js:80:29)\n    at async BaseAPI.fetchApi (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:109:32)\n    at async ManageIndexesApi.request (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:152:26)\n    at async ManageIndexesApi.describeIndexRaw (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:396:26)\n    at async ManageIndexesApi.describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:409:26)\n    at async C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\control\\describeIndex.js:19:24\n    at async _describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\data\\indexHostSingleton.js:14:34)","timestamp":"2025-10-13T09:20:44.737Z","workflowId":"workflow-1760347198060"}
+{"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","level":"error","message":"Query execution failed","timestamp":"2025-10-13T09:20:44.737Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"9389e46b-b08c-4489-87fe-28295d908639"}
+{"body":{"query":"hello my name is nitin ","workflowId":"9389e46b-b08c-4489-87fe-28295d908639"},"error":"A call to https://api.pinecone.io/indexes/default returned HTTP status 404.","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"PineconeNotFoundError: A call to https://api.pinecone.io/indexes/default returned HTTP status 404.\n    at mapHttpStatusError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\http.js:179:20)\n    at handleApiError (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\errors\\handling.js:16:46)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async Object.post (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\utils\\middleware.js:80:29)\n    at async BaseAPI.fetchApi (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:109:32)\n    at async ManageIndexesApi.request (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\runtime.js:152:26)\n    at async ManageIndexesApi.describeIndexRaw (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:396:26)\n    at async ManageIndexesApi.describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\pinecone-generated-ts-fetch\\db_control\\apis\\ManageIndexesApi.js:409:26)\n    at async C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\control\\describeIndex.js:19:24\n    at async _describeIndex (C:\\Users\\DELL\\flowforge\\my-next-app\\backend\\node_modules\\@pinecone-database\\pinecone\\dist\\data\\indexHostSingleton.js:14:34)","timestamp":"2025-10-13T09:20:45.914Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:21:11.789Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:21:19.201Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:21:19.203Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:21:22.976Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:21:24.280Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:21:24.282Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:21:26.489Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/9389e46b-b08c-4489-87fe-28295d908639","query":{},"timestamp":"2025-10-13T09:21:28.364Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:21:28.365Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:21:30.136Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"i want that if i give the queary you have to enhance and give me ","edges":[{"animated":true,"id":"xy-edge__1-2","source":"1","style":{"stroke":"#dc2626","strokeWidth":2},"target":"2"}],"id":"workflow-1760347327484","name":"netra","steps":[{"config":{"llm":{"maxTokens":1000,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1","name":"Query Rewrite","position":{"x":240,"y":96},"status":"active","type":"query_rewrite"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"2","name":"Answer Generation","position":{"x":240,"y":272},"status":"active","type":"answer_generation"}]},"description":"i want that if i give the queary you have to enhance and give me ","name":"netra","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T09:22:07.515Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:22:09.437Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T09:22:11.274Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:22:12.688Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T09:22:15.037Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:22:15.041Z"}
+{"body":{"name":"netra"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:22:24.602Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:22:25.165Z"}
+{"body":{"query":"hi my name is netra","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:22:40.855Z"}
+{"level":"info","message":"Executing query","queryLength":19,"timestamp":"2025-10-13T09:22:41.593Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:22:41.594Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:22:41.597Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:22:41.605Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:22:41.605Z"}
+{"key":"workflow:workflow-1760347327484:query:7b032b40112da4bf","level":"debug","message":"Cache miss","timestamp":"2025-10-13T09:22:41.606Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T09:22:41.606Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:22:41.606Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:22:42.629Z","tokensUsed":35}
+{"contentLength":11,"duration":1023,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:22:42.629Z","tokensUsed":35}
+{"level":"info","message":"Query rewritten","original":"hi my name is netra","rewritten":"name: netra","timestamp":"2025-10-13T09:22:42.629Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"2","timestamp":"2025-10-13T09:22:42.629Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:22:42.629Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:22:44.337Z","tokensUsed":63}
+{"contentLength":66,"duration":1708,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:22:44.337Z","tokensUsed":63}
+{"answerLength":66,"confidence":0.3,"level":"info","message":"Answer generated","timestamp":"2025-10-13T09:22:44.338Z"}
+{"key":"workflow:workflow-1760347327484:query:7b032b40112da4bf","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T09:22:44.343Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T09:28:26.924Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:28:26.935Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:28:34.562Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T09:28:38.286Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:28:38.289Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:28:42.212Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T09:28:44.567Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:28:44.570Z"}
+{"body":{"query":"where is tajmahal","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:29:12.996Z"}
+{"level":"info","message":"Executing query","queryLength":17,"timestamp":"2025-10-13T09:29:14.011Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:29:14.023Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:29:14.032Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:29:14.051Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:29:14.051Z"}
+{"key":"workflow:workflow-1760347327484:query:678d007578c005fa","level":"debug","message":"Cache miss","timestamp":"2025-10-13T09:29:14.054Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T09:29:14.054Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:29:14.054Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:29:15.749Z","tokensUsed":36}
+{"contentLength":18,"duration":1695,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:29:15.749Z","tokensUsed":36}
+{"level":"info","message":"Query rewritten","original":"where is tajmahal","rewritten":"Taj Mahal location","timestamp":"2025-10-13T09:29:15.750Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"2","timestamp":"2025-10-13T09:29:15.750Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:29:15.750Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:29:16.452Z","tokensUsed":56}
+{"contentLength":40,"duration":702,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:29:16.452Z","tokensUsed":56}
+{"answerLength":40,"confidence":0.3,"level":"info","message":"Answer generated","timestamp":"2025-10-13T09:29:16.455Z"}
+{"key":"workflow:workflow-1760347327484:query:678d007578c005fa","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T09:29:16.463Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T09:54:41.173Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T09:54:48.918Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T09:54:48.924Z"}
+{"body":{"query":"what is my name ","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:54:59.599Z"}
+{"level":"info","message":"Executing query","queryLength":16,"timestamp":"2025-10-13T09:55:00.536Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:55:00.547Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:55:00.557Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:55:00.608Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:55:00.610Z"}
+{"key":"workflow:workflow-1760347327484:query:90e6418586eb09e5","level":"debug","message":"Cache miss","timestamp":"2025-10-13T09:55:00.615Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T09:55:00.616Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:55:00.618Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:55:01.770Z","tokensUsed":36}
+{"contentLength":38,"duration":1154,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:55:01.771Z","tokensUsed":36}
+{"level":"info","message":"Query rewritten","original":"what is my name","rewritten":"Retrieve name associated with user ID.","timestamp":"2025-10-13T09:55:01.772Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"2","timestamp":"2025-10-13T09:55:01.773Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:55:01.774Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:55:03.209Z","tokensUsed":81}
+{"contentLength":191,"duration":1437,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:55:03.211Z","tokensUsed":81}
+{"answerLength":191,"confidence":0.3,"level":"info","message":"Answer generated","timestamp":"2025-10-13T09:55:03.212Z"}
+{"key":"workflow:workflow-1760347327484:query:90e6418586eb09e5","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T09:55:03.220Z","ttl":3600}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-13T09:55:16.002Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-13T09:55:16.006Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-13T09:55:16.016Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-13T09:55:16.031Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-13T09:55:39.395Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.406Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-13T09:55:39.408Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.409Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-13T09:55:39.410Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-13T09:55:39.413Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-13T09:55:39.415Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-13T09:55:39.416Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-13T09:55:39.417Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-13T09:55:39.420Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-13T09:55:39.421Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-13T09:55:39.422Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-13T09:55:39.423Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-13T09:55:39.423Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-13T09:55:39.424Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-13T09:55:39.425Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T09:55:39.426Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-13T09:55:39.427Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-13T09:55:39.428Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T09:55:39.429Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.429Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-13T09:55:39.431Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.432Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.434Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-13T09:55:39.435Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.436Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-13T09:55:39.437Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-13T09:55:39.438Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-13T09:55:39.439Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-13T09:55:39.439Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-13T09:55:39.440Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-13T09:55:39.441Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:39.441Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-13T09:55:39.442Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-13T09:55:41.557Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-13T09:55:41.558Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:55:41.559Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:55:41.623Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:55:41.635Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:55:41.635Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-13T09:55:41.639Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:41.648Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-13T09:55:41.649Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-13T09:55:41.649Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-13T09:55:41.650Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T09:55:41.650Z"}
+{"body":{"query":"what is my name ","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:55:44.582Z"}
+{"level":"info","message":"Executing query","queryLength":16,"timestamp":"2025-10-13T09:55:46.004Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:55:46.017Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:55:46.026Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:55:46.037Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:55:46.038Z"}
+{"key":"workflow:workflow-1760347327484:query:90e6418586eb09e5","level":"debug","message":"Cache hit","timestamp":"2025-10-13T09:55:46.043Z"}
+{"level":"info","message":"Cache hit","query":"what is my name","timestamp":"2025-10-13T09:55:46.045Z","workflowId":"workflow-1760347327484"}
+{"body":{"query":"what is apple\n","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:56:07.088Z"}
+{"level":"info","message":"Executing query","queryLength":14,"timestamp":"2025-10-13T09:56:08.427Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:56:08.429Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:56:08.435Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:56:08.448Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:56:08.449Z"}
+{"key":"workflow:workflow-1760347327484:query:a1666110324d161f","level":"debug","message":"Cache miss","timestamp":"2025-10-13T09:56:08.454Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T09:56:08.457Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:56:08.460Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:56:10.096Z","tokensUsed":30}
+{"contentLength":16,"duration":1638,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:56:10.097Z","tokensUsed":30}
+{"level":"info","message":"Query rewritten","original":"what is apple","rewritten":"apple definition","timestamp":"2025-10-13T09:56:10.099Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"2","timestamp":"2025-10-13T09:56:10.100Z"}
+{"enhanced":"apple definition","level":"info","message":"Using enhanced query as answer","original":"what is apple","timestamp":"2025-10-13T09:56:10.101Z"}
+{"key":"workflow:workflow-1760347327484:query:a1666110324d161f","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T09:56:10.109Z","ttl":3600}
+{"body":{"query":"what if i want to use queary rewrite before  answer genration ?\n","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T09:56:51.876Z"}
+{"level":"info","message":"Executing query","queryLength":64,"timestamp":"2025-10-13T09:56:52.868Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"8b7afc54-232e-4e04-9a0f-a36de1bfeda5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T09:56:52.870Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T09:56:52.875Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T09:56:52.888Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T09:56:52.889Z"}
+{"key":"workflow:workflow-1760347327484:query:59b0d87d66a747ab","level":"debug","message":"Cache miss","timestamp":"2025-10-13T09:56:52.893Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T09:56:52.894Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:56:52.895Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:56:54.002Z","tokensUsed":45}
+{"contentLength":38,"duration":1109,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-13T09:56:54.004Z","tokensUsed":45}
+{"level":"info","message":"Query rewritten","original":"what if i want to use queary rewrite before  answer genration ?","rewritten":"query rewrite before answer generation","timestamp":"2025-10-13T09:56:54.004Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"2","timestamp":"2025-10-13T09:56:54.005Z"}
+{"enhanced":"query rewrite before answer generation","level":"info","message":"Using enhanced query as answer","original":"what if i want to use queary rewrite before  answer genration ?","timestamp":"2025-10-13T09:56:54.006Z"}
+{"key":"workflow:workflow-1760347327484:query:59b0d87d66a747ab","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T09:56:54.011Z","ttl":3600}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-13T10:43:33.653Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.655Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-13T10:43:33.656Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.656Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-13T10:43:33.657Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-13T10:43:33.657Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-13T10:43:33.657Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-13T10:43:33.657Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-13T10:43:33.658Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-13T10:43:33.658Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T10:43:33.659Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-13T10:43:33.660Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-13T10:43:33.660Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T10:43:33.660Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.660Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-13T10:43:33.660Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.660Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-13T10:43:33.661Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-13T10:43:36.183Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-13T10:43:36.184Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T10:43:36.185Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T10:43:36.273Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T10:43:36.296Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T10:43:36.297Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-13T10:43:36.302Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:36.312Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-13T10:43:36.313Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-13T10:43:36.313Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-13T10:43:36.313Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T10:43:36.314Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T10:44:53.711Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:44:53.727Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T10:44:53.731Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1-1760352495198","source":"1","target":"1760352495198"}],"entryPoint":"1","id":"workflow-1760352521766","name":"ram","nodes":[{"data":{"config":{"llm":{"maxTokens":175,"model":"gemini-1.5-flash","provider":"google","temperature":0.4}},"label":"Query Rewrite"},"id":"1","position":{"x":272,"y":144},"type":"query_rewrite"},{"data":{"config":{"prompt":"Format the answer appropriately and add source attribution if needed."},"label":"Post Process"},"id":"1760352495198","position":{"x":272,"y":288},"type":"post_process"}],"steps":[{"config":{"llm":{"maxTokens":175,"model":"gemini-1.5-flash","provider":"google","temperature":0.4}},"id":"1","nextSteps":["1760352495198"],"type":"query_rewrite"},{"config":{"prompt":"Format the answer appropriately and add source attribution if needed."},"id":"1760352495198","type":"post_process"}]},"description":"","name":"ram","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T10:48:41.819Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:48:45.573Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/1b7bbf81-85c9-4bcf-9b09-3448c81af5f2","query":{},"timestamp":"2025-10-13T10:48:48.497Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:48:50.055Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/1b7bbf81-85c9-4bcf-9b09-3448c81af5f2","query":{},"timestamp":"2025-10-13T10:48:55.436Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:48:55.439Z"}
+{"body":{"name":"gg"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:49:04.428Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:49:05.624Z"}
+{"body":{"query":"how to convert farhenhite into celcious","workflowId":"1b7bbf81-85c9-4bcf-9b09-3448c81af5f2"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T10:49:35.273Z"}
+{"level":"info","message":"Executing query","queryLength":39,"timestamp":"2025-10-13T10:49:36.316Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"1b7bbf81-85c9-4bcf-9b09-3448c81af5f2"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T10:49:36.325Z","url":"redis://localhost:6379"}
+{"error":"Configuration errors: Workflow must include an answer generation step","level":"error","message":"Workflow execution failed","stack":"Error: Configuration errors: Workflow must include an answer generation step\n    at WorkflowExecutor.validateConfiguration (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:102:19)\n    at WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:20:18)\n    at executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:39)","timestamp":"2025-10-13T10:49:36.329Z","workflowId":"workflow-1760352521766"}
+{"error":"Configuration errors: Workflow must include an answer generation step","level":"error","message":"Query execution failed","timestamp":"2025-10-13T10:49:36.330Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"1b7bbf81-85c9-4bcf-9b09-3448c81af5f2"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T10:49:36.334Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T10:49:36.338Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T10:49:36.339Z"}
+{"body":{"query":"how to convert farhenhite into celcious","workflowId":"1b7bbf81-85c9-4bcf-9b09-3448c81af5f2"},"error":"Configuration errors: Workflow must include an answer generation step","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"Error: Configuration errors: Workflow must include an answer generation step\n    at WorkflowExecutor.validateConfiguration (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:102:19)\n    at WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:20:18)\n    at executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:39)","timestamp":"2025-10-13T10:49:37.591Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T10:50:49.523Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T10:51:33.611Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:51:33.615Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:51:47.241Z"}
+{"ip":"::1","level":"info","message":"DELETE /api/workflows/1b7bbf81-85c9-4bcf-9b09-3448c81af5f2","query":{},"timestamp":"2025-10-13T10:51:52.127Z"}
+{"ip":"::1","level":"info","message":"DELETE /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T10:51:53.825Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:51:53.828Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:51:55.975Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"timestamp":"2025-10-13T10:51:56.589Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:51:56.604Z"}
+{"error":"Workflow not found","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/workflows/8b7afc54-232e-4e04-9a0f-a36de1bfeda5","query":{},"stack":"Error: Workflow not found\n    at getWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/workflow.controller.js:69:19)","timestamp":"2025-10-13T10:51:57.596Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:51:57.849Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-13T10:52:17.237Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T10:52:18.895Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:52:18.898Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T10:52:18.902Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:52:20.253Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T10:52:24.768Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T10:52:24.963Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"you give me the enhanced queary","edges":[{"id":"xy-edge__1-1760352818669","source":"1","target":"1760352818669"}],"entryPoint":"1","id":"workflow-1760352829886","name":"soumya","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-1.5-flash","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":250,"y":50},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Answer Generation"},"id":"1760352818669","position":{"x":240,"y":208},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gemini-1.5-flash","provider":"google","temperature":0.7}},"id":"1","nextSteps":["1760352818669"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1760352818669","type":"answer_generation"}]},"description":"you give me the enhanced queary","name":"soumya","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T10:53:49.920Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:53:51.923Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/2797ae91-f3a2-424b-a5cc-cda9fc0ab2da","query":{},"timestamp":"2025-10-13T10:53:54.204Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:53:55.538Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/2797ae91-f3a2-424b-a5cc-cda9fc0ab2da","query":{},"timestamp":"2025-10-13T10:53:58.167Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:53:58.173Z"}
+{"body":{"name":"sumo"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:54:07.726Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:54:08.790Z"}
+{"body":{"query":"what is the defference between  hi and bye ","workflowId":"2797ae91-f3a2-424b-a5cc-cda9fc0ab2da"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T10:54:46.398Z"}
+{"level":"info","message":"Executing query","queryLength":43,"timestamp":"2025-10-13T10:54:47.561Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"2797ae91-f3a2-424b-a5cc-cda9fc0ab2da"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T10:54:47.563Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T10:54:47.572Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T10:54:47.583Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T10:54:47.585Z"}
+{"key":"workflow:workflow-1760352829886:query:8eaf37a229afbf23","level":"debug","message":"Cache miss","timestamp":"2025-10-13T10:54:47.590Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T10:54:47.594Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-1.5-flash","provider":"google","timestamp":"2025-10-13T10:54:47.600Z"}
+{"attempt":"1/1","error":"Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"warn","message":"LLM call failed","model":"gemini-1.5-flash","provider":"google","timestamp":"2025-10-13T10:54:48.445Z"}
+{"duration":847,"error":"Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"LLM generation failed after all attempts","request":{"maxTokens":200,"model":"gemini-1.5-flash","promptLength":139,"provider":"google","temperature":0.7},"timestamp":"2025-10-13T10:54:48.446Z"}
+{"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Step execution failed: query_rewrite","stepId":"1","timestamp":"2025-10-13T10:54:48.448Z"}
+{"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Workflow execution failed","stack":"Error: Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T10:54:48.449Z","workflowId":"workflow-1760352829886"}
+{"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Query execution failed","timestamp":"2025-10-13T10:54:48.451Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac","workflowId":"2797ae91-f3a2-424b-a5cc-cda9fc0ab2da"}
+{"body":{"query":"what is the defference between  hi and bye ","workflowId":"2797ae91-f3a2-424b-a5cc-cda9fc0ab2da"},"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"Error: Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T10:54:49.733Z","userId":"d30df296-c976-49e9-b5f0-4799f47367ac"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/2797ae91-f3a2-424b-a5cc-cda9fc0ab2da","query":{},"timestamp":"2025-10-13T10:55:57.796Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/2797ae91-f3a2-424b-a5cc-cda9fc0ab2da","query":{},"timestamp":"2025-10-13T10:56:10.989Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/2797ae91-f3a2-424b-a5cc-cda9fc0ab2da","query":{},"timestamp":"2025-10-13T10:56:15.690Z"}
+{"body":{"email":"somu@gmail.com","name":"soumya","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/register","query":{},"timestamp":"2025-10-13T10:56:58.901Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T10:57:01.447Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:57:01.452Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T10:57:01.455Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-13T10:57:02.997Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-13T10:57:03.211Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:57:05.826Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"enhance the provided queary","edges":[{"id":"xy-edge__1-1760353105021","source":"1","target":"1760353105021"}],"entryPoint":"1","id":"workflow-1760353130358","name":"somu","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-1.5-flash","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":288,"y":-32},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gemini-1.5-flash","provider":"google","temperature":0.7}},"label":"Answer Generation"},"id":"1760353105021","position":{"x":288,"y":144},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gemini-1.5-flash","provider":"google","temperature":0.7}},"id":"1","nextSteps":["1760353105021"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":1000,"model":"gemini-1.5-flash","provider":"google","temperature":0.7}},"id":"1760353105021","type":"answer_generation"}]},"description":"enhance the provided queary","name":"somu","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T10:58:50.385Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:58:53.407Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/43be9275-f60b-4a76-8f97-4848d29ff362","query":{},"timestamp":"2025-10-13T10:58:56.457Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T10:58:57.912Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/43be9275-f60b-4a76-8f97-4848d29ff362","query":{},"timestamp":"2025-10-13T10:59:00.196Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:59:00.202Z"}
+{"body":{"name":"gg"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:59:08.897Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T10:59:09.737Z"}
+{"body":{"query":"what is the difference between hi and bye?\n","workflowId":"43be9275-f60b-4a76-8f97-4848d29ff362"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T10:59:29.622Z"}
+{"level":"info","message":"Executing query","queryLength":43,"timestamp":"2025-10-13T10:59:30.801Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"43be9275-f60b-4a76-8f97-4848d29ff362"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T10:59:30.805Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T10:59:30.813Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T10:59:30.828Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T10:59:30.830Z"}
+{"key":"workflow:workflow-1760353130358:query:d796c9cb343cdac4","level":"debug","message":"Cache miss","timestamp":"2025-10-13T10:59:30.834Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T10:59:30.837Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-1.5-flash","provider":"google","timestamp":"2025-10-13T10:59:30.838Z"}
+{"attempt":"1/1","error":"Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"warn","message":"LLM call failed","model":"gemini-1.5-flash","provider":"google","timestamp":"2025-10-13T10:59:31.557Z"}
+{"duration":721,"error":"Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"LLM generation failed after all attempts","request":{"maxTokens":200,"model":"gemini-1.5-flash","promptLength":139,"provider":"google","temperature":0.7},"timestamp":"2025-10-13T10:59:31.559Z"}
+{"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Step execution failed: query_rewrite","stepId":"1","timestamp":"2025-10-13T10:59:31.562Z"}
+{"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Workflow execution failed","stack":"Error: Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T10:59:31.564Z","workflowId":"workflow-1760353130358"}
+{"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","level":"error","message":"Query execution failed","timestamp":"2025-10-13T10:59:31.568Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"43be9275-f60b-4a76-8f97-4848d29ff362"}
+{"body":{"query":"what is the difference between hi and bye?\n","workflowId":"43be9275-f60b-4a76-8f97-4848d29ff362"},"error":"Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"Error: Failed to generate completion from all available models: Gemini API call failed: [GoogleGenerativeAI Error]: Error fetching from https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent: [404 Not Found] models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T10:59:32.652Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-13T11:04:17.023Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-13T11:04:17.025Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-13T11:04:17.029Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-13T11:04:17.032Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-13T11:04:26.144Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.148Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-13T11:04:26.148Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.149Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-13T11:04:26.149Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-13T11:04:26.149Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-13T11:04:26.150Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-13T11:04:26.150Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-13T11:04:26.150Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-13T11:04:26.150Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T11:04:26.151Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-13T11:04:26.152Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-13T11:04:26.152Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T11:04:26.152Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.153Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-13T11:04:26.154Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.154Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.154Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-13T11:04:26.154Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.154Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-13T11:04:26.155Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-13T11:04:28.389Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-13T11:04:28.390Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T11:04:28.390Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T11:04:28.423Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T11:04:28.429Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T11:04:28.430Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-13T11:04:28.431Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:28.436Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-13T11:04:28.436Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-13T11:04:28.436Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-13T11:04:28.437Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:04:28.437Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/43be9275-f60b-4a76-8f97-4848d29ff362","query":{},"timestamp":"2025-10-13T11:04:44.247Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:05:24.318Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1-1760353579358","source":"1","target":"1760353579358"}],"entryPoint":"1","id":"workflow-1760353599350","name":"new","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-1.5-flash-latest","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":240,"y":112},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gemini-1.5-flash-latest","provider":"google","temperature":0.7}},"label":"Answer Generation"},"id":"1760353579358","position":{"x":224,"y":288},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gemini-1.5-flash-latest","provider":"google","temperature":0.7}},"id":"1","nextSteps":["1760353579358"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":1000,"model":"gemini-1.5-flash-latest","provider":"google","temperature":0.7}},"id":"1760353579358","type":"answer_generation"}]},"description":"","name":"new","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T11:06:39.394Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:06:41.114Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/5b45f5cd-a9db-4803-bd6e-9b644f3a64d5","query":{},"timestamp":"2025-10-13T11:06:44.545Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:06:46.054Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/5b45f5cd-a9db-4803-bd6e-9b644f3a64d5","query":{},"timestamp":"2025-10-13T11:06:48.107Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:06:48.114Z"}
+{"body":{"name":"ge"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:06:56.125Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:06:56.877Z"}
+{"body":{"query":"If users can already build AI workflows (like in n8n or LangFlow), what extra intelligence or automation could R8R provide — something that doesn’t just “connect” models, but helps users decide which models, prompts, or flows will give the best result automatically?","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T11:07:48.444Z"}
+{"level":"info","message":"Executing query","queryLength":266,"timestamp":"2025-10-13T11:07:49.732Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T11:07:49.747Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T11:07:49.754Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T11:07:49.762Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T11:07:49.763Z"}
+{"key":"workflow:workflow-1760353599350:query:6da802b8ceaec3c8","level":"debug","message":"Cache miss","timestamp":"2025-10-13T11:07:49.766Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T11:07:49.767Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-1.5-flash-latest","provider":"google","timestamp":"2025-10-13T11:07:49.769Z"}
+{"attempt":"1/1","error":"Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"warn","message":"LLM call failed","model":"gemini-1.5-flash-latest","provider":"google","timestamp":"2025-10-13T11:07:50.610Z"}
+{"duration":843,"error":"Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"LLM generation failed after all attempts","request":{"maxTokens":200,"model":"gemini-1.5-flash-latest","promptLength":363,"provider":"google","temperature":0.7},"timestamp":"2025-10-13T11:07:50.611Z"}
+{"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"Step execution failed: query_rewrite","stepId":"1","timestamp":"2025-10-13T11:07:50.612Z"}
+{"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"Workflow execution failed","stack":"Error: Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T11:07:50.615Z","workflowId":"workflow-1760353599350"}
+{"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"Query execution failed","timestamp":"2025-10-13T11:07:50.617Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"}
+{"body":{"query":"If users can already build AI workflows (like in n8n or LangFlow), what extra intelligence or automation could R8R provide — something that doesn’t just “connect” models, but helps users decide which models, prompts, or flows will give the best result automatically?","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"},"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"Error: Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T11:07:51.810Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-13T11:11:29.697Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-13T11:11:29.700Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-13T11:11:29.706Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-13T11:11:29.712Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-13T11:11:36.804Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.806Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-13T11:11:36.807Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.807Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-13T11:11:36.807Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-13T11:11:36.807Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-13T11:11:36.808Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-13T11:11:36.808Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-13T11:11:36.808Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-13T11:11:36.808Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-13T11:11:36.809Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:36.810Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-13T11:11:36.811Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-13T11:11:39.289Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-13T11:11:39.291Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T11:11:39.291Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T11:11:39.375Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T11:11:39.387Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T11:11:39.388Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-13T11:11:39.392Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:39.396Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-13T11:11:39.397Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-13T11:11:39.398Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-13T11:11:39.398Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-13T11:11:39.399Z"}
+{"body":{"query":"If users can already build AI workflows (like in n8n or LangFlow), what extra intelligence or automation could R8R provide — something that doesn’t just “connect” models, but helps users decide which models, prompts, or flows will give the best result automatically?","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T11:11:43.791Z"}
+{"level":"info","message":"Executing query","queryLength":266,"timestamp":"2025-10-13T11:11:45.406Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T11:11:45.413Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T11:11:45.416Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T11:11:45.423Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T11:11:45.425Z"}
+{"key":"workflow:workflow-1760353599350:query:6da802b8ceaec3c8","level":"debug","message":"Cache miss","timestamp":"2025-10-13T11:11:45.429Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T11:11:45.432Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-1.5-flash-latest","provider":"google","timestamp":"2025-10-13T11:11:45.433Z"}
+{"attempt":"1/1","error":"Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"warn","message":"LLM call failed","model":"gemini-1.5-flash-latest","provider":"google","timestamp":"2025-10-13T11:11:46.062Z"}
+{"duration":630,"error":"Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"LLM generation failed after all attempts","request":{"maxTokens":200,"model":"gemini-1.5-flash-latest","promptLength":363,"provider":"google","temperature":0.7},"timestamp":"2025-10-13T11:11:46.063Z"}
+{"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"Step execution failed: query_rewrite","stepId":"1","timestamp":"2025-10-13T11:11:46.064Z"}
+{"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"Workflow execution failed","stack":"Error: Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T11:11:46.065Z","workflowId":"workflow-1760353599350"}
+{"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","level":"error","message":"Query execution failed","timestamp":"2025-10-13T11:11:46.065Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"}
+{"body":{"query":"If users can already build AI workflows (like in n8n or LangFlow), what extra intelligence or automation could R8R provide — something that doesn’t just “connect” models, but helps users decide which models, prompts, or flows will give the best result automatically?","workflowId":"5b45f5cd-a9db-4803-bd6e-9b644f3a64d5"},"error":"Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/query","query":{},"stack":"Error: Failed to generate completion from all available models: Gemini model not found: gemini-1.5-flash-latest. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro\n    at LLMOrchestrator.generateCompletion (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/llm/llm-orchestrator.service.js:40:19)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async WorkflowExecutor.executeQueryRewrite (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:221:26)\n    at async WorkflowExecutor.executeSingleStep (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:155:21)\n    at async WorkflowExecutor.executeStepRecursive (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:136:9)\n    at async WorkflowExecutor.executeSteps (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:114:13)\n    at async WorkflowExecutor.executeWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/services/workflow/workflow-executor.service.js:42:13)\n    at async executeQuery (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/query.controller.js:36:24)","timestamp":"2025-10-13T11:11:47.339Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:12:53.815Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/5b45f5cd-a9db-4803-bd6e-9b644f3a64d5","query":{},"timestamp":"2025-10-13T11:12:57.461Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:12:57.466Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:13:00.278Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"enhance the queary","edges":[{"id":"xy-edge__1-1760353999702","source":"1","target":"1760353999702"}],"entryPoint":"1","id":"workflow-1760354004686","name":"joker","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":250,"y":50},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Answer Generation"},"id":"1760353999702","position":{"x":272,"y":224},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1","nextSteps":["1760353999702"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1760353999702","type":"answer_generation"}]},"description":"enhance the queary","name":"joker","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T11:13:24.710Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:13:26.821Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:13:29.309Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:13:30.657Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:13:34.784Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:13:34.790Z"}
+{"body":{"name":"gg"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:13:56.556Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:13:58.215Z"}
+{"body":{"query":"If users can already build AI workflows (like in n8n or LangFlow), what extra intelligence or automation could R8R provide — something that doesn’t just “connect” models, but helps users decide which models, prompts, or flows will give the best result automatically?","workflowId":"640be25f-ca66-4622-93ac-535badf9f805"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T11:14:15.079Z"}
+{"level":"info","message":"Executing query","queryLength":266,"timestamp":"2025-10-13T11:14:16.439Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"640be25f-ca66-4622-93ac-535badf9f805"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T11:14:16.443Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T11:14:16.453Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T11:14:16.465Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T11:14:16.466Z"}
+{"key":"workflow:workflow-1760354004686:query:6da802b8ceaec3c8","level":"debug","message":"Cache miss","timestamp":"2025-10-13T11:14:16.471Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T11:14:16.473Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:14:16.476Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:14:19.373Z","tokensUsed":109}
+{"contentLength":135,"duration":2900,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:14:19.375Z","tokensUsed":109}
+{"level":"info","message":"Query rewritten","original":"If users can already build AI workflows (like in n8n or LangFlow), what extra intelligence or automation could R8R provide — something that doesn’t just “connect” models, but helps users decide which models, prompts, or flows will give the best result automatically?","rewritten":"\"AI workflow building in n8n and LangFlow versus R8R: Comparative analysis on model selection, prompt optimization and flow automation\"","timestamp":"2025-10-13T11:14:19.376Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1760353999702","timestamp":"2025-10-13T11:14:19.377Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:14:19.379Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:14:35.844Z","tokensUsed":364}
+{"contentLength":1595,"duration":16466,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:14:35.846Z","tokensUsed":364}
+{"answerLength":1595,"confidence":0.3,"hasRewrittenQuery":true,"level":"info","message":"Answer generated using enhanced query","queryUsed":"\"AI workflow building in n8n and LangFlow versus R8R: Comparative analysis on model selection, prompt optimization and flow automation\"","timestamp":"2025-10-13T11:14:35.847Z"}
+{"key":"workflow:workflow-1760354004686:query:6da802b8ceaec3c8","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T11:14:35.857Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:15:32.326Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:15:32.328Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:16:11.808Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:16:11.811Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:16:19.253Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:16:22.901Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:16:22.905Z"}
+{"body":{"query":"what is train","workflowId":"640be25f-ca66-4622-93ac-535badf9f805"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-13T11:16:35.039Z"}
+{"level":"info","message":"Executing query","queryLength":13,"timestamp":"2025-10-13T11:16:35.967Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0","workflowId":"640be25f-ca66-4622-93ac-535badf9f805"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-13T11:16:35.968Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-13T11:16:35.971Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-13T11:16:35.980Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-13T11:16:35.980Z"}
+{"key":"workflow:workflow-1760354004686:query:1ff523c00ce2d173","level":"debug","message":"Cache miss","timestamp":"2025-10-13T11:16:35.983Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-13T11:16:35.983Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:16:35.984Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:16:38.105Z","tokensUsed":38}
+{"contentLength":49,"duration":2122,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:16:38.106Z","tokensUsed":38}
+{"level":"info","message":"Query rewritten","original":"what is train","rewritten":"\"What is the definition and function of a train?\"","timestamp":"2025-10-13T11:16:38.107Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1760353999702","timestamp":"2025-10-13T11:16:38.109Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:16:38.110Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:16:41.547Z","tokensUsed":105}
+{"contentLength":344,"duration":3439,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-13T11:16:41.549Z","tokensUsed":105}
+{"answerLength":344,"confidence":0.3,"hasRewrittenQuery":true,"level":"info","message":"Answer generated using enhanced query","queryUsed":"\"What is the definition and function of a train?\"","timestamp":"2025-10-13T11:16:41.550Z"}
+{"key":"workflow:workflow-1760354004686:query:1ff523c00ce2d173","level":"debug","message":"Cache set successful","timestamp":"2025-10-13T11:16:41.555Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:20:49.741Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:24:28.436Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:24:28.442Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:30:00.700Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:30:00.707Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/1b7bbf81-85c9-4bcf-9b09-3448c81af5f2","query":{},"timestamp":"2025-10-13T11:30:00.723Z"}
+{"error":"Workflow not found","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/workflows/1b7bbf81-85c9-4bcf-9b09-3448c81af5f2","query":{},"stack":"Error: Workflow not found\n    at getWorkflow (file:///C:/Users/DELL/flowforge/my-next-app/backend/dist/controllers/workflow.controller.js:69:19)","timestamp":"2025-10-13T11:30:05.089Z","userId":"2a929f1e-7281-43c2-86a6-b67965f705f0"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:30:05.097Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:30:05.307Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:30:21.231Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:30:29.647Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:37:03.677Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:37:13.319Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:38:02.446Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:38:02.450Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:06.651Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:38:08.682Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:38:08.685Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:12.819Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:38:13.411Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:38:13.417Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:38:14.984Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:16.921Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/640be25f-ca66-4622-93ac-535badf9f805","query":{},"timestamp":"2025-10-13T11:38:18.976Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:38:18.982Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:22.238Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"e1-2","source":"1","target":"2"},{"id":"e1-3","source":"1","target":"3"},{"id":"e2-4","source":"2","target":"4"},{"id":"e3-4","source":"3","target":"4"},{"id":"e4-5","source":"4","target":"5"}],"entryPoint":"1","id":"workflow-1760355512462","name":"kk","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":250,"y":50},"type":"query_rewrite"},{"data":{"config":{"retriever":{"config":{"indexName":"main","topK":10},"type":"pinecone"}},"label":"Vector Search"},"id":"2","position":{"x":100,"y":200},"type":"retrieval"},{"data":{"config":{"retriever":{"config":{"indexName":"keywords","topK":5},"type":"keyword"}},"label":"Keyword Search"},"id":"3","position":{"x":400,"y":200},"type":"retrieval"},{"data":{"config":{"llm":{"maxTokens":100,"model":"claude-3-sonnet","provider":"anthropic","temperature":0.3}},"label":"Rerank Results"},"id":"4","position":{"x":250,"y":350},"type":"rerank"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Generate Answer"},"id":"5","position":{"x":250,"y":500},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1","nextSteps":["2","3"],"type":"query_rewrite"},{"config":{"retriever":{"config":{"indexName":"main","topK":10},"type":"pinecone"}},"id":"2","nextSteps":["4"],"type":"retrieval"},{"config":{"retriever":{"config":{"indexName":"keywords","topK":5},"type":"keyword"}},"id":"3","nextSteps":["4"],"type":"retrieval"},{"config":{"llm":{"maxTokens":100,"model":"claude-3-sonnet","provider":"anthropic","temperature":0.3}},"id":"4","nextSteps":["5"],"type":"rerank"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"5","type":"answer_generation"}]},"description":"","name":"kk","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-13T11:38:32.489Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:34.372Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/58f9c2e0-004c-4616-a73d-c16bb6bd53a9","query":{},"timestamp":"2025-10-13T11:38:39.835Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:41.233Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/58f9c2e0-004c-4616-a73d-c16bb6bd53a9","query":{},"timestamp":"2025-10-13T11:38:46.808Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-13T11:38:46.811Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-13T11:38:52.936Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-13T11:38:59.761Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-13T11:38:59.765Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-13T11:38:59.768Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-13T11:38:59.776Z"}

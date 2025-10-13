@@ -1,4 +1,4 @@
-const TOKEN_KEY = 'auth_token';
+const TOKEN_KEY = 'userToken'; // Changed to match what your API client expects
 const USER_KEY = 'auth_user';
 
 export const authStorage = {

@@ -6,9 +6,24 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { workflowsApi } from '@/app/lib/api/workflow';
 import { queriesApi } from '@/app/lib/api/queries';
+import { authApi } from '@/app/lib/api/auth';
 import { Workflow } from '@/app/lib/types/workflow.types';
 import { QueryResponse } from '@/app/lib/types/api.types';
+import { ApiKey } from '@/app/lib/types/auth.types';
 import toast from 'react-hot-toast';
+import { 
+  Key, 
+  Plus, 
+  Copy, 
+  Trash2, 
+  Play, 
+  ArrowLeft,
+  Eye,
+  EyeOff,
+  Activity,
+  Settings,
+  Zap
+} from 'lucide-react';
 
 export default function WorkflowDetailPage() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -22,13 +37,19 @@ export default function WorkflowDetailPage() {
   const [query, setQuery] = useState('');
   const [executing, setExecuting] = useState(false);
   const [result, setResult] = useState<QueryResponse | null>(null);
-  const [apiKey, setApiKey] = useState('');
+  const [activeTab, setActiveTab] = useState<'test' | 'api-keys'>('test');
+  
+  // API Keys state
+  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
+  const [showCreateKeyModal, setShowCreateKeyModal] = useState(false);
+  const [newKeyName, setNewKeyName] = useState('');
+  const [creatingKey, setCreatingKey] = useState(false);
+  const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
+  const [selectedApiKey, setSelectedApiKey] = useState<string>('');
+  const [showFullKeys, setShowFullKeys] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     setMounted(true);
-    // Get API key from localStorage or context
-    const storedApiKey = localStorage.getItem('apiKey') || '';
-    setApiKey(storedApiKey);
   }, []);
 
   useEffect(() => {
@@ -40,6 +61,7 @@ export default function WorkflowDetailPage() {
   useEffect(() => {
     if (mounted && isAuthenticated && workflowId) {
       loadWorkflow();
+      loadApiKeys();
     }
   }, [mounted, isAuthenticated, workflowId]);
 
@@ -57,14 +79,23 @@ export default function WorkflowDetailPage() {
     }
   };
 
+  const loadApiKeys = async () => {
+    try {
+      const response = await authApi.listApiKeys();
+      setApiKeys(response.apiKeys);
+      // Auto-select the first API key if available
+      if (response.apiKeys.length > 0 && !selectedApiKey) {
+        setSelectedApiKey(response.apiKeys[0].key);
+      }
+    } catch (error: any) {
+      console.error('Failed to load API keys:', error);
+      toast.error('Failed to load API keys');
+    }
+  };
+
   const handleExecute = async () => {
     if (!query.trim()) {
       toast.error('Please enter a query');
-      return;
-    }
-
-    if (!apiKey.trim()) {
-      toast.error('Please set your API key first');
       return;
     }
 
@@ -73,15 +104,19 @@ export default function WorkflowDetailPage() {
       return;
     }
 
+    if (!selectedApiKey) {
+      toast.error('Please select an API key');
+      return;
+    }
+
     try {
       setExecuting(true);
       
-      // Set the API key for the request
       const response = await queriesApi.execute({
         workflowId,
         query,
         // @ts-ignore
-      }, apiKey); // Pass API key as second parameter
+      }, selectedApiKey);
       
       setResult(response);
       toast.success('Query executed successfully!');
@@ -99,6 +134,41 @@ export default function WorkflowDetailPage() {
     }
   };
 
+  const handleCreateApiKey = async () => {
+    if (!newKeyName.trim()) {
+      toast.error('Please enter a name for the API key');
+      return;
+    }
+
+    try {
+      setCreatingKey(true);
+      const response = await authApi.createApiKey(newKeyName);
+      
+      setNewlyCreatedKey(response.apiKey);
+      toast.success('API key created successfully!');
+      loadApiKeys();
+      setNewKeyName('');
+    } catch (error: any) {
+      console.error('Create API key error:', error);
+      toast.error(error.response?.data?.error || 'Failed to create API key');
+    } finally {
+      setCreatingKey(false);
+    }
+  };
+
+  const handleDeleteApiKey = async (keyId: string) => {
+    if (!confirm('Are you sure you want to delete this API key?')) return;
+
+    try {
+      await authApi.deleteApiKey(keyId);
+      toast.success('API key deleted successfully');
+      loadApiKeys();
+    } catch (error: any) {
+      console.error('Delete API key error:', error);
+      toast.error('Failed to delete API key');
+    }
+  };
+
   const handleActivate = async () => {
     try {
       await workflowsApi.update(workflowId, { status: 'active' });
@@ -109,42 +179,26 @@ export default function WorkflowDetailPage() {
     }
   };
 
-  // Mock function for demo purposes
-  const executeMockQuery = () => {
-    setExecuting(true);
-    
-    // Simulate API call delay
-    setTimeout(() => {
-      const mockResult: QueryResponse = {
-        answer: "Machine learning is a subset of artificial intelligence that enables computers to learn and make decisions from data without being explicitly programmed. It uses algorithms to identify patterns in data and make predictions or decisions based on those patterns.",
-        latency: 1247,
-        confidence: 0.92,
-        sources: [
-          {
-            content: "Machine learning algorithms build a mathematical model based on sample data, known as training data, in order to make predictions or decisions without being explicitly programmed to perform the task.",
-            score: 0.95,
-            metadata: { source: "Wikipedia", page: 42 }
-          },
-          {
-            content: "The term machine learning was coined in 1959 by Arthur Samuel, an American IBMer and pioneer in the field of computer gaming and artificial intelligence.",
-            score: 0.87,
-            metadata: { source: "Tech Journal", page: 15 }
-          },
-          {
-            content: "Modern machine learning includes deep learning and neural networks, which have revolutionized fields like computer vision, natural language processing, and autonomous systems.",
-            score: 0.82,
-            metadata: { source: "AI Research Paper", page: 8 }
-          }
-        ],
-        cached: false,
-        llmsUsed: ["gpt-4", "claude-3-sonnet"],
-        retrieversUsed: ["pinecone", "elasticsearch"]
-      };
-      
-      setResult(mockResult);
-      setExecuting(false);
-      toast.success('Query executed successfully! (Demo Mode)');
-    }, 2000);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success('Copied to clipboard!');
+  };
+
+  const toggleKeyVisibility = (keyId: string) => {
+    setShowFullKeys(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(keyId)) {
+        newSet.delete(keyId);
+      } else {
+        newSet.add(keyId);
+      }
+      return newSet;
+    });
+  };
+
+  const maskApiKey = (key: string) => {
+    if (key.length <= 8) return key;
+    return `${key.substring(0, 8)}${'*'.repeat(key.length - 8)}`;
   };
 
   if (!mounted || isLoading || loading) {
@@ -173,351 +227,476 @@ export default function WorkflowDetailPage() {
         aria-hidden
       />
 
-      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
-        {/* Header */}
-        <div className="mb-8">
-          <Link
-            href="/workflows"
-            className="text-red-400 hover:text-red-300 mb-4 inline-block flex items-center gap-2 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-            </svg>
-            Back to Workflows
-          </Link>
-          
-          <div className="flex items-start justify-between">
-            <div>
-              <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold bg-gradient-to-r from-red-400 to-red-600 bg-clip-text text-transparent">
+      {/* Header */}
+      <div className="border-b border-white/10 bg-black/30 backdrop-blur-sm">
+        <div className="mx-auto max-w-7xl px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link
+                href="/workflows"
+                className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
+              >
+                <ArrowLeft className="w-5 h-5" />
+              </Link>
+              <div>
+                <h1 className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-2xl font-bold text-transparent">
                   {workflow.name}
                 </h1>
-                <span
-                  className={`px-3 py-1 text-sm font-medium rounded border ${
-                    workflow.status === 'active'
-                      ? 'bg-green-500/20 text-green-400 border-green-500/30'
-                      : workflow.status === 'draft'
-                      ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                      : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
-                  }`}
-                >
-                  {workflow.status}
-                </span>
+                {workflow.description && (
+                  <p className="text-gray-400 mt-1">{workflow.description}</p>
+                )}
               </div>
-              {workflow.description && (
-                <p className="text-gray-400 mt-2">{workflow.description}</p>
-              )}
+              <span
+                className={`px-3 py-1 text-sm font-medium rounded border ${
+                  workflow.status === 'active'
+                    ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                    : workflow.status === 'draft'
+                    ? 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                    : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                }`}
+              >
+                {workflow.status}
+              </span>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-3">
               {workflow.status !== 'active' && (
                 <button
                   onClick={handleActivate}
-                  className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors border border-green-500/30"
+                  className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
                 >
-                  Activate
+                  <Zap className="w-4 h-4" />
+                  Activate Workflow
                 </button>
               )}
               <Link
                 href={`/workflows/${workflow.id}/edit`}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors border border-red-500/30"
+                className="flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors border border-white/10"
               >
+                <Settings className="w-4 h-4" />
                 Edit Workflow
               </Link>
             </div>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Test Query Section */}
-          <div className="lg:col-span-2">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10">
-              <div className="p-6 border-b border-white/10">
-                <h2 className="text-xl font-semibold text-white">Test Query</h2>
-                <p className="text-sm text-gray-400 mt-1">
-                  {workflow.status === 'active'
-                    ? 'Execute a test query to see your workflow in action'
-                    : 'Activate this workflow to test queries'}
-                </p>
-              </div>
-
-              <div className="p-6 space-y-4">
-                {/* API Key Input */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    API Key
-                  </label>
-                  <input
-                    type="password"
-                    value={apiKey}
-                    onChange={(e) => {
-                      setApiKey(e.target.value);
-                      localStorage.setItem('apiKey', e.target.value);
-                    }}
-                    placeholder="Enter your API key..."
-                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400"
-                  />
-                  <p className="text-xs text-gray-500 mt-1">
-                    Your API key is stored locally in your browser
-                  </p>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Enter your query
-                  </label>
-                  <textarea
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    rows={3}
-                    placeholder="What is machine learning?"
-                    disabled={workflow.status !== 'active'}
-                    className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400 disabled:bg-gray-700 disabled:cursor-not-allowed"
-                  />
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    onClick={handleExecute}
-                    disabled={executing || workflow.status !== 'active' || !apiKey}
-                    className="flex-1 px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-colors border border-red-500/30"
-                  >
-                    {executing ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                        Executing...
-                      </span>
-                    ) : (
-                      '▶ Execute Query'
-                    )}
-                  </button>
-                  
-                  <button
-                    onClick={executeMockQuery}
-                    disabled={executing || workflow.status !== 'active'}
-                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed font-semibold transition-colors border border-blue-500/30"
-                  >
-                    Demo
-                  </button>
-                </div>
-
-                {workflow.status !== 'active' && (
-                  <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
-                    <p className="text-sm text-yellow-400 flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                      </svg>
-                      This workflow is not active. Activate it to execute queries.
-                    </p>
-                  </div>
-                )}
-
-                {!apiKey && (
-                  <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-4">
-                    <p className="text-sm text-red-400 flex items-center gap-2">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                      Please set your API key to execute queries.
-                    </p>
-                  </div>
-                )}
-
-                {result && (
-                  <div className="mt-6 space-y-4">
-                    {/* Answer */}
-                    <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
-                      <h3 className="text-sm font-semibold text-green-400 mb-2 flex items-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        Answer
-                      </h3>
-                      <p className="text-white whitespace-pre-wrap">{result.answer}</p>
-                    </div>
-
-                    {/* Metrics */}
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                        <p className="text-xs text-gray-400">Latency</p>
-                        <p className="text-2xl font-bold text-white">{result.latency}ms</p>
-                      </div>
-                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                        <p className="text-xs text-gray-400">Confidence</p>
-                        <p className="text-2xl font-bold text-white">
-                          {result.confidence ? `${(result.confidence * 100).toFixed(0)}%` : 'N/A'}
-                        </p>
-                      </div>
-                      <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                        <p className="text-xs text-gray-400">Sources</p>
-                        <p className="text-2xl font-bold text-white">{result.sources.length}</p>
-                      </div>
-                    </div>
-
-                    {/* LLMs & Retrievers Used */}
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
-                        <p className="text-sm font-semibold text-blue-400 mb-2">LLMs Used</p>
-                        <div className="space-y-1">
-                          {result.llmsUsed.map((llm, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-block px-2 py-1 bg-blue-500/30 text-blue-300 text-xs rounded mr-1 border border-blue-500/30"
-                            >
-                              {llm}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="bg-purple-500/20 border border-purple-500/30 rounded-lg p-4">
-                        <p className="text-sm font-semibold text-purple-400 mb-2">Retrievers Used</p>
-                        <div className="space-y-1">
-                          {result.retrieversUsed.map((retriever, idx) => (
-                            <span
-                              key={idx}
-                              className="inline-block px-2 py-1 bg-purple-500/30 text-purple-300 text-xs rounded mr-1 border border-purple-500/30"
-                            >
-                              {retriever}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Sources */}
-                    {result.sources.length > 0 && (
-                      <div>
-                        <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                          </svg>
-                          Source Documents
-                        </h3>
-                        <div className="space-y-3">
-                          {result.sources.map((source, idx) => (
-                            <div
-                              key={idx}
-                              className="bg-gray-800 border border-gray-700 rounded-lg p-4"
-                            >
-                              <div className="flex items-start justify-between mb-2">
-                                <span className="text-xs font-semibold text-gray-400">
-                                  Source {idx + 1}
-                                </span>
-                                {source.score && (
-                                  <span className="text-xs text-gray-400">
-                                    Score: {source.score.toFixed(3)}
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-sm text-gray-300">{source.content}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-
-                    {result.cached && (
-                      <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3">
-                        <p className="text-sm text-blue-400 flex items-center gap-2">
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                          </svg>
-                          This result was retrieved from cache
-                        </p>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Workflow Info Sidebar */}
-          <div className="space-y-6">
-            {/* Workflow Stats */}
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Workflow Info</h3>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-400">Total Steps</p>
-                  <p className="text-2xl font-bold text-white">
-                    {(workflow.configuration as any).steps?.length || 0}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Version</p>
-                  <p className="text-2xl font-bold text-white">{workflow.version}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Created</p>
-                  <p className="text-sm text-white">
-                    {new Date(workflow.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-400">Last Updated</p>
-                  <p className="text-sm text-white">
-                    {new Date(workflow.updatedAt).toLocaleDateString()}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Analytics */}
-            {workflow.analytics && (
-              <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Analytics</h3>
-                <div className="space-y-4">
-                  <div>
-                    <p className="text-sm text-gray-400">Total Queries</p>
-                    <p className="text-2xl font-bold text-white">
-                      {workflow.analytics.totalQueries}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Success Rate</p>
-                    <p className="text-2xl font-bold text-white">
-                      {workflow.analytics.totalQueries > 0
-                        ? `${((workflow.analytics.successfulQueries / workflow.analytics.totalQueries) * 100).toFixed(0)}%`
-                        : 'N/A'}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Avg Latency</p>
-                    <p className="text-2xl font-bold text-white">
-                      {Math.round(workflow.analytics.avgLatency)}ms
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-400">Avg Confidence</p>
-                    <p className="text-2xl font-bold text-white">
-                      {(workflow.analytics.avgConfidence * 100).toFixed(0)}%
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Quick Actions */}
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-              <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-              <div className="space-y-2">
-                <Link
-                  href={`/workflows/${workflow.id}/edit`}
-                  className="block w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-center font-medium transition-colors border border-red-500/30"
-                >
-                  Edit Workflow
-                </Link>
-                <Link
-                  href="/analytics"
-                  className="block w-full px-4 py-2 bg-gray-800 hover:bg-gray-700 text-white rounded-lg text-center font-medium transition-colors border border-gray-700"
-                >
-                  View Analytics
-                </Link>
-              </div>
-            </div>
+          {/* Tabs */}
+          <div className="flex gap-8 mt-4">
+            <button
+              onClick={() => setActiveTab('test')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
+                activeTab === 'test'
+                  ? 'border-red-500 text-red-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+              }`}
+            >
+              <Play className="w-4 h-4" />
+              Test Workflow
+            </button>
+            <button
+              onClick={() => setActiveTab('api-keys')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
+                activeTab === 'api-keys'
+                  ? 'border-red-500 text-red-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+              }`}
+            >
+              <Key className="w-4 h-4" />
+              API Keys ({apiKeys.length})
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Main Content */}
+      <div className="mx-auto max-w-7xl px-6 py-8">
+        {activeTab === 'test' ? (
+          /* Test Workflow Tab */
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+                <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                  <Play className="w-5 h-5 text-red-400" />
+                  Test Workflow
+                </h2>
+                
+                {/* API Key Selector */}
+                {apiKeys.length > 0 && (
+                  <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Use API Key
+                    </label>
+                    <select 
+                      value={selectedApiKey}
+                      onChange={(e) => setSelectedApiKey(e.target.value)}
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white"
+                    >
+                      <option value="" className="bg-gray-800">Select an API key...</option>
+                      {apiKeys.map((key) => (
+                        <option key={key.id} value={key.key} className="bg-gray-800">
+                          {key.name} ({maskApiKey(key.key)})
+                        </option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-gray-400 mt-2">
+                      Select which API key to use for this test
+                    </p>
+                  </div>
+                )}
+
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Enter your query
+                    </label>
+                    <textarea
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                      rows={4}
+                      placeholder="What would you like to ask?"
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none text-white placeholder-gray-400"
+                    />
+                  </div>
+
+                  <button
+                    onClick={handleExecute}
+                    disabled={executing || workflow.status !== 'active' || !selectedApiKey}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                  >
+                    {executing ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Executing...
+                      </>
+                    ) : (
+                      <>
+                        <Play className="w-4 h-4" />
+                        Execute Query
+                      </>
+                    )}
+                  </button>
+
+                  {workflow.status !== 'active' && (
+                    <div className="bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
+                      <p className="text-sm text-yellow-400">
+                        This workflow is not active. Activate it to execute queries.
+                      </p>
+                    </div>
+                  )}
+
+                  {apiKeys.length === 0 && (
+                    <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
+                      <p className="text-sm text-blue-400">
+                        No API keys found.{' '}
+                        <button 
+                          onClick={() => setActiveTab('api-keys')}
+                          className="text-blue-300 hover:text-blue-200 underline font-medium"
+                        >
+                          Create an API key
+                        </button>{' '}
+                        to test this workflow.
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {result && (
+                  <div className="mt-6 space-y-6">
+                    <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
+                      <h3 className="text-sm font-semibold text-green-400 mb-2">Answer</h3>
+                      <p className="text-green-300 whitespace-pre-wrap">{result.answer}</p>
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="bg-white/5 rounded-lg p-4 text-center border border-white/10">
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">Latency</p>
+                        <p className="text-lg font-semibold text-white">{result.latency}ms</p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4 text-center border border-white/10">
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">Confidence</p>
+                        <p className="text-lg font-semibold text-white">
+                          {result.confidence ? `${(result.confidence * 100).toFixed(0)}%` : 'N/A'}
+                        </p>
+                      </div>
+                      <div className="bg-white/5 rounded-lg p-4 text-center border border-white/10">
+                        <p className="text-xs text-gray-400 uppercase tracking-wide">Sources</p>
+                        <p className="text-lg font-semibold text-white">{result.sources.length}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Workflow Info Sidebar */}
+            <div className="space-y-6">
+              <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Settings className="w-5 h-5 text-red-400" />
+                  Workflow Info
+                </h3>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                    <span className="text-gray-400">Total Steps</span>
+                    <span className="text-white font-semibold">
+                      {(workflow.configuration as any).steps?.length || 0}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                    <span className="text-gray-400">Created</span>
+                    <span className="text-white text-sm">
+                      {new Date(workflow.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                    <span className="text-gray-400">Available API Keys</span>
+                    <span className="text-white font-semibold">{apiKeys.length}</span>
+                  </div>
+                </div>
+              </div>
+
+              {workflow.analytics && (
+                <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+                  <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-red-400" />
+                    Analytics
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                      <span className="text-gray-400">Total Queries</span>
+                      <span className="text-white font-semibold">{workflow.analytics.totalQueries}</span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                      <span className="text-gray-400">Success Rate</span>
+                      <span className="text-white font-semibold">
+                        {workflow.analytics.totalQueries > 0
+                          ? `${((workflow.analytics.successfulQueries / workflow.analytics.totalQueries) * 100).toFixed(0)}%`
+                          : 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center p-3 bg-white/5 rounded-lg">
+                      <span className="text-gray-400">Avg Latency</span>
+                      <span className="text-white font-semibold">
+                        {Math.round(workflow.analytics.avgLatency)}ms
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          /* API Keys Tab */
+          <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10">
+            <div className="p-6 border-b border-white/10">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold flex items-center gap-2">
+                    <Key className="w-5 h-5 text-red-400" />
+                    API Keys for {workflow.name}
+                  </h2>
+                  <p className="text-gray-400 mt-1">
+                    Manage API keys to access this workflow programmatically
+                  </p>
+                </div>
+                <button
+                  onClick={() => setShowCreateKeyModal(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create API Key
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6">
+              {apiKeys.length === 0 ? (
+                <div className="text-center py-12">
+                  <Key className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    No API keys yet
+                  </h3>
+                  <p className="text-gray-400 mb-6">
+                    Create your first API key to start using this workflow via API
+                  </p>
+                  <button
+                    onClick={() => setShowCreateKeyModal(true)}
+                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all mx-auto"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Create API Key
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {apiKeys.map((apiKey) => (
+                    <div key={apiKey.id} className="bg-white/5 border border-white/10 rounded-lg p-4 hover:border-red-500/30 transition-all">
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-3 mb-3">
+                            <h4 className="font-semibold text-white">{apiKey.name}</h4>
+                            <span
+                              className={`px-2 py-1 text-xs rounded border ${
+                                apiKey.isActive
+                                  ? 'bg-green-500/20 text-green-400 border-green-500/30'
+                                  : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+                              }`}
+                            >
+                              {apiKey.isActive ? 'Active' : 'Inactive'}
+                            </span>
+                          </div>
+                          
+                          <div className="flex items-center gap-2 mb-3">
+                            <code className="text-sm bg-black/30 px-3 py-2 rounded font-mono border border-white/10">
+                              {showFullKeys.has(apiKey.id) ? apiKey.key : maskApiKey(apiKey.key)}
+                            </code>
+                            <button
+                              onClick={() => toggleKeyVisibility(apiKey.id)}
+                              className="text-gray-400 hover:text-white transition-colors p-1 hover:bg-white/10 rounded"
+                              title={showFullKeys.has(apiKey.id) ? 'Hide key' : 'Show key'}
+                            >
+                              {showFullKeys.has(apiKey.id) ? (
+                                <EyeOff className="w-4 h-4" />
+                              ) : (
+                                <Eye className="w-4 h-4" />
+                              )}
+                            </button>
+                          </div>
+
+                          <div className="text-sm text-gray-400">
+                            <div className="flex items-center gap-4">
+                              <span>Created: {new Date(apiKey.createdAt).toLocaleDateString()}</span>
+                              {apiKey.lastUsedAt && (
+                                <span>• Last used: {new Date(apiKey.lastUsedAt).toLocaleDateString()}</span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => copyToClipboard(apiKey.key)}
+                            className="p-2 text-gray-400 hover:text-white transition-colors hover:bg-white/10 rounded"
+                            title="Copy to clipboard"
+                          >
+                            <Copy className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => handleDeleteApiKey(apiKey.id)}
+                            className="p-2 text-red-400 hover:text-red-300 transition-colors hover:bg-red-500/10 rounded"
+                            title="Delete API key"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Create API Key Modal */}
+      {showCreateKeyModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-gray-900 border border-white/10 rounded-lg max-w-md w-full p-6">
+            {newlyCreatedKey ? (
+              <div className="space-y-4">
+                <div className="bg-green-500/20 border border-green-500/30 rounded-lg p-4">
+                  <p className="text-sm text-green-400 mb-2 font-semibold">
+                    🎉 API Key Created Successfully!
+                  </p>
+                  <p className="text-xs text-green-300 mb-3">
+                    Make sure to copy your API key now. You won't be able to see it again!
+                  </p>
+                  <div className="bg-black/30 border border-green-500/30 rounded p-3">
+                    <code className="text-sm break-all font-mono text-white bg-black/50 p-2 rounded block">
+                      {newlyCreatedKey}
+                    </code>
+                  </div>
+                </div>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => copyToClipboard(newlyCreatedKey)}
+                    className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Copy className="w-4 h-4" />
+                    Copy to Clipboard
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowCreateKeyModal(false);
+                      setNewlyCreatedKey(null);
+                    }}
+                    className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold flex items-center gap-2">
+                  <Key className="w-5 h-5 text-red-400" />
+                  Create API Key
+                </h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Key Name
+                  </label>
+                  <input
+                    type="text"
+                    value={newKeyName}
+                    onChange={(e) => setNewKeyName(e.target.value)}
+                    placeholder="e.g., Production, Development, Mobile App"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white placeholder-gray-400"
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') handleCreateApiKey();
+                    }}
+                  />
+                  <p className="text-xs text-gray-400 mt-2">
+                    Choose a descriptive name to identify this key
+                  </p>
+                </div>
+
+                <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-3">
+                  <p className="text-sm text-blue-400">
+                    <strong>Note:</strong> This API key can be used to execute the{' '}
+                    <strong className="text-blue-300">{workflow.name}</strong> workflow via the API.
+                  </p>
+                </div>
+
+                <div className="flex gap-3 justify-end pt-2">
+                  <button
+                    onClick={() => setShowCreateKeyModal(false)}
+                    className="px-4 py-2 text-gray-400 hover:text-white transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleCreateApiKey}
+                    disabled={creatingKey || !newKeyName.trim()}
+                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                  >
+                    {creatingKey ? (
+                      <>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="w-4 h-4" />
+                        Create Key
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

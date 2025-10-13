@@ -4,9 +4,8 @@ import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { workflowsApi } from '@/app/lib/api/workflow';
-import { WorkflowNode as WorkflowNodeType, StepType, LLMProvider, RetrieverType } from '@/app/lib/types/workflow.types';
+import { WorkflowNode as WorkflowNodeType, StepType, LLMProvider, RetrieverType, WorkflowConfig, WorkflowStep } from '@/app/lib/types/workflow.types';
 import toast from 'react-hot-toast';
-import { ApiKey } from '@/backend/generated/prisma';
 import {
   ReactFlow,
   MiniMap,
@@ -24,11 +23,207 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-// Custom Node Component
+// Enhanced Custom Node Component
 const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [config, setConfig] = useState(data.config || {});
 
   const nodeBase = "rounded-lg shadow-lg p-4 min-w-[220px] border-2 border-red-500/30 bg-gradient-to-br from-red-600 to-red-700";
+
+  const handleConfigChange = (newConfig: any) => {
+    const updatedConfig = { ...config, ...newConfig };
+    setConfig(updatedConfig);
+    if (data.onConfigChange) {
+      data.onConfigChange(id, updatedConfig);
+    }
+  };
+
+  const renderLLMConfig = () => (
+    <div className="space-y-2">
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Provider:</label>
+        <select 
+          value={config.llm?.provider || LLMProvider.OPENAI}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, provider: e.target.value as LLMProvider }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        >
+          {Object.values(LLMProvider).map(provider => (
+            <option key={provider} value={provider}>
+              {provider.charAt(0).toUpperCase() + provider.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Model:</label>
+        <input
+          type="text"
+          value={config.llm?.model || ''}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, model: e.target.value }
+          })}
+          placeholder="gpt-4"
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
+        />
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">
+          Temperature: {config.llm?.temperature || 0.7}
+        </label>
+        <input
+          type="range"
+          min="0"
+          max="2"
+          step="0.1"
+          value={config.llm?.temperature || 0.7}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, temperature: parseFloat(e.target.value) }
+          })}
+          className="w-full accent-white"
+        />
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Max Tokens:</label>
+        <input
+          type="number"
+          value={config.llm?.maxTokens || 1000}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, maxTokens: parseInt(e.target.value) }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  const renderRetrieverConfig = () => (
+    <div className="space-y-2">
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Retriever Type:</label>
+        <select
+          value={config.retriever?.type || RetrieverType.PINECONE}
+          onChange={(e) => handleConfigChange({
+            retriever: { 
+              ...config.retriever, 
+              type: e.target.value as RetrieverType,
+              config: config.retriever?.config || { indexName: 'default', topK: 10 }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        >
+          {Object.values(RetrieverType).map(type => (
+            <option key={type} value={type}>
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Index Name:</label>
+        <input
+          type="text"
+          value={config.retriever?.config?.indexName || ''}
+          onChange={(e) => handleConfigChange({
+            retriever: {
+              ...config.retriever,
+              config: { ...config.retriever?.config, indexName: e.target.value }
+            }
+          })}
+          placeholder="my-index"
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
+        />
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Top K:</label>
+        <input
+          type="number"
+          value={config.retriever?.config?.topK || 10}
+          onChange={(e) => handleConfigChange({
+            retriever: {
+              ...config.retriever,
+              config: { ...config.retriever?.config, topK: parseInt(e.target.value) }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  const renderConfigForm = () => {
+    switch (data.type) {
+      case StepType.QUERY_REWRITE:
+      case StepType.RERANK:
+      case StepType.ANSWER_GENERATION:
+        return renderLLMConfig();
+      case StepType.RETRIEVAL:
+        return renderRetrieverConfig();
+      case StepType.POST_PROCESS:
+        return (
+          <div className="space-y-2">
+            <div>
+              <label className="block text-xs opacity-80 mb-1">Custom Prompt:</label>
+              <textarea
+                value={config.prompt || ''}
+                onChange={(e) => handleConfigChange({ prompt: e.target.value })}
+                placeholder="Enter custom processing instructions..."
+                className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs h-20"
+              />
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const renderConfigPreview = () => {
+    const items = [];
+    
+    if (config.llm) {
+      items.push(
+        <div key="llm" className="flex items-center gap-1">
+          <span>🤖</span>
+          <span>{config.llm.provider}: {config.llm.model}</span>
+        </div>
+      );
+      if (config.llm.temperature) {
+        items.push(
+          <div key="temp" className="flex items-center gap-1">
+            <span>🌡️</span>
+            <span>Temp: {config.llm.temperature}</span>
+          </div>
+        );
+      }
+    }
+    
+    if (config.retriever) {
+      items.push(
+        <div key="retriever" className="flex items-center gap-1">
+          <span>🔍</span>
+          <span>{config.retriever.type}</span>
+        </div>
+      );
+      if (config.retriever.config?.topK) {
+        items.push(
+          <div key="topk" className="flex items-center gap-1">
+            <span>📊</span>
+            <span>Top K: {config.retriever.config.topK}</span>
+          </div>
+        );
+      }
+    }
+
+    return items.length > 0 ? (
+      <div className="text-xs opacity-90 space-y-1">
+        {items}
+      </div>
+    ) : (
+      <div className="text-xs opacity-70 italic">Click edit to configure</div>
+    );
+  };
 
   return (
     <div className={nodeBase}>
@@ -48,59 +243,18 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
           </button>
         </div>
 
-        {isEditing && (
+        {isEditing ? (
           <div className="space-y-2 rounded bg-white/10 p-3 text-xs">
-            <div>
-              <label className="block text-xs opacity-80 mb-1">LLM Provider:</label>
-              <select className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20">
-                <option>OpenAI</option>
-                <option>Anthropic</option>
-                <option>Google</option>
-                <option>Mistral</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-xs opacity-80 mb-1">Model:</label>
-              <input
-                type="text"
-                placeholder="gpt-4"
-                className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50"
-              />
-            </div>
-            <div>
-              <label className="block text-xs opacity-80 mb-1">Temperature:</label>
-              <input
-                type="range"
-                min="0"
-                max="2"
-                step="0.1"
-                className="w-full accent-white"
-              />
-            </div>
+            {renderConfigForm()}
+            <button
+              onClick={() => setIsEditing(false)}
+              className="w-full mt-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded transition-colors text-white text-xs"
+            >
+              Save
+            </button>
           </div>
-        )}
-
-        {!isEditing && (
-          <div className="text-xs opacity-90 space-y-1">
-            {data.llm && (
-              <div className="flex items-center gap-1">
-                <span>🤖</span>
-                <span>{data.llm}</span>
-              </div>
-            )}
-            {data.retriever && (
-              <div className="flex items-center gap-1">
-                <span>🔍</span>
-                <span>{data.retriever}</span>
-              </div>
-            )}
-            {data.temperature && (
-              <div className="flex items-center gap-1">
-                <span>🌡️</span>
-                <span>Temp: {data.temperature}</span>
-              </div>
-            )}
-          </div>
+        ) : (
+          renderConfigPreview()
         )}
       </div>
       <Handle type="source" position={Position.Bottom} className="w-3 h-3 !bg-red-500" />
@@ -112,7 +266,7 @@ const nodeTypes = {
   workflowNode: WorkflowNode,
 };
 
-// API Keys Component
+// API Keys Component (Keep your existing one)
 const ApiKeysSection = () => {
   const [apiKeys, setApiKeys] = useState([
     { id: '1', name: 'Production Key', key: 'sk_prod_1234567890abcdef', lastUsed: '2 hours ago', status: 'active' },
@@ -208,7 +362,7 @@ const ApiKeysSection = () => {
   );
 };
 
-// Code Block Component
+// Code Block Component (Keep your existing one)
 const CodeBlock = ({ title, code, language }: { title: string; code: string; language: string }) => {
   const [copied, setCopied] = useState(false);
 
@@ -246,7 +400,7 @@ const CodeBlock = ({ title, code, language }: { title: string; code: string; lan
   );
 };
 
-// API Examples Component
+// API Examples Component (Keep your existing one)
 const ApiExamplesSection = () => {
   const curlExample = `curl -X POST http://localhost:3001/api/query \\
   -H "x-api-key: YOUR_API_KEY" \\
@@ -330,100 +484,9 @@ export default function NewWorkflowPage() {
   const [saving, setSaving] = useState(false);
 
   // React Flow state
-  const initialNodes: Node[] = [
-    {
-      id: "1",
-      type: "workflowNode",
-      position: { x: 250, y: 50 },
-      data: { 
-        label: "Query Rewrite", 
-        type: "query_rewrite", 
-        llm: "GPT-4",
-        temperature: 0.7 
-      },
-    },
-    {
-      id: "2",
-      type: "workflowNode",
-      position: { x: 100, y: 200 },
-      data: { 
-        label: "Vector Search", 
-        type: "retrieval", 
-        retriever: "Pinecone" 
-      },
-    },
-    {
-      id: "3",
-      type: "workflowNode",
-      position: { x: 400, y: 200 },
-      data: { 
-        label: "Keyword Search", 
-        type: "retrieval", 
-        retriever: "Elastic" 
-      },
-    },
-    {
-      id: "4",
-      type: "workflowNode",
-      position: { x: 250, y: 350 },
-      data: { 
-        label: "Rerank Results", 
-        type: "rerank", 
-        llm: "Claude-3",
-        temperature: 0.8 
-      },
-    },
-    {
-      id: "5",
-      type: "workflowNode",
-      position: { x: 250, y: 500 },
-      data: { 
-        label: "Generate Answer", 
-        type: "answer_generation", 
-        llm: "Gemini-1.5",
-        temperature: 0.7 
-      },
-    },
-  ];
-
-  const initialEdges: Edge[] = [
-    { 
-      id: "e1-2", 
-      source: "1", 
-      target: "2", 
-      animated: true,
-      style: { stroke: '#dc2626', strokeWidth: 2 }
-    },
-    { 
-      id: "e1-3", 
-      source: "1", 
-      target: "3", 
-      animated: true,
-      style: { stroke: '#dc2626', strokeWidth: 2 }
-    },
-    { 
-      id: "e2-4", 
-      source: "2", 
-      target: "4",
-      style: { stroke: '#dc2626', strokeWidth: 2 }
-    },
-    { 
-      id: "e3-4", 
-      source: "3", 
-      target: "4",
-      style: { stroke: '#dc2626', strokeWidth: 2 }
-    },
-    { 
-      id: "e4-5", 
-      source: "4", 
-      target: "5",
-      style: { stroke: '#dc2626', strokeWidth: 2 }
-    },
-  ];
-
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+// @ts-ignore
   const onConnect = useCallback((params: any) => setEdges((eds) => addEdge({
     ...params,
     style: { stroke: '#dc2626', strokeWidth: 2 },
@@ -432,6 +495,153 @@ export default function NewWorkflowPage() {
 
   const editorWrapRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Handle node configuration changes
+  
+  const handleNodeConfigChange = useCallback((nodeId: string, config: any) => {
+    // @ts-ignore
+    setNodes((nds) =>
+      nds.map((node) =>
+        // @ts-ignore
+        node.id === nodeId
+        // @ts-ignore
+          ? { ...node, data: { ...node.data, config } }
+          : node
+      )
+    );
+  }, [setNodes]);
+
+  // Initialize with sample workflow
+  useEffect(() => {
+    const initialNodes: Node[] = [
+      {
+        id: "1",
+        type: "workflowNode",
+        position: { x: 250, y: 50 },
+        data: { 
+          label: "Query Rewrite", 
+          type: StepType.QUERY_REWRITE,
+          config: {
+            llm: {
+              provider: LLMProvider.OPENAI,
+              model: 'gpt-4',
+              temperature: 0.7,
+              maxTokens: 200
+            }
+          },
+          onConfigChange: handleNodeConfigChange
+        },
+      },
+      {
+        id: "2",
+        type: "workflowNode",
+        position: { x: 100, y: 200 },
+        data: { 
+          label: "Vector Search", 
+          type: StepType.RETRIEVAL,
+          config: {
+            retriever: {
+              type: RetrieverType.PINECONE,
+              config: { indexName: 'main', topK: 10 }
+            }
+          },
+          onConfigChange: handleNodeConfigChange
+        },
+      },
+      {
+        id: "3",
+        type: "workflowNode",
+        position: { x: 400, y: 200 },
+        data: { 
+          label: "Keyword Search", 
+          type: StepType.RETRIEVAL,
+          config: {
+            retriever: {
+              type: RetrieverType.KEYWORD,
+              config: { indexName: 'keywords', topK: 5 }
+            }
+          },
+          onConfigChange: handleNodeConfigChange
+        },
+      },
+      {
+        id: "4",
+        type: "workflowNode",
+        position: { x: 250, y: 350 },
+        data: { 
+          label: "Rerank Results", 
+          type: StepType.RERANK,
+          config: {
+            llm: {
+              provider: LLMProvider.ANTHROPIC,
+              model: 'claude-3-sonnet',
+              temperature: 0.3,
+              maxTokens: 100
+            }
+          },
+          onConfigChange: handleNodeConfigChange
+        },
+      },
+      {
+        id: "5",
+        type: "workflowNode",
+        position: { x: 250, y: 500 },
+        data: { 
+          label: "Generate Answer", 
+          type: StepType.ANSWER_GENERATION,
+          config: {
+            llm: {
+              provider: LLMProvider.OPENAI,
+              model: 'gpt-4',
+              temperature: 0.7,
+              maxTokens: 1000
+            }
+          },
+          onConfigChange: handleNodeConfigChange
+        },
+      },
+    ];
+
+    const initialEdges: Edge[] = [
+      { 
+        id: "e1-2", 
+        source: "1", 
+        target: "2", 
+        animated: true,
+        style: { stroke: '#dc2626', strokeWidth: 2 }
+      },
+      { 
+        id: "e1-3", 
+        source: "1", 
+        target: "3", 
+        animated: true,
+        style: { stroke: '#dc2626', strokeWidth: 2 }
+      },
+      { 
+        id: "e2-4", 
+        source: "2", 
+        target: "4",
+        style: { stroke: '#dc2626', strokeWidth: 2 }
+      },
+      { 
+        id: "e3-4", 
+        source: "3", 
+        target: "4",
+        style: { stroke: '#dc2626', strokeWidth: 2 }
+      },
+      { 
+        id: "e4-5", 
+        source: "4", 
+        target: "5",
+        style: { stroke: '#dc2626', strokeWidth: 2 }
+      },
+    ];
+// @ts-ignore
+    setNodes(initialNodes);
+
+    // @ts-ignore
+    setEdges(initialEdges);
+  }, [handleNodeConfigChange]);
 
   useEffect(() => {
     setMounted(true);
@@ -446,17 +656,17 @@ export default function NewWorkflowPage() {
   // Add new node
   const addNewNode = (type: StepType) => {
     const newNode: Node = {
-      id: `${nodes.length + 1}`,
+      id: `${Date.now()}`,
       type: "workflowNode",
       position: { x: Math.random() * 400 + 100, y: Math.random() * 400 + 100 },
       data: {
         label: getNodeLabel(type),
         type,
-        llm: "GPT-4",
-        temperature: 0.7,
-        ...(type === StepType.RETRIEVAL && { retriever: "Pinecone" })
+        config: getDefaultConfig(type),
+        onConfigChange: handleNodeConfigChange
       },
     };
+    // @ts-ignore
     setNodes((nds) => nds.concat(newNode));
     toast.success(`${getNodeLabel(type)} node added`);
   };
@@ -466,9 +676,39 @@ export default function NewWorkflowPage() {
     if (nodes.length > 0) {
       const lastNode = nodes[nodes.length - 1];
       setNodes(nodes.slice(0, -1));
+      // @ts-ignore
       setEdges(edges.filter(edge => edge.source !== lastNode.id && edge.target !== lastNode.id));
       toast.success('Node deleted');
     }
+  };
+
+  // Convert React Flow nodes/edges to backend format
+  const buildWorkflowSteps = (): WorkflowStep[] => {
+    const steps: WorkflowStep[] = nodes.map(node => {
+      const step: WorkflowStep = {
+        // @ts-ignore
+        id: node.id,
+        // @ts-ignore
+        type: node.data.type,
+        // @ts-ignore
+        config: node.data.config || {}
+      };
+
+      // Find next steps from edges
+      const nextSteps = edges
+      // @ts-ignore
+        .filter(edge => edge.source === node.id)
+        // @ts-ignore
+        .map(edge => edge.target);
+
+      if (nextSteps.length > 0) {
+        step.nextSteps = nextSteps;
+      }
+
+      return step;
+    });
+
+    return steps;
   };
 
   // Save workflow
@@ -486,22 +726,41 @@ export default function NewWorkflowPage() {
     try {
       setSaving(true);
       
-      const workflowNodes: WorkflowNodeType[] = nodes.map(node => ({
-        id: node.id,
-        type: node.data.type as StepType,
-        name: node.data.label,
-        position: node.position,
-        // @ts-ignore
-        config: getDefaultConfig(node.data.type),
-        status: 'active',
-      }));
+      const workflowSteps = buildWorkflowSteps();
+      // @ts-ignore
+      const entryPoint = nodes[0]?.id; // First node as entry point
 
-      const configuration = {
+      const configuration: WorkflowConfig = {
         id: `workflow-${Date.now()}`,
         name,
         description,
-        steps: workflowNodes,
-        edges: edges,
+        nodes: nodes.map(node => ({
+          // @ts-ignore
+          id: node.id,
+          // @ts-ignore
+          type: node.data.type,
+          // @ts-ignore
+          position: node.position,
+          data: {
+            // @ts-ignore
+            label: node.data.label,
+            // @ts-ignore
+            config: node.data.config
+          }
+        })),
+        edges: edges.map(edge => ({
+          // @ts-ignore
+          id: edge.id,
+          // @ts-ignore
+          source: edge.source,
+          // @ts-ignore
+          target: edge.target,
+           // @ts-ignore
+          type: edge.type
+        })),
+         // @ts-ignore
+        steps: workflowSteps,
+        entryPoint,
         cacheEnabled: true,
         cacheTTL: 3600,
       };
@@ -509,8 +768,7 @@ export default function NewWorkflowPage() {
       await workflowsApi.create({
         name,
         description,
-        configuration,
-        // @ts-ignore
+        configuration,  // @ts-ignore
         status: 'active',
       });
 
@@ -518,7 +776,7 @@ export default function NewWorkflowPage() {
       router.push('/workflows');
     } catch (error: any) {
       console.error('Save error:', error);
-      toast.error(error.response?.data?.error || 'Failed to save workflow');
+      toast.error(error.message || 'Failed to save workflow');
     } finally {
       setSaving(false);
     }
@@ -855,29 +1113,43 @@ export default function NewWorkflowPage() {
 
 // Helper functions
 function getDefaultConfig(type: StepType) {
-  if (requiresLLM(type)) {
-    return {
+  const baseConfigs = {
+    [StepType.QUERY_REWRITE]: {
       llm: {
         provider: LLMProvider.OPENAI,
         model: 'gpt-3.5-turbo',
         temperature: 0.7,
-        maxTokens: 1000,
+        maxTokens: 200,
       },
-    };
-  }
-  if (type === StepType.RETRIEVAL) {
-    return {
+    },
+    [StepType.RETRIEVAL]: {
       retriever: {
         type: RetrieverType.PINECONE,
-        config: { indexName: 'default', topK: 5 },
+        config: { indexName: 'default', topK: 10 },
       },
-    };
-  }
-  return {};
-}
+    },
+    [StepType.RERANK]: {
+      llm: {
+        provider: LLMProvider.ANTHROPIC,
+        model: 'claude-3-sonnet',
+        temperature: 0.3,
+        maxTokens: 100,
+      },
+    },
+    [StepType.ANSWER_GENERATION]: {
+      llm: {
+        provider: LLMProvider.OPENAI,
+        model: 'gpt-4',
+        temperature: 0.7,
+        maxTokens: 1000,
+      },
+    },
+    [StepType.POST_PROCESS]: {
+      prompt: 'Format the answer appropriately and add source attribution if needed.',
+    },
+  };
 
-function requiresLLM(type: StepType) {
-  return [StepType.QUERY_REWRITE, StepType.RERANK, StepType.ANSWER_GENERATION].includes(type);
+  return baseConfigs[type] || {};
 }
 
 function getNodeLabel(type: StepType) {

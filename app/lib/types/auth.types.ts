@@ -27,10 +27,14 @@ export interface ApiKey {
   id: string;
   key: string;
   name: string;
-  userId?: string;
+  userId: string;
   isActive: boolean;
-  lastUsedAt?: string;
+  // Add these properties if they're missing:
+  canRead?: boolean;    // Make optional if not always present
+  canWrite?: boolean;   // Make optional if not always present
+  lastUsedAt?: string | null;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface ApiKeyCreateResponse {

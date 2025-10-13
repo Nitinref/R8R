@@ -16,15 +16,39 @@ export const authApi = {
     return apiClient.post<AuthResponse>('/api/auth/login', credentials);
   },
 
-  createApiKey: async (name: string): Promise<{ apiKey: string; name: string }> => {
-    return apiClient.post('/api/auth/api-keys', { name });
+  createApiKey: async (name: string): Promise<{ apiKey: string }> => {
+    console.log('🔄 Creating API key with name:', name);
+    try {
+      const result = await apiClient.post<{ apiKey: string }>('/api/auth/api-keys', { name });
+      console.log('✅ API key creation successful:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ API key creation failed:', error);
+      throw error;
+    }
   },
 
   listApiKeys: async (): Promise<{ apiKeys: ApiKey[] }> => {
-    return apiClient.get('/api/auth/api-keys');
+    console.log('🔄 Listing API keys...');
+    try {
+      const result = await apiClient.get<{ apiKeys: ApiKey[] }>('/api/auth/api-keys');
+      console.log('✅ API keys loaded:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Failed to load API keys:', error);
+      throw error;
+    }
   },
 
   deleteApiKey: async (keyId: string): Promise<{ message: string }> => {
-    return apiClient.delete(`/api/auth/api-keys/${keyId}`);
+    console.log('🔄 Deleting API key:', keyId);
+    try {
+      const result = await apiClient.delete<{ message: string }>(`/api/auth/api-keys/${keyId}`);
+      console.log('✅ API key deleted:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Failed to delete API key:', error);
+      throw error;
+    }
   },
 };

@@ -94,6 +94,7 @@ export interface QueryRequest {
   metadata?: Record<string, any>;
 }
 
+// ✅ UPDATED: Added rewrittenQuery field
 export interface QueryResponse {
   answer: string;
   sources: Array<{
@@ -106,12 +107,14 @@ export interface QueryResponse {
   llmsUsed: string[];
   retrieversUsed: string[];
   cached?: boolean;
+  rewrittenQuery?: string; // ✅ NEW: Track the optimized query
 }
 
-// Execution context passed between steps
+// ✅ UPDATED: Renamed documents to retrievedDocs for clarity
 export interface ExecutionContext {
   originalQuery: string;
   currentQuery: string;
+  rewrittenQuery: string | null; // ✅ NEW: Track rewritten query separately
   retrievedDocs: Array<{
     id: string;
     content: string;

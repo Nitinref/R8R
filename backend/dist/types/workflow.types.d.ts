@@ -103,10 +103,12 @@ export interface QueryResponse {
     llmsUsed: string[];
     retrieversUsed: string[];
     cached?: boolean;
+    rewrittenQuery?: string;
 }
 export interface ExecutionContext {
     originalQuery: string;
     currentQuery: string;
+    rewrittenQuery: string | null;
     retrievedDocs: Array<{
         id: string;
         content: string;

@@ -32,8 +32,10 @@ export class GeminiService {
             if (systemPrompt) {
                 fullPrompt = `${systemPrompt}\n\n${prompt}`;
             }
+            // ✅ FIXED: Use the correct model names
+            const validatedModel = this.validateModel(model);
             const genModel = this.client.getGenerativeModel({
-                model: this.validateModel(model),
+                model: validatedModel,
                 generationConfig: {
                     temperature,
                     maxOutputTokens: maxTokens,
@@ -80,7 +82,7 @@ export class GeminiService {
             return {
                 content: response.text(),
                 provider: LLMProvider.GOOGLE,
-                model,
+                model: validatedModel, // ✅ Return the validated model name
                 tokensUsed: response.usageMetadata?.totalTokenCount || this.estimateTokens(fullPrompt + response.text()),
                 finishReason: this.mapFinishReason(response.candidates?.[0]?.finishReason),
                 safetyRatings: response.candidates?.[0]?.safetyRatings?.map(rating => ({
@@ -118,22 +120,35 @@ export class GeminiService {
             else if (error.message?.includes('blocked')) {
                 throw new Error(`Content blocked by safety filters: ${error.message}`);
             }
+            else if (error.message?.includes('404') || error.message?.includes('not found')) {
+                // ✅ FIXED: Handle model not found errors specifically
+                throw new Error(`Gemini model not found: ${model}. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro`);
+            }
             throw new Error(`Gemini API call failed: ${error.message}`);
         }
     }
+    // ✅ FIXED: Updated validateModel method with correct model names
     validateModel(model) {
         const supportedModels = [
-            'gemini-pro',
-            'gemini-1.5-pro',
-            'gemini-1.5-flash',
-            'gemini-1.0-pro'
+            'gemini-1.5-pro-latest', // ✅ Correct name for Gemini 1.5 Pro
+            'gemini-1.5-flash-latest', // ✅ Correct name for Gemini 1.5 Flash
+            'gemini-pro', // Legacy Pro model
+            'gemini-1.0-pro' // Specific version
         ];
-        // Default to gemini-pro if model is not specified or not supported
-        if (!model || !supportedModels.includes(model)) {
-            console.warn(`Model ${model} not recognized, defaulting to gemini-pro`);
-            return 'gemini-pro';
+        // Map common model names to correct ones
+        const modelMappings = {
+            'gemini-1.5-pro': 'gemini-1.5-pro-latest',
+            'gemini-1.5-flash': 'gemini-1.5-flash-latest',
+            'gemini-flash': 'gemini-1.5-flash-latest',
+        };
+        // Use mapped model if available, otherwise use the original
+        const mappedModel = modelMappings[model] || model;
+        // Check if the model is supported
+        if (!supportedModels.includes(mappedModel)) {
+            console.warn(`Model ${model} (mapped to ${mappedModel}) not recognized, defaulting to gemini-1.5-flash-latest`);
+            return 'gemini-1.5-flash-latest'; // Default to a working model
         }
-        return model;
+        return mappedModel;
     }
     mapFinishReason(finishReason) {
         const reasonMap = {
@@ -155,7 +170,7 @@ export class GeminiService {
     async validateApiKey() {
         try {
             // Try a simple completion to validate the API key
-            const testModel = this.client.getGenerativeModel({ model: 'gemini-pro' });
+            const testModel = this.client.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
             const result = await testModel.generateContent('Hello');
             return !!result.response.text();
         }
@@ -164,12 +179,12 @@ export class GeminiService {
             return false;
         }
     }
-    // Get available models (Gemini has a fixed set)
+    // ✅ FIXED: Get available models with correct names
     async getAvailableModels() {
         return [
+            'gemini-1.5-pro-latest',
+            'gemini-1.5-flash-latest',
             'gemini-pro',
-            'gemini-1.5-pro',
-            'gemini-1.5-flash',
             'gemini-1.0-pro'
         ];
     }
@@ -177,7 +192,7 @@ export class GeminiService {
     async checkSafety(prompt) {
         try {
             const genModel = this.client.getGenerativeModel({
-                model: 'gemini-pro',
+                model: 'gemini-1.5-flash-latest',
                 safetySettings: [
                     {
                         // @ts-ignore

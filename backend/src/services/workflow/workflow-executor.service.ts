@@ -27,10 +27,8 @@ export class WorkflowExecutor {
     const retrieversUsed: string[] = [];
 
     try {
-      // Validate required API keys
       this.validateConfiguration(config);
 
-      // Check cache first
       if (useCache && config.cacheEnabled) {
         const cacheKey = this.cache.generateKey(config.id, query);
         const cached = await this.cache.get<QueryResponse>(cacheKey);
@@ -45,20 +43,18 @@ export class WorkflowExecutor {
         }
       }
 
-      // Build execution context
       const context: ExecutionContext = {
         originalQuery: query,
         currentQuery: query,
+        rewrittenQuery: null, // ✅ NEW: Track the rewritten query separately
         documents: [],
         answer: '',
         confidence: 0,
         metadata: {}
       };
 
-      // Execute workflow steps in correct order
       await this.executeSteps(config.steps, context, llmsUsed, retrieversUsed);
 
-      // Validate we got an answer
       if (!context.answer || context.answer.trim().length === 0) {
         throw new Error('No answer generated. Please ensure your workflow includes an answer generation step.');
       }
@@ -74,10 +70,11 @@ export class WorkflowExecutor {
         latency: Date.now() - startTime,
         llmsUsed: [...new Set(llmsUsed)],
         retrieversUsed: [...new Set(retrieversUsed)],
-        cached: false
+        cached: false,
+        // @ts-ignore
+        rewrittenQuery: context.rewrittenQuery // ✅ Include rewritten query in result
       };
 
-      // Cache result if enabled
       if (useCache && config.cacheEnabled && context.answer) {
         const cacheKey = this.cache.generateKey(config.id, query);
         await this.cache.set(cacheKey, result, config.cacheTTL || 3600);
@@ -92,20 +89,18 @@ export class WorkflowExecutor {
         stack: (error as Error).stack
       });
       
-      throw error; // Let controller handle error response
+      throw error;
     }
   }
 
   private validateConfiguration(config: WorkflowConfig): void {
     const errors: string[] = [];
 
-    // Check for answer generation step
     const hasAnswerStep = config.steps.some(s => s.type === 'answer_generation');
     if (!hasAnswerStep) {
       errors.push('Workflow must include an answer generation step');
     }
 
-    // Validate API keys for used providers
     const llmProviders = new Set<string>();
     config.steps.forEach(step => {
       if (step.config.llm) {
@@ -123,7 +118,6 @@ export class WorkflowExecutor {
       errors.push('GOOGLE_API_KEY environment variable is required');
     }
 
-    // Check for retriever configuration
     const hasRetrieval = config.steps.some(s => s.type === 'retrieval');
     if (hasRetrieval && !process.env.PINECONE_API_KEY) {
       errors.push('PINECONE_API_KEY required for retrieval steps');
@@ -144,15 +138,12 @@ export class WorkflowExecutor {
       throw new Error('No steps defined in workflow');
     }
 
-    // Build dependency graph
     const stepMap = new Map(steps.map(step => [step.id, step]));
     const visited = new Set<string>();
     const executing = new Set<string>();
 
-    // Find entry points (steps with no predecessors)
     const entrySteps = this.findEntrySteps(steps);
     
-    // Execute from each entry point
     for (const entryStep of entrySteps) {
       await this.executeStepRecursive(
         entryStep,
@@ -169,17 +160,13 @@ export class WorkflowExecutor {
   private findEntrySteps(steps: WorkflowStep[]): WorkflowStep[] {
     const hasIncoming = new Set<string>();
     
-    // Mark all steps that have incoming connections
     steps.forEach(step => {
       step.nextSteps?.forEach(nextId => {
         hasIncoming.add(nextId);
       });
     });
 
-    // Entry steps are those without incoming connections
     const entrySteps = steps.filter(step => !hasIncoming.has(step.id));
-    
-    // If no entry steps found (circular or single node), use first step
     // @ts-ignore
     return entrySteps.length > 0 ? entrySteps : [steps[0]];
   }
@@ -193,24 +180,21 @@ export class WorkflowExecutor {
     llmsUsed: string[],
     retrieversUsed: string[]
   ): Promise<void> {
-    // Cycle detection
     if (executing.has(step.id)) {
       throw new Error(`Circular dependency detected at step: ${step.id}`);
     }
     
     if (visited.has(step.id)) {
-      return; // Already executed
+      return;
     }
 
     executing.add(step.id);
     
-    // Execute the step
     await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
     
     executing.delete(step.id);
     visited.add(step.id);
 
-    // Execute next steps
     if (step.nextSteps) {
       for (const nextStepId of step.nextSteps) {
         const nextStep = stepMap.get(nextStepId);
@@ -270,7 +254,7 @@ export class WorkflowExecutor {
         stepId: step.id, 
         error: (error as Error).message 
       });
-      throw error; // Propagate error to fail the workflow
+      throw error;
     }
   }
 
@@ -287,17 +271,17 @@ export class WorkflowExecutor {
     const topK = retrieverConfig.config?.topK || 10;
     
     try {
-      // FIXED: Actually use the VectorDB service
       if (retrieverConfig.type === 'pinecone') {
         const indexName = retrieverConfig.config?.indexName;
         if (!indexName) {
           throw new Error('Pinecone index name required');
         }
 
-        // Get embedding for query
-        const embedding = await this.vectorDB.getEmbedding(context.currentQuery);
+        // ✅ Use the rewritten query if available, otherwise use current query
+        const queryToUse = context.rewrittenQuery || context.currentQuery;
+
+        const embedding = await this.vectorDB.getEmbedding(queryToUse);
         
-        // Search vector database
         const results = await this.vectorDB.searchPinecone(
           indexName,
           embedding,
@@ -310,7 +294,8 @@ export class WorkflowExecutor {
         
         logger.info('Documents retrieved from Pinecone', { 
           count: results.length,
-          indexName 
+          indexName,
+          queryUsed: queryToUse // ✅ Log which query was used
         });
       } else {
         throw new Error(`Unsupported retriever type: ${retrieverConfig.type}`);
@@ -333,7 +318,8 @@ export class WorkflowExecutor {
 
     const prompt = step.config.prompt || 
       `Improve this search query for better document retrieval. Return only the improved query.\n\nQuery: ${context.currentQuery}`;
-// @ts-ignore
+
+    // @ts-ignore
     const response = await this.llmOrchestrator.generateCompletion({
       provider: step.config.llm.provider as LLMProvider,
       model: step.config.llm.model,
@@ -343,12 +329,13 @@ export class WorkflowExecutor {
       fallback: step.config.llm.fallback
     });
 
-    context.currentQuery = response.content.trim();
+    // ✅ Store the rewritten query separately
+    context.rewrittenQuery = response.content.trim();
     llmsUsed.push(`${response.provider}:${response.model}`);
     
     logger.info('Query rewritten', { 
       original: context.originalQuery, 
-      rewritten: context.currentQuery 
+      rewritten: context.rewrittenQuery 
     });
   }
 
@@ -361,8 +348,10 @@ export class WorkflowExecutor {
       return;
     }
 
-    // FIXED: Implement actual reranking
-    const prompt = `Rank these documents by relevance to the query: "${context.currentQuery}"\n\n${
+    // ✅ Use rewritten query if available for reranking context
+    const queryForRerank = context.rewrittenQuery || context.currentQuery;
+
+    const prompt = `Rank these documents by relevance to the query: "${queryForRerank}"\n\n${
       context.documents.map((doc, i) => `${i + 1}. ${doc.content.substring(0, 200)}`).join('\n\n')
     }\n\nReturn only the numbers in order of relevance (e.g., "3,1,2"):`;
 
@@ -377,7 +366,6 @@ export class WorkflowExecutor {
         fallback: step.config.llm.fallback
       });
 
-      // Parse ranking
       const ranking = response.content
         .trim()
         .split(',')
@@ -398,46 +386,51 @@ export class WorkflowExecutor {
     }
   }
 
-private async executeAnswerGeneration(
-  step: WorkflowStep,
-  context: ExecutionContext,
-  llmsUsed: string[]
-): Promise<void> {
-  if (!step.config?.llm) {
-    throw new Error('No LLM config for answer generation step');
+  private async executeAnswerGeneration(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    llmsUsed: string[]
+  ): Promise<void> {
+    if (!step.config?.llm) {
+      throw new Error('No LLM config for answer generation step');
+    }
+
+    // ✅ FIXED: Use rewritten query for answer generation if available
+    const queryForAnswer = context.rewrittenQuery || context.currentQuery;
+    
+    const hasContext = context.documents.length > 0;
+    const contextText = context.documents
+      .slice(0, 5)
+      .map((doc, i) => `[${i + 1}] ${doc.content}`)
+      .join('\n\n');
+
+    const prompt = step.config.prompt || (hasContext
+      ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}\n\nAnswer:`
+      : `Answer this question:\n\nQuestion: ${queryForAnswer}\n\nAnswer:`);
+
+    // @ts-ignore
+    const response = await this.llmOrchestrator.generateCompletion({
+      provider: step.config.llm.provider as LLMProvider,
+      model: step.config.llm.model,
+      prompt,
+      temperature: step.config.llm.temperature || 0.7,
+      maxTokens: step.config.llm.maxTokens || 1000,
+      systemPrompt: "You are a helpful assistant that provides accurate answers.",
+      fallback: step.config.llm.fallback
+    });
+
+    context.answer = response.content.trim();
+    llmsUsed.push(`${response.provider}:${response.model}`);
+    context.confidence = this.calculateConfidence(context.documents, context.answer);
+    
+    logger.info('Answer generated using enhanced query', { 
+      queryUsed: queryForAnswer,
+      answerLength: context.answer.length,
+      confidence: context.confidence,
+      hasRewrittenQuery: context.rewrittenQuery !== null
+    });
   }
 
-  const hasContext = context.documents.length > 0;
-  const contextText = context.documents
-    .slice(0, 5)
-    .map((doc, i) => `[${i + 1}] ${doc.content}`)
-    .join('\n\n');
-
-  // FIXED: Handle both cases - with and without context
-  const prompt = step.config.prompt || (hasContext
-    ? `Answer this question using the context provided. If you cannot find the answer, say so.\n\nQuestion: ${context.currentQuery}\n\nContext:\n${contextText}\n\nAnswer:`
-    : `Answer this question based on your general knowledge:\n\nQuestion: ${context.currentQuery}\n\nAnswer:`);
-
-  // @ts-ignore
-  const response = await this.llmOrchestrator.generateCompletion({
-    provider: step.config.llm.provider as LLMProvider,
-    model: step.config.llm.model,
-    prompt,
-    temperature: step.config.llm.temperature || 0.7,
-    maxTokens: step.config.llm.maxTokens || 1000,
-    systemPrompt: "You are a helpful assistant that provides accurate answers based on the given context.",
-    fallback: step.config.llm.fallback
-  });
-
-  context.answer = response.content.trim();
-  llmsUsed.push(`${response.provider}:${response.model}`);
-  context.confidence = this.calculateConfidence(context.documents, context.answer);
-  
-  logger.info('Answer generated', { 
-    answerLength: context.answer.length,
-    confidence: context.confidence 
-  });
-}
   private async executePostProcess(
     step: WorkflowStep,
     context: ExecutionContext
@@ -445,9 +438,13 @@ private async executeAnswerGeneration(
     if (context.answer) {
       context.answer = context.answer.trim();
       
-      // Add source attribution if configured
       if (step.config?.addSourceAttribution && context.documents.length > 0) {
         context.answer += `\n\nSources: ${context.documents.length} document${context.documents.length > 1 ? 's' : ''}`;
+      }
+
+      // ✅ Optionally append the rewritten query info if it differs from original
+      if (step.config?.showRewrittenQuery && context.rewrittenQuery && context.rewrittenQuery !== context.originalQuery) {
+        context.answer += `\n\nOptimized Query: "${context.rewrittenQuery}"`;
       }
     }
   }
@@ -459,7 +456,7 @@ private async executeAnswerGeneration(
     const hasSubstantialAnswer = answer.length > 50;
     const hasMultipleSources = documents.length > 1;
     
-    let confidence = avgScore * 0.5; // Base on retrieval scores
+    let confidence = avgScore * 0.5;
     confidence += hasSubstantialAnswer ? 0.3 : 0.1;
     confidence += hasMultipleSources ? 0.2 : 0.1;
     
@@ -470,6 +467,7 @@ private async executeAnswerGeneration(
 interface ExecutionContext {
   originalQuery: string;
   currentQuery: string;
+  rewrittenQuery: string | null; // ✅ NEW: Track rewritten query separately
   documents: any[];
   answer: string;
   confidence: number;

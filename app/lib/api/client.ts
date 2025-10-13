@@ -16,23 +16,25 @@ class ApiClient {
     });
 
     this.client.interceptors.request.use(
-        // @ts-ignore
+      // @ts-ignore
       (config) => {
         const token = authStorage.getToken();
+        console.log('🔑 Token from authStorage:', token);
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
       },
-       // @ts-ignore
+            // @ts-ignore
       (error) => Promise.reject(error)
     );
 
     this.client.interceptors.response.use(
-         // @ts-ignore
+            // @ts-ignore
       (response) => response,
-       // @ts-ignore
+            // @ts-ignore
       (error) => {
+        console.error('API Error:', error.response?.status, error.config?.url);
         if (error.response?.status === 401) {
           authStorage.clear();
           if (typeof window !== 'undefined') {
