@@ -283,9 +283,6 @@ const answer = await r8r.query("Your question here");
 - **Email**: support@r8r.ai
 - **Status**: [status.r8r.ai](https://status.r8r.ai)
 
-## 🏢 **Company**
-
-R8R is built by **FlowForge AI**, backed by Y Combinator and leading AI investors. We're on a mission to make advanced RAG capabilities accessible to every developer and organization.
 
 **© 2024 FlowForge AI. All rights reserved.**
 
