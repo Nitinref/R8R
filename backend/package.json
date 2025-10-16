@@ -3,15 +3,15 @@
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
-"scripts": {
-  "dev": "nodemon --exec ts-node dist/server.js",
-  "build": "tsc",
-  "start": "node dist/server.js",
-  "serve": "npm run build && npm run start",
-  "prisma:generate": "prisma generate",
-  "prisma:migrate": "prisma migrate dev",
-  "prisma:studio": "prisma studio"
-},
+  "scripts": {
+    "dev": "nodemon --exec ts-node dist/server.js",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "serve": "npm run build && npm run start",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:studio": "prisma studio"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

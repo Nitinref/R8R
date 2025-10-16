@@ -93,6 +93,9 @@ export interface QueryRequest {
 }
 export interface QueryResponse {
     answer: string;
+    query: string;
+    documents: any[];
+    metadata: Record<string, any>;
     sources: Array<{
         content: string;
         metadata: Record<string, any>;
@@ -102,8 +105,8 @@ export interface QueryResponse {
     latency: number;
     llmsUsed: string[];
     retrieversUsed: string[];
+    rewrittenQuery: Record<string, string>;
     cached?: boolean;
-    rewrittenQuery?: string;
 }
 export interface ExecutionContext {
     originalQuery: string;

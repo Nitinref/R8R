@@ -24,5 +24,10 @@ export declare class GeminiService {
         isSafe: boolean;
         blockReasons: string[];
     }>;
+    testAllModels(): Promise<{
+        model: string;
+        working: boolean;
+        error?: string;
+    }[]>;
 }
 //# sourceMappingURL=gemini.service.d.ts.map

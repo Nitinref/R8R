@@ -1,6 +1,7 @@
 import { LLMProvider } from '../../types/workflow.types.js';
 interface LLMRequest {
     provider: LLMProvider;
+    query: string;
     model: string;
     prompt: string;
     temperature?: number;

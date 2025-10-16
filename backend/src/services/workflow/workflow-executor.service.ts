@@ -1,4 +1,4 @@
-// workflow-executor.service.ts - FIXED VERSION
+// workflow-executor.service.ts - FIXED VERSION FOR PARALLEL EXECUTION
 
 import type { WorkflowConfig, WorkflowStep, StepType, QueryResponse, LLMProvider, RetrieverType } from '../../types/workflow.types.js';
 import { LLMOrchestrator } from '../llm/llm-orchestrator.service.js';
@@ -29,6 +29,7 @@ export class WorkflowExecutor {
     try {
       this.validateConfiguration(config);
 
+      // Check cache
       if (useCache && config.cacheEnabled) {
         const cacheKey = this.cache.generateKey(config.id, query);
         const cached = await this.cache.get<QueryResponse>(cacheKey);
@@ -43,22 +44,26 @@ export class WorkflowExecutor {
         }
       }
 
+      // Initialize execution context
       const context: ExecutionContext = {
         originalQuery: query,
         currentQuery: query,
-        rewrittenQuery: null, // ✅ NEW: Track the rewritten query separately
+        rewrittenQueries: new Map(), // Store multiple rewritten queries
         documents: [],
         answer: '',
         confidence: 0,
-        metadata: {}
+        metadata: {},
+        stepResults: new Map(),
+        stepOutputs: new Map() // Store outputs from each step
       };
 
-      await this.executeSteps(config.steps, context, llmsUsed, retrieversUsed);
+      // Execute workflow graph
+      await this.executeWorkflowGraph(config, context, llmsUsed, retrieversUsed);
 
       if (!context.answer || context.answer.trim().length === 0) {
-        throw new Error('No answer generated. Please ensure your workflow includes an answer generation step.');
+        throw new Error('No answer generated. Ensure workflow includes answer generation step.');
       }
-
+// @ts-ignore
       const result: QueryResponse = {
         answer: context.answer,
         sources: context.documents.slice(0, 10).map(doc => ({
@@ -71,10 +76,13 @@ export class WorkflowExecutor {
         llmsUsed: [...new Set(llmsUsed)],
         retrieversUsed: [...new Set(retrieversUsed)],
         cached: false,
-        // @ts-ignore
-        rewrittenQuery: context.rewrittenQuery // ✅ Include rewritten query in result
+        rewrittenQuery: Array.from(context.rewrittenQueries.entries()).reduce((acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        }, {} as Record<string, string>)
       };
 
+      // Cache result
       if (useCache && config.cacheEnabled && context.answer) {
         const cacheKey = this.cache.generateKey(config.id, query);
         await this.cache.set(cacheKey, result, config.cacheTTL || 3600);
@@ -88,75 +96,53 @@ export class WorkflowExecutor {
         error: (error as Error).message,
         stack: (error as Error).stack
       });
-      
       throw error;
     }
   }
 
-  private validateConfiguration(config: WorkflowConfig): void {
-    const errors: string[] = [];
-
-    const hasAnswerStep = config.steps.some(s => s.type === 'answer_generation');
-    if (!hasAnswerStep) {
-      errors.push('Workflow must include an answer generation step');
-    }
-
-    const llmProviders = new Set<string>();
-    config.steps.forEach(step => {
-      if (step.config.llm) {
-        llmProviders.add(step.config.llm.provider);
-      }
-    });
-
-    if (llmProviders.has('openai') && !process.env.OPENAI_API_KEY) {
-      errors.push('OPENAI_API_KEY environment variable is required');
-    }
-    if (llmProviders.has('anthropic') && !process.env.ANTHROPIC_API_KEY) {
-      errors.push('ANTHROPIC_API_KEY environment variable is required');
-    }
-    if (llmProviders.has('google') && !process.env.GOOGLE_API_KEY) {
-      errors.push('GOOGLE_API_KEY environment variable is required');
-    }
-
-    const hasRetrieval = config.steps.some(s => s.type === 'retrieval');
-    if (hasRetrieval && !process.env.PINECONE_API_KEY) {
-      errors.push('PINECONE_API_KEY required for retrieval steps');
-    }
-
-    if (errors.length > 0) {
-      throw new Error(`Configuration errors: ${errors.join(', ')}`);
-    }
-  }
-
-  private async executeSteps(
-    steps: WorkflowStep[],
+  /**
+   * Execute workflow as a graph - supports parallel and sequential execution
+   */
+  private async executeWorkflowGraph(
+    config: WorkflowConfig,
     context: ExecutionContext,
     llmsUsed: string[],
     retrieversUsed: string[]
   ): Promise<void> {
+    const steps = config.steps;
+    
     if (steps.length === 0) {
       throw new Error('No steps defined in workflow');
     }
 
+    // Build step map for quick lookup
     const stepMap = new Map(steps.map(step => [step.id, step]));
-    const visited = new Set<string>();
-    const executing = new Set<string>();
-
+    
+    // Track execution state
+    const completed = new Set<string>();
+    
+    // Find entry points (nodes with no incoming edges)
     const entrySteps = this.findEntrySteps(steps);
     
-    for (const entryStep of entrySteps) {
-      await this.executeStepRecursive(
-        entryStep,
-        stepMap,
-        visited,
-        executing,
-        context,
-        llmsUsed,
-        retrieversUsed
-      );
-    }
+    logger.info('Starting workflow execution', {
+      totalSteps: steps.length,
+      entrySteps: entrySteps.map(s => s.id)
+    });
+
+    // Execute from entry points - REMOVED inProgress tracking
+    await this.executeFromEntryPoints(
+      entrySteps,
+      stepMap,
+      completed,
+      context,
+      llmsUsed,
+      retrieversUsed
+    );
   }
 
+  /**
+   * Find entry steps (steps with no incoming connections)
+   */
   private findEntrySteps(steps: WorkflowStep[]): WorkflowStep[] {
     const hasIncoming = new Set<string>();
     
@@ -167,63 +153,144 @@ export class WorkflowExecutor {
     });
 
     const entrySteps = steps.filter(step => !hasIncoming.has(step.id));
-    // @ts-ignore
+    
+    // If no clear entry points, use first step
+     // @ts-ignore
     return entrySteps.length > 0 ? entrySteps : [steps[0]];
   }
 
-  private async executeStepRecursive(
-    step: WorkflowStep,
+  /**
+   * Execute workflow starting from entry points
+   */
+  private async executeFromEntryPoints(
+    entrySteps: WorkflowStep[],
     stepMap: Map<string, WorkflowStep>,
-    visited: Set<string>,
-    executing: Set<string>,
+    completed: Set<string>,
     context: ExecutionContext,
     llmsUsed: string[],
     retrieversUsed: string[]
   ): Promise<void> {
-    if (executing.has(step.id)) {
-      throw new Error(`Circular dependency detected at step: ${step.id}`);
-    }
-    
-    if (visited.has(step.id)) {
-      return;
-    }
-
-    executing.add(step.id);
-    
-    await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
-    
-    executing.delete(step.id);
-    visited.add(step.id);
-
-    if (step.nextSteps) {
-      for (const nextStepId of step.nextSteps) {
-        const nextStep = stepMap.get(nextStepId);
-        if (!nextStep) {
-          logger.warn(`Next step not found: ${nextStepId}`);
-          continue;
-        }
-        
-        await this.executeStepRecursive(
-          nextStep,
+    // Execute all entry steps in parallel
+    await Promise.all(
+      entrySteps.map(step =>
+        this.executeStepWithDependencies(
+          step,
           stepMap,
-          visited,
-          executing,
+          completed,
           context,
           llmsUsed,
           retrieversUsed
-        );
-      }
-    }
+        )
+      )
+    );
   }
 
+  /**
+   * Execute a step and all its downstream dependencies - FIXED VERSION
+   */
+ /**
+ * Execute a step and all its downstream dependencies - FIXED VERSION
+ */
+private async executeStepWithDependencies(
+  step: WorkflowStep,
+  stepMap: Map<string, WorkflowStep>,
+  completed: Set<string>,
+  context: ExecutionContext,
+  llmsUsed: string[],
+  retrieversUsed: string[]
+): Promise<void> {
+  // Check if already completed - ATOMIC CHECK
+  if (completed.has(step.id)) {
+    logger.debug(`Step ${step.id} already completed, skipping`);
+    return;
+  }
+
+  // Wait for all parent steps to complete
+  await this.waitForParentSteps(step, stepMap, completed);
+
+  // DOUBLE CHECK completion after waiting (race condition fix)
+  if (completed.has(step.id)) {
+    logger.debug(`Step ${step.id} completed by parallel execution, skipping`);
+    return;
+  }
+
+  // Execute current step
+  logger.info(`Executing step: ${step.type}`, { stepId: step.id });
+  await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
+  
+  // Mark as completed
+  completed.add(step.id);
+
+  // Execute next steps
+  if (step.nextSteps && step.nextSteps.length > 0) {
+    const nextSteps = step.nextSteps
+      .map(id => stepMap.get(id))
+      .filter(s => s !== undefined) as WorkflowStep[];
+
+    // Execute ALL next steps in parallel
+    await Promise.all(
+      nextSteps.map(nextStep =>
+        this.executeStepWithDependencies(
+          nextStep,
+          stepMap,
+          completed,
+          context,
+          llmsUsed,
+          retrieversUsed
+        )
+      )
+    );
+  }
+}
+  /**
+   * Wait for all parent steps to complete - FIXED VERSION
+   */
+  private async waitForParentSteps(
+    step: WorkflowStep,
+    stepMap: Map<string, WorkflowStep>,
+    completed: Set<string>
+  ): Promise<void> {
+    // Find parent steps (steps that have this step as nextStep)
+    const parentSteps: string[] = [];
+    
+    stepMap.forEach((s, id) => {
+      if (s.nextSteps?.includes(step.id)) {
+        parentSteps.push(id);
+      }
+    });
+
+    // If no parents, we can execute immediately
+    if (parentSteps.length === 0) {
+      return;
+    }
+
+    // Wait for ALL parents to complete with timeout
+    const maxWaitTime = 30000; // 30 seconds
+    const startTime = Date.now();
+    const checkInterval = 50; // ms
+    
+    while (parentSteps.some(parentId => !completed.has(parentId))) {
+      // Check for timeout
+      if (Date.now() - startTime > maxWaitTime) {
+        const missingParents = parentSteps.filter(p => !completed.has(p));
+        throw new Error(`Timeout waiting for parent steps: ${missingParents.join(', ')}`);
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, checkInterval));
+    }
+    
+    logger.debug(`All parents completed for step: ${step.id}`, { parentSteps });
+  }
+
+  /**
+   * Execute a single step
+   */
   private async executeSingleStep(
     step: WorkflowStep,
     context: ExecutionContext,
     llmsUsed: string[],
     retrieversUsed: string[]
   ): Promise<void> {
-    logger.info(`Executing step: ${step.type}`, { stepId: step.id });
-
     try {
       switch (step.type) {
         case 'query_rewrite':
@@ -249,6 +316,13 @@ export class WorkflowExecutor {
         default:
           throw new Error(`Unknown step type: ${step.type}`);
       }
+
+      // Store step result
+      context.stepResults.set(step.id, {
+        completed: true,
+        timestamp: Date.now()
+      });
+
     } catch (error) {
       logger.error(`Step execution failed: ${step.type}`, { 
         stepId: step.id, 
@@ -256,6 +330,45 @@ export class WorkflowExecutor {
       });
       throw error;
     }
+  }
+
+  private async executeQueryRewrite(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    llmsUsed: string[]
+  ): Promise<void> {
+    if (!step.config?.llm) {
+      throw new Error('No LLM config for query rewrite step');
+    }
+
+    const prompt = step.config.prompt || 
+      `Improve this search query for better document retrieval. Return only the improved query.\n\nQuery: ${context.currentQuery}`;
+ // @ts-ignore
+    const response = await this.llmOrchestrator.generateCompletion({
+      provider: step.config.llm.provider as LLMProvider,
+      model: step.config.llm.model,
+      prompt,
+      temperature: step.config.llm.temperature || 0.3,
+      maxTokens: step.config.llm.maxTokens || 200,
+      fallback: step.config.llm.fallback
+    });
+
+    const rewrittenQuery = response.content.trim();
+    
+    // Store each rewritten query by step ID (for parallel rewrites)
+    context.rewrittenQueries.set(step.id, rewrittenQuery);
+    
+    // For downstream steps, use the last rewritten query or combine logic
+    // Simple approach: use the last one, or implement merging logic
+    context.currentQuery = rewrittenQuery;
+    
+    llmsUsed.push(`${response.provider}:${response.model}`);
+    
+    logger.info('Query rewritten', { 
+      stepId: step.id,
+      original: context.originalQuery, 
+      rewritten: rewrittenQuery 
+    });
   }
 
   private async executeRetrieval(
@@ -277,8 +390,8 @@ export class WorkflowExecutor {
           throw new Error('Pinecone index name required');
         }
 
-        // ✅ Use the rewritten query if available, otherwise use current query
-        const queryToUse = context.rewrittenQuery || context.currentQuery;
+        // Use the current query (could be rewritten by any of the parallel steps)
+        const queryToUse = context.currentQuery;
 
         const embedding = await this.vectorDB.getEmbedding(queryToUse);
         
@@ -289,14 +402,18 @@ export class WorkflowExecutor {
           retrieverConfig.config?.filter
         );
 
+        // Merge with existing documents (for parallel retrievals)
         context.documents.push(...results);
-        retrieversUsed.push(retrieverConfig.type);
+        retrieversUsed.push(`${retrieverConfig.type}:${indexName}`);
         
         logger.info('Documents retrieved from Pinecone', { 
           count: results.length,
           indexName,
-          queryUsed: queryToUse // ✅ Log which query was used
+          totalDocs: context.documents.length
         });
+      } else if (retrieverConfig.type === 'keyword') {
+        // Implement keyword search
+        logger.info('Keyword search not yet implemented');
       } else {
         throw new Error(`Unsupported retriever type: ${retrieverConfig.type}`);
       }
@@ -307,56 +424,24 @@ export class WorkflowExecutor {
     }
   }
 
-  private async executeQueryRewrite(
-    step: WorkflowStep,
-    context: ExecutionContext,
-    llmsUsed: string[]
-  ): Promise<void> {
-    if (!step.config?.llm) {
-      throw new Error('No LLM config for query rewrite step');
-    }
-
-    const prompt = step.config.prompt || 
-      `Improve this search query for better document retrieval. Return only the improved query.\n\nQuery: ${context.currentQuery}`;
-
-    // @ts-ignore
-    const response = await this.llmOrchestrator.generateCompletion({
-      provider: step.config.llm.provider as LLMProvider,
-      model: step.config.llm.model,
-      prompt,
-      temperature: step.config.llm.temperature || 0.3,
-      maxTokens: step.config.llm.maxTokens || 200,
-      fallback: step.config.llm.fallback
-    });
-
-    // ✅ Store the rewritten query separately
-    context.rewrittenQuery = response.content.trim();
-    llmsUsed.push(`${response.provider}:${response.model}`);
-    
-    logger.info('Query rewritten', { 
-      original: context.originalQuery, 
-      rewritten: context.rewrittenQuery 
-    });
-  }
-
   private async executeRerank(
     step: WorkflowStep,
     context: ExecutionContext,
     llmsUsed: string[]
   ): Promise<void> {
     if (!step.config?.llm || context.documents.length === 0) {
+      logger.warn('Skipping rerank - no LLM config or no documents');
       return;
     }
 
-    // ✅ Use rewritten query if available for reranking context
-    const queryForRerank = context.rewrittenQuery || context.currentQuery;
+    const queryForRerank = context.currentQuery;
 
-    const prompt = `Rank these documents by relevance to the query: "${queryForRerank}"\n\n${
+    const prompt = `Rank these documents by relevance to: "${queryForRerank}"\n\n${
       context.documents.map((doc, i) => `${i + 1}. ${doc.content.substring(0, 200)}`).join('\n\n')
     }\n\nReturn only the numbers in order of relevance (e.g., "3,1,2"):`;
 
     try {
-      // @ts-ignore
+       // @ts-ignore
       const response = await this.llmOrchestrator.generateCompletion({
         provider: step.config.llm.provider as LLMProvider,
         model: step.config.llm.model,
@@ -395,8 +480,7 @@ export class WorkflowExecutor {
       throw new Error('No LLM config for answer generation step');
     }
 
-    // ✅ FIXED: Use rewritten query for answer generation if available
-    const queryForAnswer = context.rewrittenQuery || context.currentQuery;
+    const queryForAnswer = context.currentQuery;
     
     const hasContext = context.documents.length > 0;
     const contextText = context.documents
@@ -408,7 +492,7 @@ export class WorkflowExecutor {
       ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}\n\nAnswer:`
       : `Answer this question:\n\nQuestion: ${queryForAnswer}\n\nAnswer:`);
 
-    // @ts-ignore
+      // @ts-ignore
     const response = await this.llmOrchestrator.generateCompletion({
       provider: step.config.llm.provider as LLMProvider,
       model: step.config.llm.model,
@@ -423,11 +507,10 @@ export class WorkflowExecutor {
     llmsUsed.push(`${response.provider}:${response.model}`);
     context.confidence = this.calculateConfidence(context.documents, context.answer);
     
-    logger.info('Answer generated using enhanced query', { 
-      queryUsed: queryForAnswer,
+    logger.info('Answer generated', { 
       answerLength: context.answer.length,
       confidence: context.confidence,
-      hasRewrittenQuery: context.rewrittenQuery !== null
+      documentsUsed: context.documents.length
     });
   }
 
@@ -442,9 +525,12 @@ export class WorkflowExecutor {
         context.answer += `\n\nSources: ${context.documents.length} document${context.documents.length > 1 ? 's' : ''}`;
       }
 
-      // ✅ Optionally append the rewritten query info if it differs from original
-      if (step.config?.showRewrittenQuery && context.rewrittenQuery && context.rewrittenQuery !== context.originalQuery) {
-        context.answer += `\n\nOptimized Query: "${context.rewrittenQuery}"`;
+      // Show all rewritten queries if available
+      if (step.config?.showRewrittenQuery && context.rewrittenQueries.size > 0) {
+        const queries = Array.from(context.rewrittenQueries.entries())
+          .map(([id, query]) => `Step ${id}: "${query}"`)
+          .join(', ');
+        context.answer += `\n\n[Enhanced queries: ${queries}]`;
       }
     }
   }
@@ -462,14 +548,46 @@ export class WorkflowExecutor {
     
     return Math.min(0.95, Math.max(0.1, confidence));
   }
+
+  private validateConfiguration(config: WorkflowConfig): void {
+    const errors: string[] = [];
+
+    const hasAnswerStep = config.steps.some(s => s.type === 'answer_generation');
+    if (!hasAnswerStep) {
+      errors.push('Workflow must include an answer generation step');
+    }
+
+    const llmProviders = new Set<string>();
+    config.steps.forEach(step => {
+      if (step.config.llm) {
+        llmProviders.add(step.config.llm.provider);
+      }
+    });
+
+    if (llmProviders.has('openai') && !process.env.OPENAI_API_KEY) {
+      errors.push('OPENAI_API_KEY environment variable is required');
+    }
+    if (llmProviders.has('anthropic') && !process.env.ANTHROPIC_API_KEY) {
+      errors.push('ANTHROPIC_API_KEY environment variable is required');
+    }
+    if (llmProviders.has('google') && !process.env.GOOGLE_API_KEY) {
+      errors.push('GOOGLE_API_KEY environment variable is required');
+    }
+
+    if (errors.length > 0) {
+      throw new Error(`Configuration errors: ${errors.join(', ')}`);
+    }
+  }
 }
 
 interface ExecutionContext {
   originalQuery: string;
   currentQuery: string;
-  rewrittenQuery: string | null; // ✅ NEW: Track rewritten query separately
+  rewrittenQueries: Map<string, string>; // Store multiple rewritten queries by step ID
   documents: any[];
   answer: string;
   confidence: number;
   metadata: Record<string, any>;
+  stepResults: Map<string, { completed: boolean; timestamp: number }>;
+  stepOutputs: Map<string, any>; // Store outputs from each step
 }

@@ -6,6 +6,7 @@ import { logger } from '../../utils/logger.js';
 
 interface LLMRequest {
   provider: LLMProvider;
+ query: string;
   model: string;
   prompt: string;
   temperature?: number;

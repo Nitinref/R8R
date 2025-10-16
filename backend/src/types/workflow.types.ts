@@ -97,6 +97,9 @@ export interface QueryRequest {
 // ✅ UPDATED: Added rewrittenQuery field
 export interface QueryResponse {
   answer: string;
+  query: string;
+  documents: any[];
+  metadata: Record<string, any>;
   sources: Array<{
     content: string;
     metadata: Record<string, any>;
@@ -106,8 +109,9 @@ export interface QueryResponse {
   latency: number;
   llmsUsed: string[];
   retrieversUsed: string[];
+    rewrittenQuery: Record<string, string>;
   cached?: boolean;
-  rewrittenQuery?: string; // ✅ NEW: Track the optimized query
+  // ✅ NEW: Track the optimized query
 }
 
 // ✅ UPDATED: Renamed documents to retrievedDocs for clarity

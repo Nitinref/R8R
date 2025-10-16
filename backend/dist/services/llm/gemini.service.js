@@ -121,32 +121,34 @@ export class GeminiService {
                 throw new Error(`Content blocked by safety filters: ${error.message}`);
             }
             else if (error.message?.includes('404') || error.message?.includes('not found')) {
-                // ✅ FIXED: Handle model not found errors specifically
-                throw new Error(`Gemini model not found: ${model}. Available models: gemini-1.5-pro-latest, gemini-1.5-flash-latest, gemini-pro`);
+                // ✅ FIXED: Handle model not found errors with correct model names
+                throw new Error(`Gemini model not found: ${model}. Available models: gemini-1.5-pro, gemini-1.5-flash, gemini-pro`);
             }
             throw new Error(`Gemini API call failed: ${error.message}`);
         }
     }
-    // ✅ FIXED: Updated validateModel method with correct model names
+    // ✅ FIXED: Updated validateModel method with CORRECT model names
     validateModel(model) {
+        // ✅ CORRECT: Actual available Gemini models
         const supportedModels = [
-            'gemini-1.5-pro-latest', // ✅ Correct name for Gemini 1.5 Pro
-            'gemini-1.5-flash-latest', // ✅ Correct name for Gemini 1.5 Flash
-            'gemini-pro', // Legacy Pro model
-            'gemini-1.0-pro' // Specific version
+            'gemini-1.5-pro', // Gemini 1.5 Pro
+            'gemini-1.5-flash', // Gemini 1.5 Flash  
+            'gemini-pro' // Gemini 1.0 Pro (legacy)
         ];
-        // Map common model names to correct ones
+        // Map common incorrect names to correct ones
         const modelMappings = {
-            'gemini-1.5-pro': 'gemini-1.5-pro-latest',
-            'gemini-1.5-flash': 'gemini-1.5-flash-latest',
-            'gemini-flash': 'gemini-1.5-flash-latest',
+            'gemini-1.5-pro-latest': 'gemini-1.5-pro',
+            'gemini-1.5-flash-latest': 'gemini-1.5-flash',
+            'gemini-1.0-pro': 'gemini-pro',
+            'gemini-flash': 'gemini-1.5-flash',
+            'gpt-3.5-turbogemini-1.5-flash-latest': 'gemini-1.5-flash' // Handle corrupted names
         };
         // Use mapped model if available, otherwise use the original
         const mappedModel = modelMappings[model] || model;
         // Check if the model is supported
         if (!supportedModels.includes(mappedModel)) {
-            console.warn(`Model ${model} (mapped to ${mappedModel}) not recognized, defaulting to gemini-1.5-flash-latest`);
-            return 'gemini-1.5-flash-latest'; // Default to a working model
+            console.warn(`Model ${model} not supported, defaulting to gemini-1.5-flash`);
+            return 'gemini-1.5-flash'; // Default to a working model
         }
         return mappedModel;
     }
@@ -169,8 +171,8 @@ export class GeminiService {
     // Health check method
     async validateApiKey() {
         try {
-            // Try a simple completion to validate the API key
-            const testModel = this.client.getGenerativeModel({ model: 'gemini-1.5-flash-latest' });
+            // ✅ FIXED: Use correct model name
+            const testModel = this.client.getGenerativeModel({ model: 'gemini-1.5-flash' });
             const result = await testModel.generateContent('Hello');
             return !!result.response.text();
         }
@@ -179,43 +181,43 @@ export class GeminiService {
             return false;
         }
     }
-    // ✅ FIXED: Get available models with correct names
+    // ✅ FIXED: Get available models with CORRECT names
     async getAvailableModels() {
         return [
-            'gemini-1.5-pro-latest',
-            'gemini-1.5-flash-latest',
-            'gemini-pro',
-            'gemini-1.0-pro'
+            'gemini-1.5-pro',
+            'gemini-1.5-flash',
+            'gemini-pro'
         ];
     }
     // Check if content is likely to be blocked by safety filters
     async checkSafety(prompt) {
         try {
+            // ✅ FIXED: Use correct model name
             const genModel = this.client.getGenerativeModel({
-                model: 'gemini-1.5-flash-latest',
+                model: 'gemini-1.5-flash',
                 safetySettings: [
                     {
-                        // @ts-ignore
+                        //@ts-ignore
                         category: "HARM_CATEGORY_HARASSMENT",
-                        // @ts-ignore
+                        //@ts-ignore
                         threshold: "BLOCK_ONLY_HIGH"
                     },
                     {
-                        // @ts-ignore
+                        //@ts-ignore
                         category: "HARM_CATEGORY_HATE_SPEECH",
-                        // @ts-ignore
+                        //@ts-ignore
                         threshold: "BLOCK_ONLY_HIGH"
                     },
                     {
-                        // @ts-ignore
+                        //@ts-ignore
                         category: "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-                        // @ts-ignore
+                        //@ts-ignore
                         threshold: "BLOCK_ONLY_HIGH"
                     },
                     {
-                        // @ts-ignore
+                        //@ts-ignore
                         category: "HARM_CATEGORY_DANGEROUS_CONTENT",
-                        // @ts-ignore
+                        //@ts-ignore
                         threshold: "BLOCK_ONLY_HIGH"
                     }
                 ]
@@ -231,6 +233,30 @@ export class GeminiService {
             console.error('Safety check failed:', error);
             return { isSafe: false, blockReasons: ['Safety check failed'] };
         }
+    }
+    // ✅ NEW: Method to test all available models
+    async testAllModels() {
+        const models = await this.getAvailableModels();
+        const results = [];
+        for (const model of models) {
+            try {
+                const testModel = this.client.getGenerativeModel({ model });
+                const result = await testModel.generateContent('Test message - please respond with "OK"');
+                results.push({
+                    model,
+                    working: true,
+                    response: result.response.text()
+                });
+            }
+            catch (error) {
+                results.push({
+                    model,
+                    working: false,
+                    error: error.message
+                });
+            }
+        }
+        return results;
     }
 }
 //# sourceMappingURL=gemini.service.js.map
