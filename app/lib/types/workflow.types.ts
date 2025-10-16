@@ -17,7 +17,8 @@ export enum RetrieverType {
   PINECONE = 'pinecone',
   WEAVIATE = 'weaviate',
   KEYWORD = 'keyword',
-  HYBRID = 'hybrid'
+  HYBRID = 'hybrid',
+   QDRANT = 'qdrant'
 }
 
 export interface Position {

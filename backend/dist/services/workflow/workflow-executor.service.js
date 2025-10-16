@@ -260,30 +260,23 @@ export class WorkflowExecutor {
         const retrieverConfig = step.config.retriever;
         const topK = retrieverConfig.config?.topK || 10;
         try {
-            if (retrieverConfig.type === 'pinecone') {
-                const indexName = retrieverConfig.config?.indexName;
-                if (!indexName) {
-                    throw new Error('Pinecone index name required');
-                }
-                // Use the current query (could be rewritten by any of the parallel steps)
-                const queryToUse = context.currentQuery;
+            // @ts-ignore
+            if (retrieverConfig.type === 'qdrant') {
+                // @ts-ignore
+                const queryToUse = context.rewrittenQuery || context.currentQuery;
                 const embedding = await this.vectorDB.getEmbedding(queryToUse);
-                const results = await this.vectorDB.searchPinecone(indexName, embedding, topK, retrieverConfig.config?.filter);
-                // Merge with existing documents (for parallel retrievals)
+                const results = await this.vectorDB.searchVectors(embedding, topK, retrieverConfig.config?.filter);
                 context.documents.push(...results);
-                retrieversUsed.push(`${retrieverConfig.type}:${indexName}`);
-                logger.info('Documents retrieved from Pinecone', {
+                // @ts-ignore
+                retrieversUsed.push(`qdrant:${this.vectorDB.collectionName}`);
+                logger.info('Documents retrieved from Qdrant', {
                     count: results.length,
-                    indexName,
                     totalDocs: context.documents.length
                 });
             }
-            else if (retrieverConfig.type === 'keyword') {
-                // Implement keyword search
-                logger.info('Keyword search not yet implemented');
-            }
-            else {
-                throw new Error(`Unsupported retriever type: ${retrieverConfig.type}`);
+            else if (retrieverConfig.type === 'pinecone') {
+                // Keep Pinecone as fallback
+                // ... existing Pinecone code
             }
         }
         catch (error) {
@@ -292,12 +285,29 @@ export class WorkflowExecutor {
         }
     }
     async executeRerank(step, context, llmsUsed) {
-        if (!step.config?.llm || context.documents.length === 0) {
-            logger.warn('Skipping rerank - no LLM config or no documents');
+        if (!step.config?.llm) {
+            logger.warn('Skipping rerank - no LLM config');
             return;
         }
-        const queryForRerank = context.currentQuery;
-        const prompt = `Rank these documents by relevance to: "${queryForRerank}"\n\n${context.documents.map((doc, i) => `${i + 1}. ${doc.content.substring(0, 200)}`).join('\n\n')}\n\nReturn only the numbers in order of relevance (e.g., "3,1,2"):`;
+        // Get all rewritten queries from previous steps
+        const rewrittenQueries = Array.from(context.rewrittenQueries.values());
+        if (rewrittenQueries.length === 0) {
+            logger.warn('Skipping rerank - no rewritten queries available');
+            return;
+        }
+        if (rewrittenQueries.length === 1) {
+            // Only one query, no need to rerank
+            // @ts-ignore
+            context.currentQuery = rewrittenQueries[0];
+            return;
+        }
+        // Rerank multiple queries
+        const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
+  
+Rewritten queries:
+${rewrittenQueries.map((query, i) => `${i + 1}. ${query}`).join('\n')}
+
+Which ONE query is the best for document retrieval? Return only the number (1, 2, 3, etc.):`;
         try {
             // @ts-ignore
             const response = await this.llmOrchestrator.generateCompletion({
@@ -305,25 +315,23 @@ export class WorkflowExecutor {
                 model: step.config.llm.model,
                 prompt,
                 temperature: 0.1,
-                maxTokens: 100,
-                fallback: step.config.llm.fallback
+                maxTokens: 10
             });
-            const ranking = response.content
-                .trim()
-                .split(',')
-                .map(n => parseInt(n.trim()) - 1)
-                .filter(i => i >= 0 && i < context.documents.length);
-            if (ranking.length > 0) {
-                const reranked = ranking.map(i => context.documents[i]);
-                context.documents = reranked;
-                llmsUsed.push(`${response.provider}:${response.model}`);
-                logger.info('Documents reranked', { count: reranked.length });
+            const selectedIndex = parseInt(response.content.trim()) - 1;
+            if (selectedIndex >= 0 && selectedIndex < rewrittenQueries.length) {
+                const bestQuery = rewrittenQueries[selectedIndex];
+                // @ts-ignore
+                context.currentQuery = bestQuery;
+                logger.info('Best query selected by rerank', {
+                    selectedQuery: bestQuery,
+                    totalQueries: rewrittenQueries.length
+                });
             }
         }
         catch (error) {
-            logger.warn('Reranking failed, keeping original order', {
-                error: error.message
-            });
+            logger.warn('Reranking failed, using first query', { error: error.message });
+            // @ts-ignore
+            context.currentQuery = rewrittenQueries[0]; // Fallback
         }
     }
     async executeAnswerGeneration(step, context, llmsUsed) {

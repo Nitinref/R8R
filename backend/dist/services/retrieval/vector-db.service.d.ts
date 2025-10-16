@@ -5,11 +5,16 @@ interface VectorSearchResult {
     content: string;
 }
 export declare class VectorDBService {
-    private pinecone;
+    private qdrant;
     private openai;
+    private collectionName;
     constructor();
-    searchPinecone(indexName: string, embedding: number[], topK?: number, filter?: Record<string, any>): Promise<VectorSearchResult[]>;
+    private initializeCollection;
+    searchVectors(embedding: number[], topK?: number, filter?: Record<string, any>): Promise<VectorSearchResult[]>;
+    upsertDocument(id: string, content: string, metadata?: Record<string, any>): Promise<void>;
     getEmbedding(text: string): Promise<number[]>;
+    private buildQdrantFilter;
+    getCollectionStats(): Promise<any>;
 }
 export {};
 //# sourceMappingURL=vector-db.service.d.ts.map

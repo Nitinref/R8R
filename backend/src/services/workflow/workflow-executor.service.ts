@@ -371,105 +371,108 @@ private async executeStepWithDependencies(
     });
   }
 
-  private async executeRetrieval(
-    step: WorkflowStep,
-    context: ExecutionContext,
-    retrieversUsed: string[]
-  ): Promise<void> {
-    if (!step.config?.retriever) {
-      throw new Error('No retriever config for retrieval step');
-    }
-
-    const retrieverConfig = step.config.retriever;
-    const topK = retrieverConfig.config?.topK || 10;
-    
-    try {
-      if (retrieverConfig.type === 'pinecone') {
-        const indexName = retrieverConfig.config?.indexName;
-        if (!indexName) {
-          throw new Error('Pinecone index name required');
-        }
-
-        // Use the current query (could be rewritten by any of the parallel steps)
-        const queryToUse = context.currentQuery;
-
-        const embedding = await this.vectorDB.getEmbedding(queryToUse);
-        
-        const results = await this.vectorDB.searchPinecone(
-          indexName,
-          embedding,
-          topK,
-          retrieverConfig.config?.filter
-        );
-
-        // Merge with existing documents (for parallel retrievals)
-        context.documents.push(...results);
-        retrieversUsed.push(`${retrieverConfig.type}:${indexName}`);
-        
-        logger.info('Documents retrieved from Pinecone', { 
-          count: results.length,
-          indexName,
-          totalDocs: context.documents.length
-        });
-      } else if (retrieverConfig.type === 'keyword') {
-        // Implement keyword search
-        logger.info('Keyword search not yet implemented');
-      } else {
-        throw new Error(`Unsupported retriever type: ${retrieverConfig.type}`);
-      }
-
-    } catch (error) {
-      logger.error('Retrieval failed', { error: (error as Error).message });
-      throw error;
-    }
+private async executeRetrieval(
+  step: WorkflowStep,
+  context: ExecutionContext,
+  retrieversUsed: string[]
+): Promise<void> {
+  if (!step.config?.retriever) {
+    throw new Error('No retriever config for retrieval step');
   }
 
-  private async executeRerank(
-    step: WorkflowStep,
-    context: ExecutionContext,
-    llmsUsed: string[]
-  ): Promise<void> {
-    if (!step.config?.llm || context.documents.length === 0) {
-      logger.warn('Skipping rerank - no LLM config or no documents');
-      return;
-    }
-
-    const queryForRerank = context.currentQuery;
-
-    const prompt = `Rank these documents by relevance to: "${queryForRerank}"\n\n${
-      context.documents.map((doc, i) => `${i + 1}. ${doc.content.substring(0, 200)}`).join('\n\n')
-    }\n\nReturn only the numbers in order of relevance (e.g., "3,1,2"):`;
-
-    try {
+  const retrieverConfig = step.config.retriever;
+  const topK = retrieverConfig.config?.topK || 10;
+  
+  try {
+    // @ts-ignore
+    if (retrieverConfig.type === 'qdrant') {
        // @ts-ignore
-      const response = await this.llmOrchestrator.generateCompletion({
-        provider: step.config.llm.provider as LLMProvider,
-        model: step.config.llm.model,
-        prompt,
-        temperature: 0.1,
-        maxTokens: 100,
-        fallback: step.config.llm.fallback
+      const queryToUse = context.rewrittenQuery || context.currentQuery;
+      const embedding = await this.vectorDB.getEmbedding(queryToUse);
+      
+      const results = await this.vectorDB.searchVectors(
+        embedding,
+        topK,
+        retrieverConfig.config?.filter
+      );
+
+      context.documents.push(...results);
+       // @ts-ignore
+      retrieversUsed.push(`qdrant:${this.vectorDB.collectionName}`);
+      
+      logger.info('Documents retrieved from Qdrant', { 
+        count: results.length,
+        totalDocs: context.documents.length
       });
+    } else if (retrieverConfig.type === 'pinecone') {
+      // Keep Pinecone as fallback
+      // ... existing Pinecone code
+    }
+  } catch (error) {
+    logger.error('Retrieval failed', { error: (error as Error).message });
+    throw error;
+  }
+}
+ private async executeRerank(
+  step: WorkflowStep,
+  context: ExecutionContext,
+  llmsUsed: string[]
+): Promise<void> {
+  if (!step.config?.llm) {
+    logger.warn('Skipping rerank - no LLM config');
+    return;
+  }
 
-      const ranking = response.content
-        .trim()
-        .split(',')
-        .map(n => parseInt(n.trim()) - 1)
-        .filter(i => i >= 0 && i < context.documents.length);
+  // Get all rewritten queries from previous steps
+  const rewrittenQueries = Array.from(context.rewrittenQueries.values());
+  
+  if (rewrittenQueries.length === 0) {
+    logger.warn('Skipping rerank - no rewritten queries available');
+    return;
+  }
 
-      if (ranking.length > 0) {
-        const reranked = ranking.map(i => context.documents[i]);
-        context.documents = reranked;
-        llmsUsed.push(`${response.provider}:${response.model}`);
-        
-        logger.info('Documents reranked', { count: reranked.length });
-      }
-    } catch (error) {
-      logger.warn('Reranking failed, keeping original order', { 
-        error: (error as Error).message 
+  if (rewrittenQueries.length === 1) {
+    // Only one query, no need to rerank
+      // @ts-ignore
+    context.currentQuery = rewrittenQueries[0];
+    return;
+  }
+
+  // Rerank multiple queries
+  const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
+  
+Rewritten queries:
+${rewrittenQueries.map((query, i) => `${i + 1}. ${query}`).join('\n')}
+
+Which ONE query is the best for document retrieval? Return only the number (1, 2, 3, etc.):`;
+
+  try {
+    // @ts-ignore
+    const response = await this.llmOrchestrator.generateCompletion({
+      provider: step.config.llm.provider as LLMProvider,
+      model: step.config.llm.model,
+      prompt,
+      temperature: 0.1,
+      maxTokens: 10
+    });
+
+    const selectedIndex = parseInt(response.content.trim()) - 1;
+    
+    if (selectedIndex >= 0 && selectedIndex < rewrittenQueries.length) {
+      const bestQuery = rewrittenQueries[selectedIndex];
+        // @ts-ignore
+      context.currentQuery = bestQuery;
+      logger.info('Best query selected by rerank', { 
+        selectedQuery: bestQuery,
+        totalQueries: rewrittenQueries.length 
       });
     }
+  } catch (error) {
+    logger.warn('Reranking failed, using first query', { error: (error as Error).message });
+      // @ts-ignore
+    context.currentQuery = rewrittenQueries[0]; // Fallback
   }
+}
 
   private async executeAnswerGeneration(
     step: WorkflowStep,

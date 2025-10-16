@@ -13,6 +13,18 @@ interface ConfigPanelProps {
   onUpdate: (config: Partial<WorkflowNode['config']>) => void;
 }
 
+// Add this helper function
+function getDefaultRetrieverConfig(type: RetrieverType) {
+  const defaults = {
+    [RetrieverType.QDRANT]: { collectionName: 'r8r-documents', topK: 10 },
+    [RetrieverType.PINECONE]: { indexName: 'default', topK: 10 },
+    [RetrieverType.WEAVIATE]: { indexName: 'default', topK: 10 },
+    [RetrieverType.KEYWORD]: { topK: 5 },
+    [RetrieverType.HYBRID]: { topK: 10 }
+  };
+  return defaults[type];
+}
+
 export function ConfigPanel({ node, onUpdate }: ConfigPanelProps) {
   if (!node) {
     return (
@@ -130,44 +142,69 @@ export function ConfigPanel({ node, onUpdate }: ConfigPanelProps) {
             <Select
               label="Retriever Type"
               value={node.config.retriever?.type || ''}
-              onChange={(e) =>
+              onChange={(e) => {
+                const retrieverType = e.target.value as RetrieverType;
                 onUpdate({
                   retriever: {
-                    type: e.target.value as RetrieverType,
-                    config: node.config.retriever?.config || {},
+                    type: retrieverType,
+                    config: getDefaultRetrieverConfig(retrieverType),
                   },
-                })
-              }
+                });
+              }}
               options={[
                 { value: '', label: 'Select retriever' },
                 { value: RetrieverType.PINECONE, label: 'Pinecone' },
+                { value: RetrieverType.QDRANT, label: 'Qdrant' }, // ← Add Qdrant here
                 { value: RetrieverType.WEAVIATE, label: 'Weaviate' },
                 { value: RetrieverType.KEYWORD, label: 'Keyword' },
                 { value: RetrieverType.HYBRID, label: 'Hybrid' },
               ]}
             />
 
-            <Input
-              label="Index Name"
-              value={node.config.retriever?.config.indexName || ''}
-              onChange={(e) =>
-                onUpdate({
-                  retriever: {
-                    ...node.config.retriever!,
-                    config: {
-                      ...node.config.retriever?.config,
-                      indexName: e.target.value,
+            {/* Show different input labels based on retriever type */}
+            {node.config.retriever?.type === RetrieverType.QDRANT && (
+              <Input
+                label="Collection Name"
+                value={node.config.retriever?.config.collectionName || ''}
+                onChange={(e) =>
+                  onUpdate({
+                    retriever: {
+                      ...node.config.retriever!,
+                      config: {
+                        ...node.config.retriever?.config,
+                        collectionName: e.target.value,
+                      },
                     },
-                  },
-                })
-              }
-              placeholder="default"
-            />
+                  })
+                }
+                placeholder="r8r-documents"
+              />
+            )}
+
+            {(node.config.retriever?.type === RetrieverType.PINECONE || 
+              node.config.retriever?.type === RetrieverType.WEAVIATE) && (
+              <Input
+                label="Index Name"
+                value={node.config.retriever?.config.indexName || ''}
+                onChange={(e) =>
+                  onUpdate({
+                    retriever: {
+                      ...node.config.retriever!,
+                      config: {
+                        ...node.config.retriever?.config,
+                        indexName: e.target.value,
+                      },
+                    },
+                  })
+                }
+                placeholder="default"
+              />
+            )}
 
             <Input
               label="Top K Results"
               type="number"
-              value={node.config.retriever?.config.topK || 5}
+              value={node.config.retriever?.config.topK || 10}
               onChange={(e) =>
                 onUpdate({
                   retriever: {

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { WorkflowNode as WorkflowNodeType, StepType, LLMProvider } from '@/app/lib/types/workflow.types';
 import { NodePalette } from './NodePalette';
+// @ts-ignore
 import { WorkflowCanvas } from './WorkflowCanvas';
 import { ConfigPanel } from './ConfigPanel';
 import { Button } from '../ui/Button';

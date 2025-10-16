@@ -5,10 +5,6 @@ export interface GeminiCompletion {
     model: string;
     tokensUsed: number;
     finishReason?: string;
-    safetyRatings?: Array<{
-        category: string;
-        probability: string;
-    }>;
 }
 export declare class GeminiService {
     private client;
@@ -16,18 +12,8 @@ export declare class GeminiService {
     constructor();
     generateCompletion(model: string, prompt: string, temperature?: number, maxTokens?: number, systemPrompt?: string): Promise<GeminiCompletion>;
     private validateModel;
-    private mapFinishReason;
     private estimateTokens;
     validateApiKey(): Promise<boolean>;
     getAvailableModels(): Promise<string[]>;
-    checkSafety(prompt: string): Promise<{
-        isSafe: boolean;
-        blockReasons: string[];
-    }>;
-    testAllModels(): Promise<{
-        model: string;
-        working: boolean;
-        error?: string;
-    }[]>;
 }
 //# sourceMappingURL=gemini.service.d.ts.map
