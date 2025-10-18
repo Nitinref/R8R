@@ -5187,3 +5187,113 @@
 {"level":"info","message":"📝 Environment: development","timestamp":"2025-10-16T15:50:08.333Z"}
 {"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-16T15:50:08.334Z"}
 {"level":"info","message":"==================================================","timestamp":"2025-10-16T15:50:08.334Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-18T09:23:00.613Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.616Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-18T09:23:00.617Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.617Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-18T09:23:00.617Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-18T09:23:00.617Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-18T09:23:00.617Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-18T09:23:00.618Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-18T09:23:00.618Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-18T09:23:00.618Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-18T09:23:00.619Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-18T09:23:00.620Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-18T09:23:00.620Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-18T09:23:00.620Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.620Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-18T09:23:00.620Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.620Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-18T09:23:00.621Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:00.622Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-18T09:23:00.622Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-18T09:23:05.058Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-18T09:23:05.058Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-18T09:23:05.059Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-18T09:23:05.095Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-18T09:23:05.116Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-18T09:23:05.116Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-18T09:23:05.119Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:05.128Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-18T09:23:05.128Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-18T09:23:05.128Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-18T09:23:05.129Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-18T09:23:05.129Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-18T09:23:53.360Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-18T09:23:56.074Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-18T09:23:56.080Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-18T09:23:56.084Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-18T09:23:59.756Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-18T09:24:00.258Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-18T09:24:00.695Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1-1760779467861","source":"1","target":"1760779467861"},{"id":"xy-edge__1760779462540-1760779467861","source":"1760779462540","target":"1760779467861"},{"id":"xy-edge__1760779467861-1760779501766","source":"1760779467861","target":"1760779501766"}],"entryPoint":"1","id":"workflow-1760779509766","name":"mumm","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":-16,"y":160},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1760779462540","position":{"x":288,"y":160},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":100,"model":"gemini-2.0-flash","provider":"google","temperature":0.3}},"label":"Rerank"},"id":"1760779467861","position":{"x":176,"y":304},"type":"rerank"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Answer Generation"},"id":"1760779501766","position":{"x":176,"y":448},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1","nextSteps":["1760779467861"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1760779462540","nextSteps":["1760779467861"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":100,"model":"gemini-2.0-flash","provider":"google","temperature":0.3}},"id":"1760779467861","nextSteps":["1760779501766"],"type":"rerank"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1760779501766","type":"answer_generation"}]},"description":"","name":"mumm","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-18T09:25:09.780Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-18T09:25:14.259Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/67364601-0447-4671-b2a0-7f17fdeb18df","query":{},"timestamp":"2025-10-18T09:25:18.222Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-18T09:25:19.955Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/67364601-0447-4671-b2a0-7f17fdeb18df","query":{},"timestamp":"2025-10-18T09:25:26.056Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-18T09:25:26.060Z"}
+{"body":{"name":"f"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-18T09:25:33.284Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-18T09:25:34.352Z"}
+{"body":{"query":"What is the universe made of?\" and \"Are we alone in the universe?","workflowId":"67364601-0447-4671-b2a0-7f17fdeb18df"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-18T09:26:06.154Z"}
+{"level":"info","message":"Executing query","queryLength":65,"timestamp":"2025-10-18T09:26:07.523Z","userId":"87cb0fc3-d630-4bf2-b2ab-00e67822e60e","workflowId":"67364601-0447-4671-b2a0-7f17fdeb18df"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-18T09:26:07.568Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-18T09:26:07.575Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-18T09:26:07.578Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-18T09:26:07.579Z"}
+{"key":"workflow:workflow-1760779509766:query:c9306998a358886a","level":"debug","message":"Cache miss","timestamp":"2025-10-18T09:26:07.580Z"}
+{"entrySteps":["1","1760779462540"],"level":"info","message":"Starting workflow execution","timestamp":"2025-10-18T09:26:07.581Z","totalSteps":4}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-18T09:26:07.581Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1760779462540","timestamp":"2025-10-18T09:26:07.582Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:07.582Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-18T09:26:07.582Z"}
+{"attemptIndex":0,"level":"debug","message":"Rate limiting openai","timestamp":"2025-10-18T09:26:07.583Z","waitTime":499}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-18T09:26:10.192Z","tokensUsed":56}
+{"contentLength":66,"duration":2611,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-18T09:26:10.193Z","tokensUsed":56}
+{"level":"info","message":"Query rewritten","original":"What is the universe made of?\" and \"Are we alone in the universe?","rewritten":"\"Composition of the universe\" \"Existence of extraterrestrial life\"","stepId":"1760779462540","timestamp":"2025-10-18T09:26:10.194Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:10.607Z","tokensUsed":59}
+{"contentLength":82,"duration":3026,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:10.608Z","tokensUsed":59}
+{"level":"info","message":"Query rewritten","original":"What is the universe made of?\" and \"Are we alone in the universe?","rewritten":"\"Composition of the universe\" and \"Existence of life beyond Earth in the universe\"","stepId":"1","timestamp":"2025-10-18T09:26:10.608Z"}
+{"level":"debug","message":"All parents completed for step: 1760779467861","parentSteps":["1","1760779462540"],"timestamp":"2025-10-18T09:26:10.608Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1760779467861","timestamp":"2025-10-18T09:26:10.609Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-18T09:26:10.610Z"}
+{"level":"debug","message":"All parents completed for step: 1760779467861","parentSteps":["1","1760779462540"],"timestamp":"2025-10-18T09:26:10.638Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1760779467861","timestamp":"2025-10-18T09:26:10.639Z"}
+{"level":"debug","message":"Provider google in cooldown","timestamp":"2025-10-18T09:26:10.639Z","waitTime":1971}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-18T09:26:11.788Z","tokensUsed":99}
+{"contentLength":2,"duration":1180,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-18T09:26:11.789Z","tokensUsed":99}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"\"Composition of the universe\" and \"Existence of life beyond Earth in the universe\"","timestamp":"2025-10-18T09:26:11.789Z","totalQueries":2}
+{"level":"debug","message":"All parents completed for step: 1760779501766","parentSteps":["1760779467861"],"timestamp":"2025-10-18T09:26:11.789Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1760779501766","timestamp":"2025-10-18T09:26:11.789Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:11.790Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-18T09:26:12.614Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-18T09:26:13.543Z","tokensUsed":99}
+{"contentLength":2,"duration":2905,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-18T09:26:13.544Z","tokensUsed":99}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"\"Composition of the universe\" and \"Existence of life beyond Earth in the universe\"","timestamp":"2025-10-18T09:26:13.544Z","totalQueries":2}
+{"level":"debug","message":"All parents completed for step: 1760779501766","parentSteps":["1760779467861"],"timestamp":"2025-10-18T09:26:13.544Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1760779501766","timestamp":"2025-10-18T09:26:13.544Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:13.544Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:17.705Z","tokensUsed":192}
+{"contentLength":722,"duration":4161,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:17.706Z","tokensUsed":192}
+{"answerLength":722,"confidence":0.3,"documentsUsed":0,"level":"info","message":"Answer generated","timestamp":"2025-10-18T09:26:17.706Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:18.591Z","tokensUsed":238}
+{"contentLength":970,"duration":6802,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-18T09:26:18.592Z","tokensUsed":238}
+{"answerLength":970,"confidence":0.3,"documentsUsed":0,"level":"info","message":"Answer generated","timestamp":"2025-10-18T09:26:18.593Z"}
+{"key":"workflow:workflow-1760779509766:query:c9306998a358886a","level":"debug","message":"Cache set successful","timestamp":"2025-10-18T09:26:18.598Z","ttl":3600}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-18T09:34:32.680Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-18T09:34:32.681Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-18T09:34:32.682Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-18T09:34:32.685Z"}

@@ -1,0 +1,19 @@
+FROM node:18-alpine
+
+RUN apk add --no-cache openssl libc6-compat
+
+WORKDIR /app
+
+COPY backend/package*.json ./
+COPY backend/prisma ./prisma/
+
+# Install all dependencies (including dev) but faster
+RUN npm install --prefer-offline --no-audit
+
+RUN npx prisma generate
+
+COPY backend .
+
+EXPOSE 3001
+
+CMD ["npm", "run", "dev"]

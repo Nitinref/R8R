@@ -1,0 +1,31 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache openssl libc6-compat python3 make g++
+
+ARG DATABASE_URL
+# 1. Copy package files
+COPY package*.json ./
+COPY package-lock.json* ./
+COPY next.config.ts ./
+COPY tsconfig.json ./
+COPY postcss.config.mjs ./
+COPY eslint.config.mjs ./
+COPY tailwind.config.* ./
+
+RUN npm install
+
+# 2. Copy Prisma
+COPY backend/prisma ./prisma/
+RUN npx prisma generate
+
+# 3. Copy frontend source - FIXED: Copy the app FOLDER, not just contents
+COPY app ./app/
+
+# 4. Build (now app directory exists in the right location)
+RUN DATABASE_URL=${DATABASE_URL} npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

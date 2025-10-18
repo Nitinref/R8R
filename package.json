@@ -6,9 +6,12 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
+    "db:generate": "cd backend && npx prisma generate",
+    "db:migrate": "cd backend && npx prisma migrate dev"
   },
   "dependencies": {
+    "@prisma/client": "^6.16.3",
     "@radix-ui/react-slot": "^1.2.3",
     "@types/axios": "^0.9.36",
     "@xyflow/react": "^12.8.6",
@@ -37,6 +40,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
+    "prisma": "^6.16.3",
     "tailwindcss": "^4",
     "typescript": "^5.9.3"
   }
