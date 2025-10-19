@@ -14,6 +14,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Debug file structure
+      - name: Debug File Structure
+        run: |
+          echo "=== File Structure ==="
+          find . -name "docker-compose.yml" -o -name "Dockerfile.backend" -o -name "Dockerfile.frontend" | head -20
+
       # Docker login
       - name: Docker Login
         uses: docker/login-action@v2
@@ -32,17 +38,24 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
 
-      # Copy files to EC2
-      - name: Copy Files to EC2
+      # Copy files individually
+      - name: Copy docker-compose.yml
         uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: |
-            docker-compose.yml
-            docker/
-          target: /home/ubuntu/project/
+          source: "docker-compose.yml"
+          target: "/home/ubuntu/project/"
+
+      - name: Copy Dockerfiles
+        uses: appleboy/scp-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "docker/Dockerfile.backend,docker/Dockerfile.frontend"
+          target: "/home/ubuntu/project/docker/"
 
       # SSH and deploy
       - name: SSH and Deploy Backend
@@ -53,5 +66,6 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/project
+            ls -la
             docker-compose down backend
             docker-compose up -d --build backend
