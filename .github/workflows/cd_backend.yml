@@ -1,21 +1,27 @@
 name: Deploy the backend to production
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # 2️⃣ Docker Login
       - name: Docker Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
+      # 3️⃣ Build and Push backend image
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v4
         with:
@@ -25,3 +31,17 @@ jobs:
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
+
+      # 4️⃣ Deploy on EC2 via SSH
+      - name: SSH and Deploy Backend on EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/project
+            # Pull latest backend image from Docker Hub
+            docker-compose pull backend
+            # Restart only the backend container
+            docker-compose up -d backend
