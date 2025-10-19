@@ -34,7 +34,7 @@ jobs:
 
       # Copy files to EC2
       - name: Copy Backend Files to EC2
-        uses: appleboy/scp-action@v0.1.1
+        uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
