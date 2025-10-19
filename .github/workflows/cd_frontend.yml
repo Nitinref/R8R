@@ -56,4 +56,4 @@ jobs:
           script: |
             cd /home/ubuntu/project
             docker-compose pull frontend
-            docker-compose up -d frontend
+             docker-compose up -d frontend
