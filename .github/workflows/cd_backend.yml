@@ -10,24 +10,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Debug file structure
-      - name: Debug File Structure
-        run: |
-          echo "=== File Structure ==="
-          find . -name "docker-compose.yml" -o -name "Dockerfile.backend" -o -name "Dockerfile.frontend" | head -20
-
-      # Docker login
       - name: Docker Login
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      # Build & push backend image
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v4
         with:
@@ -38,7 +29,6 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
 
-      # Copy files individually
       - name: Copy docker-compose.yml
         uses: appleboy/scp-action@v0.1.6
         with:
@@ -57,7 +47,21 @@ jobs:
           source: "docker/Dockerfile.backend,docker/Dockerfile.frontend"
           target: "/home/ubuntu/project/docker/"
 
-      # SSH and deploy
+      - name: Create .env file on server
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/project
+            cat > .env << 'EOF'
+            DATABASE_URL=postgresql://neondb_owner:npg_8TjRiXy9GmYZ@ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
+            REDIS_PASSWORD=your-strong-password
+            JWT_SECRET=your-jwt-secret
+            OPENAI_API_KEY=your-openai-api-key
+            EOF
+
       - name: SSH and Deploy Backend
         uses: appleboy/ssh-action@v0.1.6
         with:
@@ -66,6 +70,5 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/project
-            ls -la
             docker-compose down backend
             docker-compose up -d --build backend
