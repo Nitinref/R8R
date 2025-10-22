@@ -1,54 +1,49 @@
-# R8R - Rapid RAG Runtime 🚀
+R8R - Rapid RAG Runtime 🚀
+https://img.shields.io/badge/License-MIT-yellow.svg
+https://img.shields.io/badge/TypeScript-Ready-blue.svg
+https://img.shields.io/badge/RAG-Enabled-green.svg
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![TypeScript](https://img.shields.io/badge/TypeScript-Ready-blue.svg)](https://www.typescriptlang.org/)
-[![RAG](https://img.shields.io/badge/RAG-Enabled-green.svg)](https://arxiv.org/abs/2005.11401)
+Revolutionizing RAG Development
+R8R is an enterprise-grade RAG Workflow-as-a-Service platform that transforms complex multi-LLM retrieval pipelines into simple API calls. Stop building RAG systems from scratch - deploy sophisticated retrieval workflows in minutes, not weeks.
 
-## **Revolutionizing RAG Development**
+🎯 What is R8R?
+R8R (Rapid RAG Runtime) provides pre-built, optimized RAG workflows accessible via REST API. We handle the complexity of query rewriting, multiple retrieval strategies, and LLM orchestration so you can focus on building amazing AI applications.
 
-R8R is an enterprise-grade **RAG Workflow-as-a-Service** platform that transforms complex multi-LLM retrieval pipelines into simple API calls. Stop building RAG systems from scratch - deploy sophisticated retrieval workflows in minutes, not weeks.
-
-## 🎯 **What is R8R?**
-
-R8R (Rapid RAG Runtime) provides **pre-built, optimized RAG workflows** accessible via REST API. We handle the complexity of query rewriting, multiple retrieval strategies, and LLM orchestration so you can focus on building amazing AI applications.
 🖼️ Platform Preview
 <div align="center">
 Landing Page - Modern & Engaging
-{assets/3.png}
-Clean, professional landing page showcasing R8R's value proposition and features
-
+<img src="./assets/2.png" alt="R8R Landing Page" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" /> <p><em>Clean, professional landing page showcasing R8R's value proposition and features</em></p>
 Signup & Authentication
-{assets/2.png}
-Streamlined signup process with secure authentication and API key generation
-
+<img src="./assets/3.png" alt="R8R Signup" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" /> <p><em>Streamlined signup process with secure authentication and API key generation</em></p>
 Visual Workflow Editor
-{assets/1.png}
-Intuitive drag-and-drop workflow editor with node-based pipeline creation
+<img src="./assets/1.png" alt="R8R Workflow Editor" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" /> <p><em>Intuitive drag-and-drop workflow editor with node-based pipeline creation</em></p></div>
+🎯 The Problem We Solve
+🕒 Building production RAG systems takes 4-8 weeks
 
-</div>
-### **The Problem We Solve**
-- Building production RAG systems takes 4-8 weeks
-- Managing multiple LLMs and vector databases is complex
-- Query rewriting, hybrid search, and result synthesis require extensive tuning
-- Most teams reinvent the wheel for every project
+🔧 Managing multiple LLMs and vector databases is complex
 
-### **Our Solution**
-- **API-first RAG workflows** - Deploy in 5 minutes
-- **Multi-LLM intelligence** - Smart routing and fallbacks
-- **Built-in query optimization** - Automatic query rewriting
-- **Multiple retrieval strategies** - Vector, hybrid, multi-hop in parallel
-- **Enterprise ready** - Rate limiting, monitoring, security
+⚙️ Query rewriting, hybrid search, and result synthesis require extensive tuning
 
-## ⚡ **Quick Start**
+🔄 Most teams reinvent the wheel for every project
 
-### **1. Get Your API Key**
-```bash
+💡 Our Solution
+🚀 API-first RAG workflows - Deploy in 5 minutes
+
+🧠 Multi-LLM intelligence - Smart routing and fallbacks
+
+🔍 Built-in query optimization - Automatic query rewriting
+
+📊 Multiple retrieval strategies - Vector, hybrid, multi-hop in parallel
+
+🏢 Enterprise ready - Rate limiting, monitoring, security
+
+⚡ Quick Start
+1. Get Your API Key
+bash
 # Sign up at https://r8r.ai
 # Get your free API key (1000 queries/month)
-```
-
-### **2. Make Your First Call**
-```javascript
+2. Make Your First Call
+javascript
 import R8R from 'r8r-client';
 
 const client = new R8R('your-api-key');
@@ -62,10 +57,8 @@ const result = await client.query(
 );
 
 console.log(result.answer);
-```
-
-### **3. Or Use REST API**
-```bash
+3. Or Use REST API
+bash
 curl -X POST https://api.r8r.ai/v1/query \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
@@ -74,11 +67,8 @@ curl -X POST https://api.r8r.ai/v1/query \
     "pipeline": "research",
     "format": "detailed"
   }'
-```
-
-## 🏗️ **Architecture**
-
-```
+🏗️ Architecture
+text
 Input Query
     ↓
 Smart Query Rewriter (Multi-LLM)
@@ -92,42 +82,45 @@ Parallel RAG Pipelines
 Intelligent Result Synthesis
     ↓
 Verified, Source-Cited Response
-```
+🔧 Core Features
+🧠 Smart Query Rewriting
+✅ 5+ rewriting strategies per query
 
-## 🔧 **Core Features**
+✅ Multi-LLM ensemble (GPT-4, Claude-3, Llama-3)
 
-### **🧠 Smart Query Rewriting**
-- **5+ rewriting strategies** per query
-- **Multi-LLM ensemble** (GPT-4, Claude-3, Llama-3)
-- **Automatic intent recognition**
-- **Domain-specific optimization**
+✅ Automatic intent recognition
 
-### **🔍 Multi-Pipeline Retrieval**
-- **Vector RAG** - Semantic similarity search
-- **Hybrid RAG** - Best of vector + keyword search
-- **Multi-Hop RAG** - Complex reasoning chains
-- **Cross-Modal RAG** - Text + structured data
+✅ Domain-specific optimization
 
-### **🎯 Pre-Built Workflows**
-```javascript
+🔍 Multi-Pipeline Retrieval
+✅ Vector RAG - Semantic similarity search
+
+✅ Hybrid RAG - Best of vector + keyword search
+
+✅ Multi-Hop RAG - Complex reasoning chains
+
+✅ Cross-Modal RAG - Text + structured data
+
+🎯 Pre-Built Workflows
+javascript
 // Available pipeline types:
 'standard'      // Fast, general-purpose
 'advanced'      // Multi-strategy with verification  
 'research'      // Academic/scientific rigor
 'enterprise'    // Maximum accuracy, multiple validations
 'custom'        // Tailored to your domain
-```
+📊 Built-in Analytics
+📈 Query performance metrics
 
-### **📊 Built-in Analytics**
-- Query performance metrics
-- Source attribution scoring
-- Pipeline effectiveness analysis
-- Cost optimization insights
+🎯 Source attribution scoring
 
-## 📚 **API Reference**
+📊 Pipeline effectiveness analysis
 
-### **Query Endpoint**
-```javascript
+💰 Cost optimization insights
+
+📚 API Reference
+Query Endpoint
+javascript
 POST /v1/query
 
 {
@@ -139,10 +132,8 @@ POST /v1/query
   "max_sources": 10,
   "citation_style": "apa|ieee|simple"
 }
-```
-
-### **Response Format**
-```javascript
+Response Format
+javascript
 {
   "success": true,
   "data": {
@@ -169,34 +160,14 @@ POST /v1/query
     }
   }
 }
-```
-
-## 💰 **Pricing**
-
-### **Free Tier**
-- **1,000 queries/month**
-- Standard pipeline only
-- Basic analytics
-- Community support
-
-### **Pro** - $49/month
-- **50,000 queries/month**
-- All advanced pipelines
-- Custom domain tuning
-- Priority support
-- Advanced analytics
-
-### **Enterprise** - Custom
-- **Unlimited queries**
-- Dedicated instances
-- White-label options
-- SLAs & custom workflows
-- On-premise deployment available
-
-## 🛠️ **Integration Examples**
-
-### **Next.js Application**
-```javascript
+💰 Pricing
+Plan	Queries/Month	Features	Price
+Free Tier	1,000	Standard pipeline, Basic analytics, Community support	$0
+Pro	50,000	All advanced pipelines, Custom domain tuning, Priority support, Advanced analytics	$49/month
+Enterprise	Unlimited	Dedicated instances, White-label options, SLAs & custom workflows, On-premise deployment	Custom
+🛠️ Integration Examples
+Next.js Application
+javascript
 // pages/api/chat.js
 import R8R from 'r8r-client';
 
@@ -210,10 +181,8 @@ export default async function handler(req, res) {
   
   res.json(result);
 }
-```
-
-### **React Component**
-```javascript
+React Component
+javascript
 import { useR8R } from 'r8r-react';
 
 function ChatApp() {
@@ -229,10 +198,8 @@ function ChatApp() {
   
   return <ChatInterface onSendMessage={handleQuestion} />;
 }
-```
-
-### **Python Integration**
-```python
+Python Integration
+python
 from r8r_client import R8RClient
 
 client = R8RClient(api_key="your-api-key")
@@ -241,65 +208,69 @@ response = client.query(
     pipeline="standard"
 )
 print(response['answer'])
-```
+🔒 Security & Compliance
+✅ SOC 2 Type II Certified
 
-## 🔒 **Security & Compliance**
+✅ GDPR & CCPA Compliant
 
-- **SOC 2 Type II Certified**
-- **GDPR & CCPA Compliant**
-- **End-to-end encryption**
-- **Data isolation** per customer
-- **Zero data retention** (optional)
-- **On-premise deployment** available
+✅ End-to-end encryption
 
-## 📈 **Why Choose R8R?**
+✅ Data isolation per customer
 
-### **For Developers**
-- **90% faster RAG implementation**
-- **No infrastructure management**
-- **Consistent, high-quality results**
-- **Scalable from prototype to production**
+✅ Zero data retention (optional)
 
-### **For Enterprises**
-- **Proven accuracy** across domains
-- **Cost control** with predictable pricing
-- **Security & compliance** built-in
-- **Enterprise support** with SLAs
+✅ On-premise deployment available
 
-### **For AI Teams**
-- **Focus on innovation**, not infrastructure
-- **A/B test pipelines** easily
-- **Comprehensive analytics** for optimization
-- **Continuous pipeline improvements**
+📈 Why Choose R8R?
+👨‍💻 For Developers
+⚡ 90% faster RAG implementation
 
-## 🚀 **Getting Started**
+🛠️ No infrastructure management
 
-### **1. Sign Up**
-Visit [r8r.ai](https://r8r.ai) for free API key
+🎯 Consistent, high-quality results
 
-### **2. Integrate**
-```bash
+📈 Scalable from prototype to production
+
+🏢 For Enterprises
+✅ Proven accuracy across domains
+
+💰 Cost control with predictable pricing
+
+🔒 Security & compliance built-in
+
+📞 Enterprise support with SLAs
+
+🧠 For AI Teams
+💡 Focus on innovation, not infrastructure
+
+🔄 A/B test pipelines easily
+
+📊 Comprehensive analytics for optimization
+
+🚀 Continuous pipeline improvements
+
+🚀 Getting Started
+1. Sign Up
+Visit r8r.ai for free API key
+
+2. Integrate
+bash
 npm install r8r-client
 # or
 pip install r8r-client
-```
-
-### **3. Deploy**
-```javascript
+3. Deploy
+javascript
 // That's it! You're ready to use production-grade RAG
 const answer = await r8r.query("Your question here");
-```
+🆘 Support
+📚 Documentation: docs.r8r.ai
 
-## 🆘 **Support**
+💬 Community: Discord
 
-- **Documentation**: [docs.r8r.ai](https://docs.r8r.ai)
-- **Community**: [Discord](https://discord.gg/r8r)
-- **Email**: support@r8r.ai
-- **Status**: [status.r8r.ai](https://status.r8r.ai)
+📧 Email: support@r8r.ai
 
+📊 Status: status.r8r.ai
 
-**© 2024 FlowForge AI. All rights reserved.**
+© 2024 FlowForge AI. All rights reserved.
 
----
-
-*"Stop building RAG infrastructure. Start building AI applications."* 🚀
+"Stop building RAG infrastructure. Start building AI applications." 🚀
