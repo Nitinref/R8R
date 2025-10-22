@@ -60,6 +60,8 @@ export interface WorkflowNode {
 }
 
 export interface WorkflowConfig {
+  edges: never[];
+  nodes: WorkflowNode[];
   id: string;
   name: string;
   description?: string;

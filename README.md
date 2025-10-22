@@ -272,5 +272,3 @@ const answer = await r8r.query("Your question here");
 📊 Status: status.r8r.ai
 
 © 2024 FlowForge AI. All rights reserved.
-
-"Stop building RAG infrastructure. Start building AI applications." 🚀

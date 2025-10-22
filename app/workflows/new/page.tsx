@@ -1207,6 +1207,7 @@ useEffect(() => {
         id: `workflow-${Date.now()}`,
         name,
         description,
+          // @ts-ignore
         nodes: nodes.map(node => ({
           // @ts-ignore
           id: node.id,
@@ -1221,6 +1222,7 @@ useEffect(() => {
             config: node.data.config
           }
         })),
+          // @ts-ignore
         edges: edges.map(edge => ({
           // @ts-ignore
           id: edge.id,

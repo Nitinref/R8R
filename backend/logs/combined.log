@@ -9126,3 +9126,258 @@
 {"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-22T10:24:01.313Z"}
 {"level":"info","message":"HTTP server closed","timestamp":"2025-10-22T10:24:01.315Z"}
 {"error":"Authentication failed","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/analytics/dashboard","query":{},"stack":"Error: Authentication failed\n    at authenticateJWT (file:///C:/Users/DELL/yy/R8R/backend/dist/middleware/auth.middleware.js:43:14)","timestamp":"2025-10-22T10:24:10.598Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-22T10:31:52.898Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.902Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-22T10:31:52.902Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.902Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-22T10:31:52.903Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-22T10:31:52.903Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-22T10:31:52.904Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-22T10:31:52.904Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-22T10:31:52.904Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-22T10:31:52.905Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-22T10:31:52.906Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-22T10:31:52.906Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-22T10:31:52.906Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-22T10:31:52.906Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.906Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-22T10:31:52.907Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.907Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.908Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-22T10:31:52.908Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.908Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-22T10:31:52.908Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-22T10:31:52.908Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-22T10:31:52.908Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-22T10:31:52.909Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-22T10:31:52.909Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-22T10:31:52.909Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T10:31:52.909Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-22T10:31:52.909Z"}
+{"error":"Can't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","level":"error","message":"Failed to initialize application","stack":"PrismaClientInitializationError: Can't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.\n    at r (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:115:2770)\n    at async initializeApp (file:///C:/Users/DELL/yy/R8R/backend/dist/server.js:32:9)","timestamp":"2025-10-22T10:31:57.964Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-22T12:35:59.143Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.148Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-22T12:35:59.149Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.150Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-22T12:35:59.151Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-22T12:35:59.152Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-22T12:35:59.152Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-22T12:35:59.153Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-22T12:35:59.154Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-22T12:35:59.156Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-22T12:35:59.157Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-22T12:35:59.157Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-22T12:35:59.158Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-22T12:35:59.158Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-22T12:35:59.159Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-22T12:35:59.159Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-22T12:35:59.159Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-22T12:35:59.160Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-22T12:35:59.160Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-22T12:35:59.160Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.161Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-22T12:35:59.161Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.161Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.162Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-22T12:35:59.162Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.162Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-22T12:35:59.163Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-22T12:35:59.163Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-22T12:35:59.164Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-22T12:35:59.164Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-22T12:35:59.164Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-22T12:35:59.165Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:35:59.165Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-22T12:35:59.166Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-22T12:36:02.609Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-22T12:36:02.610Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-22T12:36:02.612Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-22T12:36:02.683Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-22T12:36:02.723Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-22T12:36:02.724Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-22T12:36:02.730Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:36:02.740Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-22T12:36:02.740Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-22T12:36:02.741Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-22T12:36:02.741Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-22T12:36:02.742Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-22T12:36:08.375Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:36:11.543Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:36:11.559Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:36:11.574Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:36:16.541Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:36:17.102Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:36:17.446Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:36:36.432Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:36:36.439Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:36:36.446Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:36:38.947Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:36:39.309Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:36:39.472Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:38:42.125Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:38:42.131Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:38:42.138Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:38:43.747Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:38:43.913Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:38:44.273Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:39:02.392Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:02.401Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:39:02.413Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:29.011Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:31.217Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:42.454Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:39:42.461Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:39:42.471Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:39:43.400Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:39:43.636Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:44.806Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:39:49.510Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:49.572Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:39:49.653Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:39:51.128Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T12:39:51.518Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T12:39:52.684Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1761136817587-1761136822954","source":"1761136817587","target":"1761136822954"},{"id":"xy-edge__1761136822954-1761136832538","source":"1761136822954","target":"1761136832538"},{"id":"xy-edge__1761136832538-1761136840618","source":"1761136832538","target":"1761136840618"},{"id":"xy-edge__1761136840618-1761136847771","source":"1761136840618","target":"1761136847771"}],"entryPoint":"1761136817587","id":"workflow-1761136864195","name":"kaka","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1761136817587","position":{"x":430.43103030137615,"y":298.1435039959722},"type":"query_rewrite"},{"data":{"config":{"memoryRetrieve":{"enabled":true,"includeMetadata":true,"keywordWeight":0.3,"minScore":0.7,"topK":5,"useHybridSearch":false,"useReranking":false}},"label":"Memory Retrieve"},"id":"1761136822954","position":{"x":432,"y":448},"type":"memory_retrieve"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Answer Generation"},"id":"1761136832538","position":{"x":432,"y":608},"type":"answer_generation"},{"data":{"config":{"memorySummarize":{"enabled":true,"strategy":{"preserveDetails":false},"triggers":{"maxSimilarity":0.8,"minGroupSize":2,"minMemories":3}}},"label":"Memory Summarize"},"id":"1761136840618","position":{"x":432,"y":768},"type":"memory_summarize"},{"data":{"config":{"memoryUpdate":{"deduplication":{"enabled":true,"mergeStrategy":"summarize","similarityThreshold":0.8},"enabled":true,"importance":{"auto":true},"retention":{"enableExpiration":true,"expirationDays":90,"maxMemories":1000}}},"label":"Memory Update"},"id":"1761136847771","position":{"x":432,"y":928},"type":"memory_update"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1761136817587","nextSteps":["1761136822954"],"type":"query_rewrite"},{"config":{"memoryRetrieve":{"enabled":true,"includeMetadata":true,"keywordWeight":0.3,"minScore":0.7,"topK":5,"useHybridSearch":false,"useReranking":false}},"id":"1761136822954","nextSteps":["1761136832538"],"type":"memory_retrieve"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1761136832538","nextSteps":["1761136840618"],"type":"answer_generation"},{"config":{"memorySummarize":{"enabled":true,"strategy":{"preserveDetails":false},"triggers":{"maxSimilarity":0.8,"minGroupSize":2,"minMemories":3}}},"id":"1761136840618","nextSteps":["1761136847771"],"type":"memory_summarize"},{"config":{"memoryUpdate":{"deduplication":{"enabled":true,"mergeStrategy":"summarize","similarityThreshold":0.8},"enabled":true,"importance":{"auto":true},"retention":{"enableExpiration":true,"expirationDays":90,"maxMemories":1000}}},"id":"1761136847771","type":"memory_update"}]},"description":"","name":"kaka","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-22T12:41:04.251Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:41:07.183Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T12:41:11.230Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T12:41:13.755Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T12:41:18.338Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T12:41:18.343Z"}
+{"body":{"name":"2r"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-22T12:41:32.750Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T12:41:33.695Z"}
+{"body":{"query":"Moral Obligation and Future Generations (Ethics/Sustainability): What is the precise nature and extent of our moral obligation, if any, to ensure the long-term sustainability and well-being of people who do not yet exist? Does this obligation supersede the immediate needs or wants of the current global population, and if so, how is that sacrifice morally justified?","workflowId":"workflow-1761136864195"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-22T12:43:01.431Z"}
+{"level":"info","message":"Executing query","queryLength":367,"timestamp":"2025-10-22T12:43:02.925Z","userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e","workflowId":"workflow-1761136864195"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-22T12:43:02.934Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-22T12:43:02.942Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-22T12:43:02.962Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-22T12:43:02.962Z"}
+{"key":"workflow:workflow-1761136864195:query:3e162103b085128d","level":"debug","message":"Cache miss","timestamp":"2025-10-22T12:43:02.974Z"}
+{"entrySteps":["1761136817587"],"level":"info","message":"Starting workflow execution","timestamp":"2025-10-22T12:43:02.976Z","totalSteps":5}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761136817587","timestamp":"2025-10-22T12:43:02.978Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-22T12:43:02.981Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-22T12:43:05.572Z","tokensUsed":129}
+{"contentLength":152,"duration":2593,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-22T12:43:05.573Z","tokensUsed":129}
+{"level":"info","message":"Query rewritten","original":"Moral Obligation and Future Generations (Ethics/Sustainability): What is the precise nature and extent of our moral obligation, if any, to ensure the long-term sustainability and well-being of people who do not yet exist? Does this obligation supersede the immediate needs or wants of the current global population, and if so, how is that sacrifice morally justified?","rewritten":"Moral Obligation to Future Generations: What is the extent of our duty to ensure long-term sustainability and well-being of people who do not yet exist?","stepId":"1761136817587","timestamp":"2025-10-22T12:43:05.573Z"}
+{"level":"debug","message":"All parents completed for step: 1761136822954","parentSteps":["1761136817587"],"timestamp":"2025-10-22T12:43:05.574Z"}
+{"level":"info","message":"Executing step: memory_retrieve","stepId":"1761136822954","timestamp":"2025-10-22T12:43:05.575Z"}
+{"level":"info","message":"Executing memory retrieval","minScore":0.7,"stepId":"1761136822954","timestamp":"2025-10-22T12:43:05.576Z","topK":5}
+{"level":"info","message":"🔍 Retrieving memories","timestamp":"2025-10-22T12:43:05.577Z","topK":5,"userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e","workflowId":"workflow-1761136864195"}
+{"avgScore":0,"count":0,"level":"info","message":"✅ Memories retrieved","timestamp":"2025-10-22T12:43:07.349Z","totalTime":1772}
+{"level":"info","message":"No relevant memories found","stepId":"1761136822954","timestamp":"2025-10-22T12:43:07.350Z"}
+{"level":"debug","message":"All parents completed for step: 1761136832538","parentSteps":["1761136822954"],"timestamp":"2025-10-22T12:43:07.350Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1761136832538","timestamp":"2025-10-22T12:43:07.350Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-22T12:43:07.351Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-22T12:43:13.982Z","tokensUsed":293}
+{"contentLength":1281,"duration":6632,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-22T12:43:13.983Z","tokensUsed":293}
+{"answerLength":1281,"confidence":0.3,"documentsUsed":0,"level":"info","memoriesUsed":0,"message":"Answer generated","timestamp":"2025-10-22T12:43:13.984Z"}
+{"level":"debug","message":"All parents completed for step: 1761136840618","parentSteps":["1761136832538"],"timestamp":"2025-10-22T12:43:13.985Z"}
+{"level":"info","message":"Executing step: memory_summarize","stepId":"1761136840618","timestamp":"2025-10-22T12:43:13.985Z"}
+{"level":"info","message":"Executing memory summarization","preserveDetails":false,"stepId":"1761136840618","timestamp":"2025-10-22T12:43:13.986Z"}
+{"level":"info","memoryCount":0,"message":"Not enough memories to summarize","stepId":"1761136840618","timestamp":"2025-10-22T12:43:13.987Z"}
+{"level":"debug","message":"All parents completed for step: 1761136847771","parentSteps":["1761136840618"],"timestamp":"2025-10-22T12:43:13.988Z"}
+{"level":"info","message":"Executing step: memory_update","stepId":"1761136847771","timestamp":"2025-10-22T12:43:13.988Z"}
+{"deduplication":true,"importance":true,"level":"info","message":"Executing memory update","stepId":"1761136847771","timestamp":"2025-10-22T12:43:13.989Z"}
+{"level":"info","memoryId":"2a841119-d238-41e5-a525-47a70bcd1e3e","message":"✅ Memory stored successfully","timestamp":"2025-10-22T12:43:16.777Z","withWorkflow":true}
+{"level":"info","message":"🔍 Retrieving memories","timestamp":"2025-10-22T12:43:16.778Z","topK":10,"userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e"}
+{"avgScore":0.93461204,"count":1,"level":"info","message":"✅ Memories retrieved","timestamp":"2025-10-22T12:43:19.763Z","totalTime":2985}
+{"currentCount":6,"level":"info","maxMemories":1000,"message":"No cleanup needed","timestamp":"2025-10-22T12:43:20.336Z","userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e"}
+{"importance":0.7,"level":"info","memoryId":"2a841119-d238-41e5-a525-47a70bcd1e3e","message":"Memory update completed successfully","stepId":"1761136847771","timestamp":"2025-10-22T12:43:20.337Z"}
+{"key":"workflow:workflow-1761136864195:query:3e162103b085128d","level":"debug","message":"Cache set successful","timestamp":"2025-10-22T12:43:20.345Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T13:47:15.573Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T13:47:45.791Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T13:47:45.816Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:01:06.273Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:01:26.910Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1761136817587-1761136822954","source":"1761136817587","target":"1761136822954"},{"id":"xy-edge__1761136822954-1761136832538","source":"1761136822954","target":"1761136832538"},{"id":"xy-edge__1761136832538-1761136840618","source":"1761136832538","target":"1761136840618"},{"id":"xy-edge__1761136840618-1761136847771","source":"1761136840618","target":"1761136847771"}],"entryPoint":"1761136817587","id":"workflow-1761136864195","name":"kaka","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1761136817587","position":{"x":128,"y":80},"type":"query_rewrite"},{"data":{"config":{"memoryRetrieve":{"enabled":true,"includeMetadata":true,"keywordWeight":0.3,"minScore":0.7,"topK":5,"useHybridSearch":false,"useReranking":false}},"label":"Memory Retrieve"},"id":"1761136822954","position":{"x":128,"y":224},"type":"memory_retrieve"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Answer Generation"},"id":"1761136832538","position":{"x":112,"y":368},"type":"answer_generation"},{"data":{"config":{"memorySummarize":{"enabled":true,"strategy":{"preserveDetails":false},"triggers":{"maxSimilarity":0.8,"minGroupSize":2,"minMemories":3}}},"label":"Memory Summarize"},"id":"1761136840618","position":{"x":112,"y":528},"type":"memory_summarize"},{"data":{"config":{"memoryUpdate":{"deduplication":{"enabled":true,"mergeStrategy":"summarize","similarityThreshold":0.8},"enabled":true,"importance":{"auto":true},"retention":{"enableExpiration":true,"expirationDays":90,"maxMemories":1000}}},"label":"Memory Update"},"id":"1761136847771","position":{"x":128,"y":688},"type":"memory_update"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1761136817587","nextSteps":["1761136822954"],"type":"query_rewrite"},{"config":{"memoryRetrieve":{"enabled":true,"includeMetadata":true,"keywordWeight":0.3,"minScore":0.7,"topK":5,"useHybridSearch":false,"useReranking":false}},"id":"1761136822954","nextSteps":["1761136832538"],"type":"memory_retrieve"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1761136832538","nextSteps":["1761136840618"],"type":"answer_generation"},{"config":{"memorySummarize":{"enabled":true,"strategy":{"preserveDetails":false},"triggers":{"maxSimilarity":0.8,"minGroupSize":2,"minMemories":3}}},"id":"1761136840618","nextSteps":["1761136847771"],"type":"memory_summarize"},{"config":{"memoryUpdate":{"deduplication":{"enabled":true,"mergeStrategy":"summarize","similarityThreshold":0.8},"enabled":true,"importance":{"auto":true},"retention":{"enableExpiration":true,"expirationDays":90,"maxMemories":1000}}},"id":"1761136847771","type":"memory_update"}]},"description":"","name":"kaka","status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:02:02.577Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:02:04.978Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T14:02:04.988Z"}
+{"body":{"query":"The Limits of Predictability in Chaos (Mathematics/Physics): The three-body problem is demonstrably chaotic and non-linear. What is the fundamental, underlying reason that certain physical systems resist complete, deterministic prediction, even when all initial conditions are theoretically known? Does this suggest a structural limit to scientific knowledge, or merely a computational one?","workflowId":"workflow-1761136864195"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-22T14:02:24.451Z"}
+{"level":"info","message":"Executing query","queryLength":390,"timestamp":"2025-10-22T14:02:26.020Z","userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e","workflowId":"workflow-1761136864195"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-22T14:02:26.039Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-22T14:02:26.044Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-22T14:02:26.067Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-22T14:02:26.068Z"}
+{"key":"workflow:workflow-1761136864195:query:fd69c961642dbf75","level":"debug","message":"Cache miss","timestamp":"2025-10-22T14:02:26.073Z"}
+{"entrySteps":["1761136817587"],"level":"info","message":"Starting workflow execution","timestamp":"2025-10-22T14:02:26.074Z","totalSteps":5}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761136817587","timestamp":"2025-10-22T14:02:26.074Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-22T14:02:26.075Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-22T14:02:29.381Z","tokensUsed":113}
+{"contentLength":179,"duration":3307,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-22T14:02:29.382Z","tokensUsed":113}
+{"level":"info","message":"Query rewritten","original":"The Limits of Predictability in Chaos (Mathematics/Physics): The three-body problem is demonstrably chaotic and non-linear. What is the fundamental, underlying reason that certain physical systems resist complete, deterministic prediction, even when all initial conditions are theoretically known? Does this suggest a structural limit to scientific knowledge, or merely a computational one?","rewritten":"Limits of Predictability in Chaos Mathematics Physics Fundamental reason physical systems resist deterministic prediction structural limit scientific knowledge computational limit","stepId":"1761136817587","timestamp":"2025-10-22T14:02:29.382Z"}
+{"level":"debug","message":"All parents completed for step: 1761136822954","parentSteps":["1761136817587"],"timestamp":"2025-10-22T14:02:29.382Z"}
+{"level":"info","message":"Executing step: memory_retrieve","stepId":"1761136822954","timestamp":"2025-10-22T14:02:29.383Z"}
+{"level":"info","message":"Executing memory retrieval","minScore":0.7,"stepId":"1761136822954","timestamp":"2025-10-22T14:02:29.383Z","topK":5}
+{"level":"info","message":"🔍 Retrieving memories","timestamp":"2025-10-22T14:02:29.383Z","topK":5,"userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e","workflowId":"workflow-1761136864195"}
+{"avgScore":0,"count":0,"level":"info","message":"✅ Memories retrieved","timestamp":"2025-10-22T14:02:30.870Z","totalTime":1487}
+{"level":"info","message":"No relevant memories found","stepId":"1761136822954","timestamp":"2025-10-22T14:02:30.871Z"}
+{"level":"debug","message":"All parents completed for step: 1761136832538","parentSteps":["1761136822954"],"timestamp":"2025-10-22T14:02:30.871Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1761136832538","timestamp":"2025-10-22T14:02:30.872Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-22T14:02:30.872Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-22T14:02:42.420Z","tokensUsed":224}
+{"contentLength":999,"duration":11549,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-22T14:02:42.421Z","tokensUsed":224}
+{"answerLength":999,"confidence":0.3,"documentsUsed":0,"level":"info","memoriesUsed":0,"message":"Answer generated","timestamp":"2025-10-22T14:02:42.422Z"}
+{"level":"debug","message":"All parents completed for step: 1761136840618","parentSteps":["1761136832538"],"timestamp":"2025-10-22T14:02:42.422Z"}
+{"level":"info","message":"Executing step: memory_summarize","stepId":"1761136840618","timestamp":"2025-10-22T14:02:42.423Z"}
+{"level":"info","message":"Executing memory summarization","preserveDetails":false,"stepId":"1761136840618","timestamp":"2025-10-22T14:02:42.424Z"}
+{"level":"info","memoryCount":0,"message":"Not enough memories to summarize","stepId":"1761136840618","timestamp":"2025-10-22T14:02:42.424Z"}
+{"level":"debug","message":"All parents completed for step: 1761136847771","parentSteps":["1761136840618"],"timestamp":"2025-10-22T14:02:42.425Z"}
+{"level":"info","message":"Executing step: memory_update","stepId":"1761136847771","timestamp":"2025-10-22T14:02:42.426Z"}
+{"deduplication":true,"importance":true,"level":"info","message":"Executing memory update","stepId":"1761136847771","timestamp":"2025-10-22T14:02:42.427Z"}
+{"level":"info","memoryId":"73fda0ac-fc04-4fca-8865-fdcd083ee08d","message":"✅ Memory stored successfully","timestamp":"2025-10-22T14:02:45.284Z","withWorkflow":true}
+{"level":"info","message":"🔍 Retrieving memories","timestamp":"2025-10-22T14:02:45.285Z","topK":10,"userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e"}
+{"avgScore":0.94645727,"count":1,"level":"info","message":"✅ Memories retrieved","timestamp":"2025-10-22T14:02:47.749Z","totalTime":2464}
+{"currentCount":7,"level":"info","maxMemories":1000,"message":"No cleanup needed","timestamp":"2025-10-22T14:02:48.305Z","userId":"e4e0de40-6ef3-4bd9-b63b-456affdf4b0e"}
+{"importance":0.7,"level":"info","memoryId":"73fda0ac-fc04-4fca-8865-fdcd083ee08d","message":"Memory update completed successfully","stepId":"1761136847771","timestamp":"2025-10-22T14:02:48.306Z"}
+{"key":"workflow:workflow-1761136864195:query:fd69c961642dbf75","level":"debug","message":"Cache set successful","timestamp":"2025-10-22T14:02:48.313Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:03:01.571Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:03:40.558Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T14:03:40.562Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:03:48.975Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:03:53.431Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T14:03:53.433Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:03:55.220Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:03:56.916Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T14:03:56.920Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:03:58.831Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:04:00.470Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T14:04:00.477Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:04:02.000Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761136864195","query":{},"timestamp":"2025-10-22T14:04:03.450Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-22T14:04:03.454Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:04:04.907Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:04:09.113Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:04:09.119Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T14:04:09.123Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:04:10.549Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T14:04:13.194Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:04:13.688Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:04:27.957Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:04:29.811Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:04:39.956Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:04:39.959Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T14:04:39.961Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:04:41.215Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T14:04:41.856Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:04:43.708Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:09:27.560Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:09:27.562Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T14:09:27.566Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-22T14:09:32.456Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-22T14:09:34.663Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-22T14:09:35.593Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-22T14:26:55.949Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"error":"\nInvalid `prisma.user.findUnique()` invocation:\n\n\nCan't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/auth/login","query":{},"stack":"PrismaClientKnownRequestError: \nInvalid `prisma.user.findUnique()` invocation:\n\n\nCan't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.\n    at ei.handleRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:7268)\n    at ei.handleAndLogRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6593)\n    at ei.request (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6300)\n    at async a (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:133:9551)\n    at async login (file:///C:/Users/DELL/yy/R8R/backend/src/controllers/auth.controllers.ts:59:18)","timestamp":"2025-10-22T14:27:01.038Z"}
+{"code":"P1001","level":"error","message":"Unhandled Prisma error \nInvalid `prisma.user.findUnique()` invocation:\n\n\nCan't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","meta":{"database_location":"ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432","modelName":"User"},"timestamp":"2025-10-22T14:27:01.040Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-22T14:29:39.291Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"error":"\nInvalid `prisma.user.findUnique()` invocation:\n\n\nCan't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","ip":"::1","level":"error","message":"Error occurred","method":"POST","params":{},"path":"/api/auth/login","query":{},"stack":"PrismaClientKnownRequestError: \nInvalid `prisma.user.findUnique()` invocation:\n\n\nCan't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.\n    at ei.handleRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:7268)\n    at ei.handleAndLogRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6593)\n    at ei.request (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6300)\n    at async a (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:133:9551)\n    at async login (file:///C:/Users/DELL/yy/R8R/backend/src/controllers/auth.controllers.ts:59:18)","timestamp":"2025-10-22T14:29:44.325Z"}
+{"code":"P1001","level":"error","message":"Unhandled Prisma error \nInvalid `prisma.user.findUnique()` invocation:\n\n\nCan't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","meta":{"database_location":"ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432","modelName":"User"},"timestamp":"2025-10-22T14:29:44.331Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-22T14:53:35.887Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-22T14:53:35.895Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-22T14:53:35.913Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-22T14:53:35.931Z"}
