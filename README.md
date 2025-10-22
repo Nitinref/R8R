@@ -11,7 +11,21 @@ R8R is an enterprise-grade **RAG Workflow-as-a-Service** platform that transform
 ## 🎯 **What is R8R?**
 
 R8R (Rapid RAG Runtime) provides **pre-built, optimized RAG workflows** accessible via REST API. We handle the complexity of query rewriting, multiple retrieval strategies, and LLM orchestration so you can focus on building amazing AI applications.
+🖼️ Platform Preview
+<div align="center">
+Landing Page - Modern & Engaging
+{assets/3.png}
+Clean, professional landing page showcasing R8R's value proposition and features
 
+Signup & Authentication
+{assets/2.png}
+Streamlined signup process with secure authentication and API key generation
+
+Visual Workflow Editor
+{assets/1.png}
+Intuitive drag-and-drop workflow editor with node-based pipeline creation
+
+</div>
 ### **The Problem We Solve**
 - Building production RAG systems takes 4-8 weeks
 - Managing multiple LLMs and vector databases is complex
