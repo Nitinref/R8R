@@ -1,3 +1,4 @@
+// types/workflow.types.ts
 export var StepType;
 (function (StepType) {
     StepType["QUERY_REWRITE"] = "query_rewrite";
@@ -5,6 +6,9 @@ export var StepType;
     StepType["RERANK"] = "rerank";
     StepType["ANSWER_GENERATION"] = "answer_generation";
     StepType["POST_PROCESS"] = "post_process";
+    StepType["MEMORY_UPDATE"] = "memory_update";
+    StepType["MEMORY_SUMMARIZE"] = "memory_summarize";
+    StepType["MEMORY_RETRIEVE"] = "memory_retrieve"; // UPPERCASE
 })(StepType || (StepType = {}));
 export var LLMProvider;
 (function (LLMProvider) {

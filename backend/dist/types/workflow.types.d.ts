@@ -3,7 +3,10 @@ export declare enum StepType {
     RETRIEVAL = "retrieval",
     RERANK = "rerank",
     ANSWER_GENERATION = "answer_generation",
-    POST_PROCESS = "post_process"
+    POST_PROCESS = "post_process",
+    MEMORY_UPDATE = "memory_update",// UPPERCASE
+    MEMORY_SUMMARIZE = "memory_summarize",// UPPERCASE
+    MEMORY_RETRIEVE = "memory_retrieve"
 }
 export declare enum LLMProvider {
     OPENAI = "openai",
@@ -16,6 +19,18 @@ export declare enum RetrieverType {
     WEAVIATE = "weaviate",
     KEYWORD = "keyword",
     HYBRID = "hybrid"
+}
+export type MemoryType = 'conversation' | 'fact' | 'preference' | 'decision' | 'insight' | 'feedback' | 'instruction' | 'explanation';
+export interface MemoryFilters {
+    types?: MemoryType[];
+    tags?: string[];
+    minImportance?: number;
+    maxImportance?: number;
+    minScore?: number;
+    maxScore?: number;
+    dateFrom?: Date;
+    dateTo?: Date;
+    maxAgeDays?: number;
 }
 export interface WorkflowNode {
     id: string;
@@ -42,6 +57,45 @@ export interface WorkflowNode {
                 config: Record<string, any>;
             };
             prompt?: string;
+            memoryRetrieve?: {
+                enabled: boolean;
+                topK: number;
+                minScore: number;
+                includeMetadata: boolean;
+                useReranking: boolean;
+                useHybridSearch?: boolean;
+                keywordWeight?: number;
+                relevanceThreshold?: number;
+                filters?: MemoryFilters;
+            };
+            memoryUpdate?: {
+                enabled: boolean;
+                importance: {
+                    auto: boolean;
+                    baseScore?: number;
+                };
+                deduplication: {
+                    enabled: boolean;
+                    similarityThreshold: number;
+                    mergeStrategy: 'summarize' | 'keep_recent' | 'keep_important' | 'merge_metadata';
+                };
+                retention: {
+                    maxMemories: number;
+                    enableExpiration: boolean;
+                    expirationDays?: number;
+                };
+            };
+            memorySummarize?: {
+                enabled: boolean;
+                triggers: {
+                    minMemories: number;
+                    maxSimilarity: number;
+                    minGroupSize?: number;
+                };
+                strategy: {
+                    preserveDetails: boolean;
+                };
+            };
             [key: string]: any;
         };
     };
@@ -71,6 +125,50 @@ export interface WorkflowStep {
             config: Record<string, any>;
         };
         prompt?: string;
+        memoryRetrieve?: {
+            enabled: boolean;
+            topK: number;
+            minScore: number;
+            includeMetadata: boolean;
+            useReranking: boolean;
+            useHybridSearch?: boolean;
+            keywordWeight?: number;
+            relevanceThreshold?: number;
+            filters?: MemoryFilters;
+        };
+        memoryUpdate?: {
+            enabled: boolean;
+            importance: {
+                manualValue: number;
+                auto: boolean;
+                baseScore?: number;
+            };
+            deduplication: {
+                enabled: boolean;
+                similarityThreshold: number;
+                mergeStrategy: 'summarize' | 'keep_recent' | 'keep_important' | 'merge_metadata';
+            };
+            retention: {
+                maxMemories: number;
+                enableExpiration: boolean;
+                expirationDays?: number;
+            };
+        };
+        memorySummarize?: {
+            topK: number;
+            similarityThreshold: any;
+            memoryIds: boolean;
+            preserveDetails: boolean;
+            enabled: boolean;
+            triggers: {
+                minMemories: number;
+                maxSimilarity: number;
+                minGroupSize?: number;
+            };
+            strategy: {
+                preserveDetails: boolean;
+            };
+        };
         [key: string]: any;
     };
     nextSteps?: string[];
@@ -107,6 +205,14 @@ export interface QueryResponse {
     retrieversUsed: string[];
     rewrittenQuery: Record<string, string>;
     cached?: boolean;
+    memoryContext?: {
+        memoriesUsed?: number;
+        memoryRelevance?: number;
+        memoryRetrievalTime?: number;
+        memoryStored?: boolean;
+        memoriesSummarized?: boolean;
+        memoryError?: string;
+    };
 }
 export interface ExecutionContext {
     originalQuery: string;
@@ -118,8 +224,79 @@ export interface ExecutionContext {
         metadata: Record<string, any>;
         score: number;
     }>;
+    memoryContext?: {
+        retrievedMemories: Array<{
+            id: string;
+            content: string;
+            metadata: {
+                query: string;
+                response: string;
+                timestamp: Date;
+                importance: number;
+                type: MemoryType;
+                tags: string[];
+                accessCount: number;
+                lastAccessed: Date;
+            };
+            score: number;
+            distance: number;
+        }>;
+        memoriesUsed?: number;
+        memoryRelevance?: number;
+        memoryRetrievalTime?: number;
+        memoryStored?: boolean;
+        memoryId?: string;
+        memoryImportance?: number;
+        memoryType?: string;
+        memoryTags?: string[];
+        memoriesSummarized?: boolean;
+        groupsProcessed?: number;
+        summarizedCount?: number;
+        memoryError?: string;
+    };
     answer?: string;
     confidence?: number;
     metadata: Record<string, any>;
+}
+export interface MemoryMatch {
+    id: string;
+    content: string;
+    metadata: {
+        query: string;
+        response: string;
+        timestamp: Date;
+        importance: number;
+        type: MemoryType;
+        tags: string[];
+        accessCount: number;
+        lastAccessed: Date;
+        [key: string]: any;
+    };
+    score: number;
+    distance: number;
+}
+export interface MemoryServiceResponse {
+    success: boolean;
+    data?: {
+        stored?: any;
+        memories?: MemoryMatch[];
+        summarized?: {
+            original: any[];
+            summary: any;
+        };
+    };
+    stats?: {
+        embeddingTime?: number;
+        retrievalTime?: number;
+        totalTime?: number;
+    };
+    error?: string;
+}
+export interface MemorySummarizeConfig {
+    enabled?: boolean;
+    memoryIds?: string[];
+    topK?: number;
+    similarityThreshold?: number;
+    preserveDetails?: boolean;
 }
 //# sourceMappingURL=workflow.types.d.ts.map

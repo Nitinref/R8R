@@ -48,6 +48,7 @@ export const executeQuery = async (req: Request, res: Response) => {
     const result = await executor.executeWorkflow(
       workflowConfig,
       query.trim(),
+      userId,
       true // Use cache
     );
 
@@ -155,6 +156,7 @@ export const testWorkflow = async (req: Request, res: Response) => {
     const result = await executor.executeWorkflow(
       configuration as WorkflowConfig,
       query.trim(),
+      userId,
       false // Don't use cache for testing
     );
 
@@ -420,6 +422,7 @@ export const executeBatchQueries = async (req: Request, res: Response) => {
         const result = await executor.executeWorkflow(
           workflowConfig,
           query.trim(),
+          userId,
           true
         );
 

@@ -3,7 +3,10 @@ export enum StepType {
   RETRIEVAL = 'retrieval',
   RERANK = 'rerank',
   ANSWER_GENERATION = 'answer_generation',
-  POST_PROCESS = 'post_process'
+  POST_PROCESS = 'post_process',
+  MEMORY_UPDATE = "memory_update",        // Changed from "MEMORY_UPDATE"
+  MEMORY_SUMMARIZE = "memory_summarize",  // Changed from "MEMORY_SUMMARIZE"
+  MEMORY_RETRIEVE = "memory_retrieve"     // Changed from "MEMORY_RETRIEVE"
 }
 
 export enum LLMProvider {

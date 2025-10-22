@@ -1,10 +1,19 @@
+// app/workflows/new/page.tsx
+
 'use client';
 
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { workflowsApi } from '@/app/lib/api/workflow';
-import { WorkflowNode as WorkflowNodeType, StepType, LLMProvider, RetrieverType, WorkflowConfig, WorkflowStep } from '@/app/lib/types/workflow.types';
+import { 
+  WorkflowNode as WorkflowNodeType, 
+  StepType, 
+  LLMProvider, 
+  RetrieverType, 
+  WorkflowConfig, 
+  WorkflowStep, 
+} from '@/app/lib/types/workflow.types';
 import toast from 'react-hot-toast';
 import {
   ReactFlow,
@@ -23,12 +32,38 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-// Enhanced Custom Node Component
+// Enhanced Custom Node Component with Memory Support
 const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [config, setConfig] = useState(data.config || {});
 
-  const nodeBase = "rounded-lg shadow-lg p-4 min-w-[220px] border-2 border-red-500/30 bg-gradient-to-br from-red-600 to-red-700";
+  // Node styling based on type
+  const getNodeStyle = (type: StepType) => {
+    const base = "rounded-lg shadow-lg p-4 min-w-[220px] border-2";
+    
+    switch (type) {
+      case StepType.MEMORY_RETRIEVE:
+        return `${base} border-purple-500/30 bg-gradient-to-br from-purple-600 to-purple-700`;
+      case StepType.MEMORY_UPDATE:
+        return `${base} border-green-500/30 bg-gradient-to-br from-green-600 to-green-700`;
+      case StepType.MEMORY_SUMMARIZE:
+        return `${base} border-blue-500/30 bg-gradient-to-br from-blue-600 to-blue-700`;
+      default:
+        return `${base} border-red-500/30 bg-gradient-to-br from-red-600 to-red-700`;
+    }
+  };
+
+  const handleColor = (type: StepType) => {
+    switch (type) {
+      case StepType.MEMORY_RETRIEVE: return '!bg-purple-500';
+      case StepType.MEMORY_UPDATE: return '!bg-green-500';
+      case StepType.MEMORY_SUMMARIZE: return '!bg-blue-500';
+      default: return '!bg-red-500';
+    }
+  };
+
+  const nodeBase = getNodeStyle(data.type);
+  const handleClass = handleColor(data.type);
 
   const handleConfigChange = (newConfig: any) => {
     const updatedConfig = { ...config, ...newConfig };
@@ -38,6 +73,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     }
   };
 
+  // LLM Configuration
   const renderLLMConfig = () => (
     <div className="space-y-2">
       <div>
@@ -98,6 +134,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     </div>
   );
 
+  // Retriever Configuration
   const renderRetrieverConfig = () => (
     <div className="space-y-2">
       <div>
@@ -152,6 +189,260 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     </div>
   );
 
+  // Memory Retrieve Configuration
+  const renderMemoryRetrieveConfig = () => (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          checked={config.memoryRetrieve?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, enabled: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Enable Memory Retrieval</label>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Top K:</label>
+          <input
+            type="number"
+            value={config.memoryRetrieve?.topK || 5}
+            onChange={(e) => handleConfigChange({
+              memoryRetrieve: { ...config.memoryRetrieve, topK: parseInt(e.target.value) }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Min Score:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memoryRetrieve?.minScore || 0.7}
+            onChange={(e) => handleConfigChange({
+              memoryRetrieve: { ...config.memoryRetrieve, minScore: parseFloat(e.target.value) }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memoryRetrieve?.useReranking ?? false}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, useReranking: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Use Reranking</label>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memoryRetrieve?.useHybridSearch ?? false}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, useHybridSearch: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Hybrid Search</label>
+      </div>
+
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Keyword Weight:</label>
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          max="1"
+          value={config.memoryRetrieve?.keywordWeight || 0.3}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, keywordWeight: parseFloat(e.target.value) }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  // Memory Update Configuration
+  const renderMemoryUpdateConfig = () => (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          checked={config.memoryUpdate?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { ...config.memoryUpdate, enabled: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Enable Memory Storage</label>
+      </div>
+
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Importance Strategy:</label>
+        <select 
+          value={config.memoryUpdate?.importance?.auto ? 'auto' : 'manual'}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { 
+              ...config.memoryUpdate, 
+              importance: { auto: e.target.value === 'auto' }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        >
+          <option value="auto">Auto-calculate</option>
+          <option value="manual">Manual score</option>
+        </select>
+      </div>
+
+      {config.memoryUpdate?.importance?.auto === false && (
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Base Importance:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memoryUpdate?.importance?.baseScore || 0.5}
+            onChange={(e) => handleConfigChange({
+              memoryUpdate: { 
+                ...config.memoryUpdate, 
+                importance: { ...config.memoryUpdate?.importance, baseScore: parseFloat(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      )}
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memoryUpdate?.deduplication?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { 
+              ...config.memoryUpdate, 
+              deduplication: { ...config.memoryUpdate?.deduplication, enabled: e.target.checked }
+            }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Deduplication</label>
+      </div>
+
+      {config.memoryUpdate?.deduplication?.enabled && (
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Similarity Threshold:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memoryUpdate?.deduplication?.similarityThreshold || 0.8}
+            onChange={(e) => handleConfigChange({
+              memoryUpdate: { 
+                ...config.memoryUpdate, 
+                deduplication: { ...config.memoryUpdate?.deduplication, similarityThreshold: parseFloat(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      )}
+
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Max Memories:</label>
+        <input
+          type="number"
+          value={config.memoryUpdate?.retention?.maxMemories || 1000}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { 
+              ...config.memoryUpdate, 
+              retention: { ...config.memoryUpdate?.retention, maxMemories: parseInt(e.target.value) }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  // Memory Summarize Configuration
+  const renderMemorySummarizeConfig = () => (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          checked={config.memorySummarize?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memorySummarize: { ...config.memorySummarize, enabled: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Enable Memory Summarization</label>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Min Memories:</label>
+          <input
+            type="number"
+            value={config.memorySummarize?.triggers?.minMemories || 3}
+            onChange={(e) => handleConfigChange({
+              memorySummarize: { 
+                ...config.memorySummarize, 
+                triggers: { ...config.memorySummarize?.triggers, minMemories: parseInt(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Max Similarity:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memorySummarize?.triggers?.maxSimilarity || 0.8}
+            onChange={(e) => handleConfigChange({
+              memorySummarize: { 
+                ...config.memorySummarize, 
+                triggers: { ...config.memorySummarize?.triggers, maxSimilarity: parseFloat(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memorySummarize?.strategy?.preserveDetails ?? false}
+          onChange={(e) => handleConfigChange({
+            memorySummarize: { 
+              ...config.memorySummarize, 
+              strategy: { preserveDetails: e.target.checked }
+            }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Preserve Details</label>
+      </div>
+    </div>
+  );
+
   const renderConfigForm = () => {
     switch (data.type) {
       case StepType.QUERY_REWRITE:
@@ -174,6 +465,12 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
             </div>
           </div>
         );
+      case StepType.MEMORY_RETRIEVE:
+        return renderMemoryRetrieveConfig();
+      case StepType.MEMORY_UPDATE:
+        return renderMemoryUpdateConfig();
+      case StepType.MEMORY_SUMMARIZE:
+        return renderMemorySummarizeConfig();
       default:
         return null;
     }
@@ -216,6 +513,57 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
       }
     }
 
+    if (config.memoryRetrieve) {
+      items.push(
+        <div key="memory-retrieve" className="flex items-center gap-1">
+          <span>🧠</span>
+          <span>Retrieve: {config.memoryRetrieve.topK || 5} memories</span>
+        </div>
+      );
+      if (config.memoryRetrieve.minScore) {
+        items.push(
+          <div key="memory-score" className="flex items-center gap-1">
+            <span>🎯</span>
+            <span>Min score: {config.memoryRetrieve.minScore}</span>
+          </div>
+        );
+      }
+    }
+
+    if (config.memoryUpdate) {
+      items.push(
+        <div key="memory-update" className="flex items-center gap-1">
+          <span>💾</span>
+          <span>Store memories</span>
+        </div>
+      );
+      if (config.memoryUpdate.retention?.maxMemories) {
+        items.push(
+          <div key="memory-limit" className="flex items-center gap-1">
+            <span>📈</span>
+            <span>Max: {config.memoryUpdate.retention.maxMemories}</span>
+          </div>
+        );
+      }
+    }
+
+    if (config.memorySummarize) {
+      items.push(
+        <div key="memory-summarize" className="flex items-center gap-1">
+          <span>📝</span>
+          <span>Summarize memories</span>
+        </div>
+      );
+      if (config.memorySummarize.triggers?.minMemories) {
+        items.push(
+          <div key="memory-trigger" className="flex items-center gap-1">
+            <span>⚡</span>
+            <span>Trigger: {config.memorySummarize.triggers.minMemories}+</span>
+          </div>
+        );
+      }
+    }
+
     return items.length > 0 ? (
       <div className="text-xs opacity-90 space-y-1">
         {items}
@@ -227,7 +575,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
 
   return (
     <div className={nodeBase}>
-      <Handle type="target" position={Position.Top} className="w-3 h-3 !bg-red-500" />
+      <Handle type="target" position={Position.Top} className={`w-3 h-3 ${handleClass}`} />
       <div className="text-white">
         <div className="mb-2 flex items-center justify-between">
           <span className="text-sm font-bold">{data.label}</span>
@@ -257,7 +605,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
           renderConfigPreview()
         )}
       </div>
-      <Handle type="source" position={Position.Bottom} className="w-3 h-3 !bg-red-500" />
+      <Handle type="source" position={Position.Bottom} className={`w-3 h-3 ${handleClass}`} />
     </div>
   );
 };
@@ -266,7 +614,48 @@ const nodeTypes = {
   workflowNode: WorkflowNode,
 };
 
-// API Keys Component (Keep your existing one)
+// Node Palette Component
+const NodePalette = ({ onAddNode }: { onAddNode: (type: StepType) => void }) => {
+  const nodeTypes = [
+    { type: StepType.QUERY_REWRITE, label: 'Query Rewrite', color: 'red' },
+    { type: StepType.RETRIEVAL, label: 'Retrieval', color: 'red' },
+    { type: StepType.RERANK, label: 'Rerank', color: 'red' },
+    { type: StepType.ANSWER_GENERATION, label: 'Answer Generation', color: 'red' },
+    { type: StepType.POST_PROCESS, label: 'Post Process', color: 'red' },
+    { type: StepType.MEMORY_RETRIEVE, label: 'Memory Retrieve', color: 'purple' },
+    { type: StepType.MEMORY_UPDATE, label: 'Memory Update', color: 'green' },
+    { type: StepType.MEMORY_SUMMARIZE, label: 'Memory Summarize', color: 'blue' },
+  ];
+
+  const getButtonClass = (color: string) => {
+    const base = "rounded px-4 py-2 text-white transition flex items-center gap-2";
+    switch (color) {
+      case 'purple': return `${base} bg-purple-600 hover:bg-purple-700`;
+      case 'green': return `${base} bg-green-600 hover:bg-green-700`;
+      case 'blue': return `${base} bg-blue-600 hover:bg-blue-700`;
+      default: return `${base} bg-red-600 hover:bg-red-700`;
+    }
+  };
+
+  return (
+    <div className="mb-4 flex gap-2 flex-wrap">
+      {nodeTypes.map(({ type, label, color }) => (
+        <button
+          key={type}
+          onClick={() => onAddNode(type)}
+          className={getButtonClass(color)}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+// API Keys Component
 const ApiKeysSection = () => {
   const [apiKeys, setApiKeys] = useState([
     { id: '1', name: 'Production Key', key: 'sk_prod_1234567890abcdef', lastUsed: '2 hours ago', status: 'active' },
@@ -362,7 +751,7 @@ const ApiKeysSection = () => {
   );
 };
 
-// Code Block Component (Keep your existing one)
+// Code Block Component
 const CodeBlock = ({ title, code, language }: { title: string; code: string; language: string }) => {
   const [copied, setCopied] = useState(false);
 
@@ -400,7 +789,7 @@ const CodeBlock = ({ title, code, language }: { title: string; code: string; lan
   );
 };
 
-// API Examples Component (Keep your existing one)
+// API Examples Component
 const ApiExamplesSection = () => {
   const curlExample = `curl -X POST http://localhost:3001/api/query \\
   -H "x-api-key: YOUR_API_KEY" \\
@@ -486,7 +875,7 @@ export default function NewWorkflowPage() {
   // React Flow state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-// @ts-ignore
+  // @ts-ignore
   const onConnect = useCallback((params: any) => setEdges((eds) => addEdge({
     ...params,
     style: { stroke: '#dc2626', strokeWidth: 2 },
@@ -497,7 +886,6 @@ export default function NewWorkflowPage() {
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   // Handle node configuration changes
-  
   const handleNodeConfigChange = useCallback((nodeId: string, config: any) => {
     // @ts-ignore
     setNodes((nds) =>
@@ -511,97 +899,177 @@ export default function NewWorkflowPage() {
     );
   }, [setNodes]);
 
-  // Initialize with sample workflow
-  useEffect(() => {
-    const initialNodes: Node[] = [
-      {
-        id: "1",
-        type: "workflowNode",
-        position: { x: 250, y: 50 },
-        data: { 
-          label: "Query Rewrite", 
-          type: StepType.QUERY_REWRITE,
-          config: {
-            llm: {
-              provider: LLMProvider.OPENAI,
-              model: 'gpt-4',
-              temperature: 0.7,
-              maxTokens: 200
-            }
-          },
-          onConfigChange: handleNodeConfigChange
+  // Helper functions
+const getDefaultConfig = (type: StepType) => {
+  const baseConfigs = {
+    [StepType.QUERY_REWRITE]: {
+      llm: {
+        provider: LLMProvider.OPENAI,
+        model: 'gpt-3.5-turbo',
+        temperature: 0.7,
+        maxTokens: 200,
+      },
+    },
+    [StepType.RETRIEVAL]: {
+      retriever: {
+        type: RetrieverType.PINECONE,
+        config: { indexName: 'default', topK: 10 },
+      },
+    },
+    [StepType.RERANK]: {
+      llm: {
+        provider: LLMProvider.ANTHROPIC,
+        model: 'claude-3-sonnet',
+        temperature: 0.3,
+        maxTokens: 100,
+      },
+    },
+    [StepType.ANSWER_GENERATION]: {
+      llm: {
+        provider: LLMProvider.OPENAI,
+        model: 'gpt-4',
+        temperature: 0.7,
+        maxTokens: 1000,
+      },
+    },
+    [StepType.POST_PROCESS]: {
+      prompt: 'Format the answer appropriately and add source attribution if needed.',
+    },
+    // UPDATED: Changed from StepType.MEMORY_RETRIEVE to StepType.MEMORY_RETRIEVE (now lowercase)
+    [StepType.MEMORY_RETRIEVE]: {
+      memoryRetrieve: {
+        enabled: true,
+        topK: 5,
+        minScore: 0.7,
+        includeMetadata: true,
+        useReranking: false,
+        useHybridSearch: false,
+        keywordWeight: 0.3,
+      },
+    },
+    // UPDATED: Changed from StepType.MEMORY_UPDATE to StepType.MEMORY_UPDATE (now lowercase)
+    [StepType.MEMORY_UPDATE]: {
+      memoryUpdate: {
+        enabled: true,
+        importance: {
+          auto: true,
+        },
+        deduplication: {
+          enabled: true,
+          similarityThreshold: 0.8,
+          mergeStrategy: 'summarize' as const,
+        },
+        retention: {
+          maxMemories: 1000,
+          enableExpiration: true,
+          expirationDays: 90,
         },
       },
-      {
-        id: "2",
-        type: "workflowNode",
-        position: { x: 100, y: 200 },
-        data: { 
-          label: "Vector Search", 
-          type: StepType.RETRIEVAL,
-          config: {
-            retriever: {
-              type: RetrieverType.PINECONE,
-              config: { indexName: 'main', topK: 10 }
-            }
-          },
-          onConfigChange: handleNodeConfigChange
+    },
+    // UPDATED: Changed from StepType.MEMORY_SUMMARIZE to StepType.MEMORY_SUMMARIZE (now lowercase)
+    [StepType.MEMORY_SUMMARIZE]: {
+      memorySummarize: {
+        enabled: true,
+        triggers: {
+          minMemories: 3,
+          maxSimilarity: 0.8,
+          minGroupSize: 2,
+        },
+        strategy: {
+          preserveDetails: false,
         },
       },
-      {
-        id: "3",
-        type: "workflowNode",
-        position: { x: 400, y: 200 },
-        data: { 
-          label: "Keyword Search", 
-          type: StepType.RETRIEVAL,
-          config: {
-            retriever: {
-              type: RetrieverType.KEYWORD,
-              config: { indexName: 'keywords', topK: 5 }
-            }
-          },
-          onConfigChange: handleNodeConfigChange
-        },
-      },
-      {
-        id: "4",
-        type: "workflowNode",
-        position: { x: 250, y: 350 },
-        data: { 
-          label: "Rerank Results", 
-          type: StepType.RERANK,
-          config: {
-            llm: {
-              provider: LLMProvider.ANTHROPIC,
-              model: 'claude-3-sonnet',
-              temperature: 0.3,
-              maxTokens: 100
-            }
-          },
-          onConfigChange: handleNodeConfigChange
-        },
-      },
-      {
-        id: "5",
-        type: "workflowNode",
-        position: { x: 250, y: 500 },
-        data: { 
-          label: "Generate Answer", 
-          type: StepType.ANSWER_GENERATION,
-          config: {
-            llm: {
-              provider: LLMProvider.OPENAI,
-              model: 'gpt-4',
-              temperature: 0.7,
-              maxTokens: 1000
-            }
-          },
-          onConfigChange: handleNodeConfigChange
-        },
-      },
-    ];
+    },
+  };
 
+  return baseConfigs[type] || {};
+};
+  const getNodeLabel = (type: StepType) => {
+    const labels = {
+      [StepType.QUERY_REWRITE]: 'Query Rewrite',
+      [StepType.RETRIEVAL]: 'Retrieval',
+      [StepType.RERANK]: 'Rerank',
+      [StepType.ANSWER_GENERATION]: 'Answer Generation',
+      [StepType.POST_PROCESS]: 'Post Process',
+         // @ts-ignore
+      [StepType.MEMORY_RETRIEVE]: 'Memory Retrieve',
+
+      [StepType.MEMORY_UPDATE]: 'Memory Update',
+      [StepType.MEMORY_SUMMARIZE]: 'Memory Summarize',
+    };
+    return labels[type];
+  };
+
+  // Initialize with sample workflow including memory nodes
+useEffect(() => {
+  const initialNodes: Node[] = [
+    {
+      id: "1",
+      type: "workflowNode",
+      position: { x: 250, y: 50 },
+      data: { 
+        label: "Query Rewrite", 
+        type: StepType.QUERY_REWRITE,
+        config: getDefaultConfig(StepType.QUERY_REWRITE),
+        onConfigChange: handleNodeConfigChange
+      },
+    },
+    {
+      id: "2",
+      type: "workflowNode",
+      position: { x: 100, y: 200 },
+      data: { 
+        label: "Memory Retrieve",
+        type: StepType.MEMORY_RETRIEVE, // UPDATED: Now uses corrected enum
+        config: getDefaultConfig(StepType.MEMORY_RETRIEVE), // UPDATED
+        onConfigChange: handleNodeConfigChange
+      },
+    },
+    {
+      id: "3",
+      type: "workflowNode",
+      position: { x: 400, y: 200 },
+      data: { 
+        label: "Vector Search", 
+        type: StepType.RETRIEVAL,
+        config: getDefaultConfig(StepType.RETRIEVAL),
+        onConfigChange: handleNodeConfigChange
+      },
+    },
+    {
+      id: "4",
+      type: "workflowNode",
+      position: { x: 250, y: 350 },
+      data: { 
+        label: "Rerank Results", 
+        type: StepType.RERANK,
+        config: getDefaultConfig(StepType.RERANK),
+        onConfigChange: handleNodeConfigChange
+      },
+    },
+    {
+      id: "5",
+      type: "workflowNode",
+      position: { x: 250, y: 500 },
+      data: { 
+        label: "Generate Answer", 
+        type: StepType.ANSWER_GENERATION,
+        config: getDefaultConfig(StepType.ANSWER_GENERATION),
+        onConfigChange: handleNodeConfigChange
+      },
+    },
+    {
+      id: "6",
+      type: "workflowNode",
+      position: { x: 250, y: 650 },
+      data: { 
+        label: "Memory Update", 
+        type: StepType.MEMORY_UPDATE, // UPDATED: Now uses corrected enum
+        config: getDefaultConfig(StepType.MEMORY_UPDATE), // UPDATED
+        onConfigChange: handleNodeConfigChange
+      },
+    },
+  ];
     const initialEdges: Edge[] = [
       { 
         id: "e1-2", 
@@ -635,10 +1103,15 @@ export default function NewWorkflowPage() {
         target: "5",
         style: { stroke: '#dc2626', strokeWidth: 2 }
       },
+      { 
+        id: "e5-6", 
+        source: "5", 
+        target: "6",
+        style: { stroke: '#dc2626', strokeWidth: 2 }
+      },
     ];
-// @ts-ignore
+    // @ts-ignore
     setNodes(initialNodes);
-
     // @ts-ignore
     setEdges(initialEdges);
   }, [handleNodeConfigChange]);
@@ -728,7 +1201,7 @@ export default function NewWorkflowPage() {
       
       const workflowSteps = buildWorkflowSteps();
       // @ts-ignore
-      const entryPoint = nodes[0]?.id; // First node as entry point
+      const entryPoint = nodes[0]?.id;
 
       const configuration: WorkflowConfig = {
         id: `workflow-${Date.now()}`,
@@ -854,7 +1327,7 @@ export default function NewWorkflowPage() {
               <h1 className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-2xl font-bold text-transparent">
                 Create New Workflow
               </h1>
-              <p className="text-sm opacity-70">Design your multi-LLM RAG pipeline</p>
+              <p className="text-sm opacity-70">Design your multi-LLM RAG pipeline with Memory</p>
             </div>
             <div className="flex gap-3">
               <button
@@ -972,52 +1445,10 @@ export default function NewWorkflowPage() {
 
               <div ref={editorWrapRef} className={editorShellClass}>
                 {/* Node Palette */}
-                <div className="mb-4 flex gap-2 flex-wrap">
-                  <button
-                    onClick={() => addNewNode(StepType.QUERY_REWRITE)}
-                    className="rounded bg-red-600 px-4 py-2 text-white transition hover:bg-red-700 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Query Rewrite
-                  </button>
-                  <button
-                    onClick={() => addNewNode(StepType.RETRIEVAL)}
-                    className="rounded border border-white/10 px-4 py-2 transition hover:bg-white/5 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Retrieval
-                  </button>
-                  <button
-                    onClick={() => addNewNode(StepType.RERANK)}
-                    className="rounded border border-white/10 px-4 py-2 transition hover:bg-white/5 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Rerank
-                  </button>
-                  <button
-                    onClick={() => addNewNode(StepType.ANSWER_GENERATION)}
-                    className="rounded border border-white/10 px-4 py-2 transition hover:bg-white/5 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Answer Generation
-                  </button>
-                  <button
-                    onClick={() => addNewNode(StepType.POST_PROCESS)}
-                    className="rounded border border-white/10 px-4 py-2 transition hover:bg-white/5 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                    </svg>
-                    Post Process
-                  </button>
+                <NodePalette onAddNode={addNewNode} />
+
+                {/* Delete Node Button */}
+                <div className="mb-4">
                   <button
                     onClick={deleteSelectedNodes}
                     className="rounded border border-red-500/30 px-4 py-2 text-red-400 transition hover:bg-red-500/10 flex items-center gap-2"
@@ -1025,7 +1456,7 @@ export default function NewWorkflowPage() {
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    Delete Node
+                    Delete Last Node
                   </button>
                 </div>
 
@@ -1081,6 +1512,8 @@ export default function NewWorkflowPage() {
                   <div className="flex gap-4">
                     <span>Nodes: {nodes.length}</span>
                     <span>Connections: {edges.length}</span>
+                    
+                    <span>Memory Nodes: {nodes.filter((n: any) => String(n?.data?.type ?? '').includes('MEMORY')).length}</span>
                   </div>
                   <div className="flex gap-2">
                     <span className="flex items-center gap-1">
@@ -1109,56 +1542,4 @@ export default function NewWorkflowPage() {
       </div>
     </div>
   );
-}
-
-// Helper functions
-function getDefaultConfig(type: StepType) {
-  const baseConfigs = {
-    [StepType.QUERY_REWRITE]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 200,
-      },
-    },
-    [StepType.RETRIEVAL]: {
-      retriever: {
-        type: RetrieverType.PINECONE,
-        config: { indexName: 'default', topK: 10 },
-      },
-    },
-    [StepType.RERANK]: {
-      llm: {
-        provider: LLMProvider.ANTHROPIC,
-        model: 'claude-3-sonnet',
-        temperature: 0.3,
-        maxTokens: 100,
-      },
-    },
-    [StepType.ANSWER_GENERATION]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-4',
-        temperature: 0.7,
-        maxTokens: 1000,
-      },
-    },
-    [StepType.POST_PROCESS]: {
-      prompt: 'Format the answer appropriately and add source attribution if needed.',
-    },
-  };
-
-  return baseConfigs[type] || {};
-}
-
-function getNodeLabel(type: StepType) {
-  const labels = {
-    [StepType.QUERY_REWRITE]: 'Query Rewrite',
-    [StepType.RETRIEVAL]: 'Retrieval',
-    [StepType.RERANK]: 'Rerank',
-    [StepType.ANSWER_GENERATION]: 'Answer Generation',
-    [StepType.POST_PROCESS]: 'Post Process',
-  };
-  return labels[type];
 }

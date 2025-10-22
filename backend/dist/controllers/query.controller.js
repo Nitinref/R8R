@@ -33,7 +33,7 @@ export const executeQuery = async (req, res) => {
         const executor = new WorkflowExecutor();
         // @ts-ignore
         const workflowConfig = workflow.configuration;
-        const result = await executor.executeWorkflow(workflowConfig, query.trim(), true // Use cache
+        const result = await executor.executeWorkflow(workflowConfig, query.trim(), userId, true // Use cache
         );
         // Log successful query with proper typing
         await prisma.queryLog.create({
@@ -124,7 +124,7 @@ export const testWorkflow = async (req, res) => {
         logger.info('Testing workflow', { userId, queryLength: query.length });
         // Execute workflow without caching
         const executor = new WorkflowExecutor();
-        const result = await executor.executeWorkflow(configuration, query.trim(), false // Don't use cache for testing
+        const result = await executor.executeWorkflow(configuration, query.trim(), userId, false // Don't use cache for testing
         );
         res.json({
             ...result,
@@ -344,7 +344,7 @@ export const executeBatchQueries = async (req, res) => {
         // Execute queries sequentially to avoid overwhelming the system
         for (const query of queries) {
             try {
-                const result = await executor.executeWorkflow(workflowConfig, query.trim(), true);
+                const result = await executor.executeWorkflow(workflowConfig, query.trim(), userId, true);
                 results.push({
                     query,
                     success: true,
