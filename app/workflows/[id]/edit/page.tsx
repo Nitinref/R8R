@@ -2,12 +2,656 @@
 
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter, useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { workflowsApi } from '@/app/lib/api/workflow';
-import { Workflow, WorkflowNode, StepType, LLMProvider, RetrieverType } from '@/app/lib/types/workflow.types';
+import { 
+  WorkflowNode as WorkflowNodeType, 
+  StepType, 
+  LLMProvider, 
+  RetrieverType, 
+  WorkflowConfig, 
+  WorkflowStep,
+} from '@/app/lib/types/workflow.types';
 import toast from 'react-hot-toast';
-import { ArrowLeft, Plus, Trash2, Play, Settings, Zap, Search, MessageSquare, Filter, Cpu } from 'lucide-react';
+import {
+  ReactFlow,
+  MiniMap,
+  Controls,
+  Background,
+  BackgroundVariant,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+  type Node,
+  type Edge,
+  Handle,
+  Position,
+  ConnectionLineType,
+} from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+
+// Enhanced Custom Node Component with Memory Support
+const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [config, setConfig] = useState(data.config || {});
+
+  // Node styling based on type
+  const getNodeStyle = (type: StepType) => {
+    const base = "rounded-lg shadow-lg p-4 min-w-[220px] border-2";
+    
+    switch (type) {
+      case StepType.MEMORY_RETRIEVE:
+        return `${base} border-purple-500/30 bg-gradient-to-br from-purple-600 to-purple-700`;
+      case StepType.MEMORY_UPDATE:
+        return `${base} border-green-500/30 bg-gradient-to-br from-green-600 to-green-700`;
+      case StepType.MEMORY_SUMMARIZE:
+        return `${base} border-blue-500/30 bg-gradient-to-br from-blue-600 to-blue-700`;
+      default:
+        return `${base} border-red-500/30 bg-gradient-to-br from-red-600 to-red-700`;
+    }
+  };
+
+  const handleColor = (type: StepType) => {
+    switch (type) {
+      case StepType.MEMORY_RETRIEVE: return '!bg-purple-500';
+      case StepType.MEMORY_UPDATE: return '!bg-green-500';
+      case StepType.MEMORY_SUMMARIZE: return '!bg-blue-500';
+      default: return '!bg-red-500';
+    }
+  };
+
+  const nodeBase = getNodeStyle(data.type);
+  const handleClass = handleColor(data.type);
+
+  const handleConfigChange = (newConfig: any) => {
+    const updatedConfig = { ...config, ...newConfig };
+    setConfig(updatedConfig);
+    if (data.onConfigChange) {
+      data.onConfigChange(id, updatedConfig);
+    }
+  };
+
+  // LLM Configuration
+  const renderLLMConfig = () => (
+    <div className="space-y-2">
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Provider:</label>
+        <select 
+          value={config.llm?.provider || LLMProvider.OPENAI}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, provider: e.target.value as LLMProvider }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        >
+          {Object.values(LLMProvider).map(provider => (
+            <option key={provider} value={provider}>
+              {provider.charAt(0).toUpperCase() + provider.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Model:</label>
+        <input
+          type="text"
+          value={config.llm?.model || ''}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, model: e.target.value }
+          })}
+          placeholder="gpt-4"
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
+        />
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">
+          Temperature: {config.llm?.temperature || 0.7}
+        </label>
+        <input
+          type="range"
+          min="0"
+          max="2"
+          step="0.1"
+          value={config.llm?.temperature || 0.7}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, temperature: parseFloat(e.target.value) }
+          })}
+          className="w-full accent-white"
+        />
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Max Tokens:</label>
+        <input
+          type="number"
+          value={config.llm?.maxTokens || 1000}
+          onChange={(e) => handleConfigChange({
+            llm: { ...config.llm, maxTokens: parseInt(e.target.value) }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  // Retriever Configuration
+  const renderRetrieverConfig = () => (
+    <div className="space-y-2">
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Retriever Type:</label>
+        <select
+          value={config.retriever?.type || RetrieverType.PINECONE}
+          onChange={(e) => handleConfigChange({
+            retriever: { 
+              ...config.retriever, 
+              type: e.target.value as RetrieverType,
+              config: config.retriever?.config || { indexName: 'default', topK: 10 }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        >
+          {Object.values(RetrieverType).map(type => (
+            <option key={type} value={type}>
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Index Name:</label>
+        <input
+          type="text"
+          value={config.retriever?.config?.indexName || ''}
+          onChange={(e) => handleConfigChange({
+            retriever: {
+              ...config.retriever,
+              config: { ...config.retriever?.config, indexName: e.target.value }
+            }
+          })}
+          placeholder="my-index"
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
+        />
+      </div>
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Top K:</label>
+        <input
+          type="number"
+          value={config.retriever?.config?.topK || 10}
+          onChange={(e) => handleConfigChange({
+            retriever: {
+              ...config.retriever,
+              config: { ...config.retriever?.config, topK: parseInt(e.target.value) }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  // Memory Retrieve Configuration
+  const renderMemoryRetrieveConfig = () => (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          checked={config.memoryRetrieve?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, enabled: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Enable Memory Retrieval</label>
+      </div>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Top K:</label>
+          <input
+            type="number"
+            value={config.memoryRetrieve?.topK || 5}
+            onChange={(e) => handleConfigChange({
+              memoryRetrieve: { ...config.memoryRetrieve, topK: parseInt(e.target.value) }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Min Score:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memoryRetrieve?.minScore || 0.7}
+            onChange={(e) => handleConfigChange({
+              memoryRetrieve: { ...config.memoryRetrieve, minScore: parseFloat(e.target.value) }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memoryRetrieve?.useReranking ?? false}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, useReranking: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Use Reranking</label>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memoryRetrieve?.useHybridSearch ?? false}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, useHybridSearch: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Hybrid Search</label>
+      </div>
+
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Keyword Weight:</label>
+        <input
+          type="number"
+          step="0.1"
+          min="0"
+          max="1"
+          value={config.memoryRetrieve?.keywordWeight || 0.3}
+          onChange={(e) => handleConfigChange({
+            memoryRetrieve: { ...config.memoryRetrieve, keywordWeight: parseFloat(e.target.value) }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  // Memory Update Configuration
+  const renderMemoryUpdateConfig = () => (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          checked={config.memoryUpdate?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { ...config.memoryUpdate, enabled: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Enable Memory Storage</label>
+      </div>
+
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Importance Strategy:</label>
+        <select 
+          value={config.memoryUpdate?.importance?.auto ? 'auto' : 'manual'}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { 
+              ...config.memoryUpdate, 
+              importance: { auto: e.target.value === 'auto' }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        >
+          <option value="auto">Auto-calculate</option>
+          <option value="manual">Manual score</option>
+        </select>
+      </div>
+
+      {config.memoryUpdate?.importance?.auto === false && (
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Base Importance:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memoryUpdate?.importance?.baseScore || 0.5}
+            onChange={(e) => handleConfigChange({
+              memoryUpdate: { 
+                ...config.memoryUpdate, 
+                importance: { ...config.memoryUpdate?.importance, baseScore: parseFloat(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      )}
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memoryUpdate?.deduplication?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { 
+              ...config.memoryUpdate, 
+              deduplication: { ...config.memoryUpdate?.deduplication, enabled: e.target.checked }
+            }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Deduplication</label>
+      </div>
+
+      {config.memoryUpdate?.deduplication?.enabled && (
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Similarity Threshold:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memoryUpdate?.deduplication?.similarityThreshold || 0.8}
+            onChange={(e) => handleConfigChange({
+              memoryUpdate: { 
+                ...config.memoryUpdate, 
+                deduplication: { ...config.memoryUpdate?.deduplication, similarityThreshold: parseFloat(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      )}
+
+      <div>
+        <label className="block text-xs opacity-80 mb-1">Max Memories:</label>
+        <input
+          type="number"
+          value={config.memoryUpdate?.retention?.maxMemories || 1000}
+          onChange={(e) => handleConfigChange({
+            memoryUpdate: { 
+              ...config.memoryUpdate, 
+              retention: { ...config.memoryUpdate?.retention, maxMemories: parseInt(e.target.value) }
+            }
+          })}
+          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+        />
+      </div>
+    </div>
+  );
+
+  // Memory Summarize Configuration
+  const renderMemorySummarizeConfig = () => (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2 mb-2">
+        <input
+          type="checkbox"
+          checked={config.memorySummarize?.enabled ?? true}
+          onChange={(e) => handleConfigChange({
+            memorySummarize: { ...config.memorySummarize, enabled: e.target.checked }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Enable Memory Summarization</label>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Min Memories:</label>
+          <input
+            type="number"
+            value={config.memorySummarize?.triggers?.minMemories || 3}
+            onChange={(e) => handleConfigChange({
+              memorySummarize: { 
+                ...config.memorySummarize, 
+                triggers: { ...config.memorySummarize?.triggers, minMemories: parseInt(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+        <div>
+          <label className="block text-xs opacity-80 mb-1">Max Similarity:</label>
+          <input
+            type="number"
+            step="0.1"
+            min="0"
+            max="1"
+            value={config.memorySummarize?.triggers?.maxSimilarity || 0.8}
+            onChange={(e) => handleConfigChange({
+              memorySummarize: { 
+                ...config.memorySummarize, 
+                triggers: { ...config.memorySummarize?.triggers, maxSimilarity: parseFloat(e.target.value) }
+              }
+            })}
+            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          />
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={config.memorySummarize?.strategy?.preserveDetails ?? false}
+          onChange={(e) => handleConfigChange({
+            memorySummarize: { 
+              ...config.memorySummarize, 
+              strategy: { preserveDetails: e.target.checked }
+            }
+          })}
+          className="rounded"
+        />
+        <label className="text-xs opacity-80">Preserve Details</label>
+      </div>
+    </div>
+  );
+
+  const renderConfigForm = () => {
+    switch (data.type) {
+      case StepType.QUERY_REWRITE:
+      case StepType.RERANK:
+      case StepType.ANSWER_GENERATION:
+        return renderLLMConfig();
+      case StepType.RETRIEVAL:
+        return renderRetrieverConfig();
+      case StepType.POST_PROCESS:
+        return (
+          <div className="space-y-2">
+            <div>
+              <label className="block text-xs opacity-80 mb-1">Custom Prompt:</label>
+              <textarea
+                value={config.prompt || ''}
+                onChange={(e) => handleConfigChange({ prompt: e.target.value })}
+                placeholder="Enter custom processing instructions..."
+                className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs h-20"
+              />
+            </div>
+          </div>
+        );
+      case StepType.MEMORY_RETRIEVE:
+        return renderMemoryRetrieveConfig();
+      case StepType.MEMORY_UPDATE:
+        return renderMemoryUpdateConfig();
+      case StepType.MEMORY_SUMMARIZE:
+        return renderMemorySummarizeConfig();
+      default:
+        return null;
+    }
+  };
+
+  const renderConfigPreview = () => {
+    const items = [];
+    
+    if (config.llm) {
+      items.push(
+        <div key="llm" className="flex items-center gap-1">
+          <span>🤖</span>
+          <span>{config.llm.provider}: {config.llm.model}</span>
+        </div>
+      );
+      if (config.llm.temperature) {
+        items.push(
+          <div key="temp" className="flex items-center gap-1">
+            <span>🌡️</span>
+            <span>Temp: {config.llm.temperature}</span>
+          </div>
+        );
+      }
+    }
+    
+    if (config.retriever) {
+      items.push(
+        <div key="retriever" className="flex items-center gap-1">
+          <span>🔍</span>
+          <span>{config.retriever.type}</span>
+        </div>
+      );
+      if (config.retriever.config?.topK) {
+        items.push(
+          <div key="topk" className="flex items-center gap-1">
+            <span>📊</span>
+            <span>Top K: {config.retriever.config.topK}</span>
+          </div>
+        );
+      }
+    }
+
+    if (config.memoryRetrieve) {
+      items.push(
+        <div key="memory-retrieve" className="flex items-center gap-1">
+          <span>🧠</span>
+          <span>Retrieve: {config.memoryRetrieve.topK || 5} memories</span>
+        </div>
+      );
+      if (config.memoryRetrieve.minScore) {
+        items.push(
+          <div key="memory-score" className="flex items-center gap-1">
+            <span>🎯</span>
+            <span>Min score: {config.memoryRetrieve.minScore}</span>
+          </div>
+        );
+      }
+    }
+
+    if (config.memoryUpdate) {
+      items.push(
+        <div key="memory-update" className="flex items-center gap-1">
+          <span>💾</span>
+          <span>Store memories</span>
+        </div>
+      );
+      if (config.memoryUpdate.retention?.maxMemories) {
+        items.push(
+          <div key="memory-limit" className="flex items-center gap-1">
+            <span>📈</span>
+            <span>Max: {config.memoryUpdate.retention.maxMemories}</span>
+          </div>
+        );
+      }
+    }
+
+    if (config.memorySummarize) {
+      items.push(
+        <div key="memory-summarize" className="flex items-center gap-1">
+          <span>📝</span>
+          <span>Summarize memories</span>
+        </div>
+      );
+      if (config.memorySummarize.triggers?.minMemories) {
+        items.push(
+          <div key="memory-trigger" className="flex items-center gap-1">
+            <span>⚡</span>
+            <span>Trigger: {config.memorySummarize.triggers.minMemories}+</span>
+          </div>
+        );
+      }
+    }
+
+    return items.length > 0 ? (
+      <div className="text-xs opacity-90 space-y-1">
+        {items}
+      </div>
+    ) : (
+      <div className="text-xs opacity-70 italic">Click edit to configure</div>
+    );
+  };
+
+  return (
+    <div className={nodeBase}>
+      <Handle type="target" position={Position.Top} className={`w-3 h-3 ${handleClass}`} />
+      <div className="text-white">
+        <div className="mb-2 flex items-center justify-between">
+          <span className="text-sm font-bold">{data.label}</span>
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className="rounded p-1 hover:bg-white/10 transition"
+            aria-label="Edit node"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
+
+        {isEditing ? (
+          <div className="space-y-2 rounded bg-white/10 p-3 text-xs">
+            {renderConfigForm()}
+            <button
+              onClick={() => setIsEditing(false)}
+              className="w-full mt-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded transition-colors text-white text-xs"
+            >
+              Save
+            </button>
+          </div>
+        ) : (
+          renderConfigPreview()
+        )}
+      </div>
+      <Handle type="source" position={Position.Bottom} className={`w-3 h-3 ${handleClass}`} />
+    </div>
+  );
+};
+
+const nodeTypes = {
+  workflowNode: WorkflowNode,
+};
+
+// Node Palette Component
+const NodePalette = ({ onAddNode }: { onAddNode: (type: StepType) => void }) => {
+  const nodeTypes = [
+    { type: StepType.QUERY_REWRITE, label: 'Query Rewrite', color: 'red' },
+    { type: StepType.RETRIEVAL, label: 'Retrieval', color: 'red' },
+    { type: StepType.RERANK, label: 'Rerank', color: 'red' },
+    { type: StepType.ANSWER_GENERATION, label: 'Answer Generation', color: 'red' },
+    { type: StepType.POST_PROCESS, label: 'Post Process', color: 'red' },
+    { type: StepType.MEMORY_RETRIEVE, label: 'Memory Retrieve', color: 'purple' },
+    { type: StepType.MEMORY_UPDATE, label: 'Memory Update', color: 'green' },
+    { type: StepType.MEMORY_SUMMARIZE, label: 'Memory Summarize', color: 'blue' },
+  ];
+
+  const getButtonClass = (color: string) => {
+    const base = "rounded px-4 py-2 text-white transition flex items-center gap-2";
+    switch (color) {
+      case 'purple': return `${base} bg-purple-600 hover:bg-purple-700`;
+      case 'green': return `${base} bg-green-600 hover:bg-green-700`;
+      case 'blue': return `${base} bg-blue-600 hover:bg-blue-700`;
+      default: return `${base} bg-red-600 hover:bg-red-700`;
+    }
+  };
+
+  return (
+    <div className="mb-4 flex gap-2 flex-wrap">
+      {nodeTypes.map(({ type, label, color }) => (
+        <button
+          key={type}
+          onClick={() => onAddNode(type)}
+          className={getButtonClass(color)}
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+};
 
 export default function EditWorkflowPage() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -16,19 +660,203 @@ export default function EditWorkflowPage() {
   const workflowId = params.id as string;
 
   const [mounted, setMounted] = useState(false);
-  const [workflow, setWorkflow] = useState<Workflow | null>(null);
+  const [workflow, setWorkflow] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   
   // Form state
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [nodes, setNodes] = useState<WorkflowNode[]>([]);
-  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
-  // Drag state
-  const [draggingNodeId, setDraggingNodeId] = useState<string | null>(null);
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  // React Flow state
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  // @ts-ignore
+  const onConnect = useCallback((params: any) => setEdges((eds) => addEdge({
+    ...params,
+    style: { stroke: '#dc2626', strokeWidth: 2 },
+    animated: true
+  }, eds)), [setEdges]);
+
+  const editorWrapRef = useRef<HTMLDivElement>(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+
+  // Handle node configuration changes
+  const handleNodeConfigChange = useCallback((nodeId: string, config: any) => {
+    // @ts-ignore
+    setNodes((nds) =>
+      nds.map((node) =>
+        // @ts-ignore
+        node.id === nodeId
+        // @ts-ignore
+          ? { ...node, data: { ...node.data, config } }
+          : node
+      )
+    );
+  }, [setNodes]);
+
+  // Helper functions
+  const getDefaultConfig = (type: StepType) => {
+    const baseConfigs = {
+      [StepType.QUERY_REWRITE]: {
+        llm: {
+          provider: LLMProvider.OPENAI,
+          model: 'gpt-3.5-turbo',
+          temperature: 0.7,
+          maxTokens: 200,
+        },
+      },
+      [StepType.RETRIEVAL]: {
+        retriever: {
+          type: RetrieverType.PINECONE,
+          config: { indexName: 'default', topK: 10 },
+        },
+      },
+      [StepType.RERANK]: {
+        llm: {
+          provider: LLMProvider.ANTHROPIC,
+          model: 'claude-3-sonnet',
+          temperature: 0.3,
+          maxTokens: 100,
+        },
+      },
+      [StepType.ANSWER_GENERATION]: {
+        llm: {
+          provider: LLMProvider.OPENAI,
+          model: 'gpt-4',
+          temperature: 0.7,
+          maxTokens: 1000,
+        },
+      },
+      [StepType.POST_PROCESS]: {
+        prompt: 'Format the answer appropriately and add source attribution if needed.',
+      },
+      [StepType.MEMORY_RETRIEVE]: {
+        memoryRetrieve: {
+          enabled: true,
+          topK: 5,
+          minScore: 0.7,
+          includeMetadata: true,
+          useReranking: false,
+          useHybridSearch: false,
+          keywordWeight: 0.3,
+        },
+      },
+      [StepType.MEMORY_UPDATE]: {
+        memoryUpdate: {
+          enabled: true,
+          importance: {
+            auto: true,
+          },
+          deduplication: {
+            enabled: true,
+            similarityThreshold: 0.8,
+            mergeStrategy: 'summarize' as const,
+          },
+          retention: {
+            maxMemories: 1000,
+            enableExpiration: true,
+            expirationDays: 90,
+          },
+        },
+      },
+      [StepType.MEMORY_SUMMARIZE]: {
+        memorySummarize: {
+          enabled: true,
+          triggers: {
+            minMemories: 3,
+            maxSimilarity: 0.8,
+            minGroupSize: 2,
+          },
+          strategy: {
+            preserveDetails: false,
+          },
+        },
+      },
+    };
+
+    return baseConfigs[type] || {};
+  };
+
+  const getNodeLabel = (type: StepType) => {
+    const labels = {
+      [StepType.QUERY_REWRITE]: 'Query Rewrite',
+      [StepType.RETRIEVAL]: 'Retrieval',
+      [StepType.RERANK]: 'Rerank',
+      [StepType.ANSWER_GENERATION]: 'Answer Generation',
+      [StepType.POST_PROCESS]: 'Post Process',
+      [StepType.MEMORY_RETRIEVE]: 'Memory Retrieve',
+      [StepType.MEMORY_UPDATE]: 'Memory Update',
+      [StepType.MEMORY_SUMMARIZE]: 'Memory Summarize',
+    };
+    return labels[type];
+  };
+
+  // Load workflow data
+  const loadWorkflow = async () => {
+    try {
+      setLoading(true);
+      const response = await workflowsApi.get(workflowId);
+      const workflowData = response.workflow || response;
+      setWorkflow(workflowData);
+      setName(workflowData.name);
+      setDescription(workflowData.description || '');
+
+      // Convert backend workflow to React Flow nodes/edges
+      const configuration = workflowData.configuration || workflowData;
+      const steps = configuration.steps || configuration.nodes || [];
+      const workflowEdges = configuration.edges || [];
+
+      if (steps.length === 0) {
+        // Add default answer generation step if empty
+        const defaultNodes: Node[] = [{
+          id: "answer-1",
+          type: "workflowNode",
+          position: { x: 300, y: 200 },
+          data: {
+            label: "Generate Answer",
+            type: StepType.ANSWER_GENERATION,
+            config: getDefaultConfig(StepType.ANSWER_GENERATION),
+            onConfigChange: handleNodeConfigChange
+          },
+        }];
+        // @ts-ignore
+        setNodes(defaultNodes);
+      } else {
+        // Convert backend steps to React Flow nodes
+        const formattedNodes: Node[] = steps.map((step: any) => ({
+          id: step.id || `node-${Date.now()}-${Math.random()}`,
+          type: "workflowNode",
+          position: step.position || { x: 100 + Math.random() * 400, y: 100 + Math.random() * 400 },
+          data: {
+            label: step.name || step.data?.label || getNodeLabel(step.type),
+            type: step.type,
+            config: step.config || step.data?.config || getDefaultConfig(step.type),
+            onConfigChange: handleNodeConfigChange
+          },
+        }));
+        // @ts-ignore
+        setNodes(formattedNodes);
+
+        // Convert backend edges to React Flow edges
+        const formattedEdges: Edge[] = workflowEdges.map((edge: any) => ({
+          id: edge.id || `edge-${edge.source}-${edge.target}`,
+          source: edge.source,
+          target: edge.target,
+          animated: true,
+          style: { stroke: '#dc2626', strokeWidth: 2 }
+        }));
+        // @ts-ignore
+        setEdges(formattedEdges);
+      }
+    } catch (error: any) {
+      console.error('Load workflow error:', error);
+      toast.error('Failed to load workflow');
+      router.push('/workflows');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -46,136 +874,78 @@ export default function EditWorkflowPage() {
     }
   }, [mounted, isAuthenticated, workflowId]);
 
-  const loadWorkflow = async () => {
-    try {
-      setLoading(true);
-      const response = await workflowsApi.get(workflowId);
-      const workflowData = response.workflow || response;
-      setWorkflow(workflowData);
-      setName(workflowData.name);
-      setDescription(workflowData.description || '');
-      
-      // Handle different response structures
-      const configuration = workflowData.configuration || workflowData;
-          // @ts-ignore
-      const steps = configuration.steps || configuration.nodes || [];
-      
-      if (steps.length === 0) {
-        // Add default answer generation step if empty
-        const defaultSteps = [{
-          id: 'answer-1',
-          type: StepType.ANSWER_GENERATION,
-          name: 'Generate Answer',
-          position: { x: 300, y: 200 },
-          config: getDefaultConfig(StepType.ANSWER_GENERATION),
-          status: 'active',
-        }];
-        setNodes(defaultSteps);
-      } else {
-        // Ensure all nodes have required fields
-        const formattedNodes = steps.map((step: any) => ({
-          id: step.id || `node-${Date.now()}-${Math.random()}`,
-          type: step.type,
-          name: step.name || step.data?.label || getNodeLabel(step.type),
-          position: step.position || { x: 100, y: 100 },
-          config: step.config || step.data?.config || getDefaultConfig(step.type),
-          status: step.status || 'active',
-        }));
-        setNodes(formattedNodes);
-      }
-    } catch (error: any) {
-      console.error('Load workflow error:', error);
-      toast.error('Failed to load workflow');
-      router.push('/workflows');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addNode = (type: StepType) => {
-    const newNode: WorkflowNode = {
-      id: `node-${Date.now()}`,
-      type,
-      // @ts-ignore
-      name: getNodeLabel(type),
-      position: { 
-        x: 100 + (nodes.length % 3) * 200, 
-        y: 100 + Math.floor(nodes.length / 3) * 120 
+  // Add new node
+  const addNewNode = (type: StepType) => {
+    const newNode: Node = {
+      id: `${Date.now()}`,
+      type: "workflowNode",
+      position: { x: Math.random() * 400 + 100, y: Math.random() * 400 + 100 },
+      data: {
+        label: getNodeLabel(type),
+        type,
+        config: getDefaultConfig(type),
+        onConfigChange: handleNodeConfigChange
       },
-      config: getDefaultConfig(type),
-      status: 'active',
     };
-    setNodes([...nodes, newNode]);
-    setSelectedNodeId(newNode.id);
-    toast.success(`${getNodeLabel(type)} step added`);
+    // @ts-ignore
+    setNodes((nds) => nds.concat(newNode));
+    toast.success(`${getNodeLabel(type)} node added`);
   };
 
-  const deleteNode = (id: string) => {
-    if (nodes.length <= 1) {
-      toast.error('Workflow must have at least one step');
-      return;
+  // Delete selected nodes
+  const deleteSelectedNodes = () => {
+    if (nodes.length > 0) {
+      const lastNode = nodes[nodes.length - 1];
+      setNodes(nodes.slice(0, -1));
+      // @ts-ignore
+      setEdges(edges.filter(edge => edge.source !== lastNode.id && edge.target !== lastNode.id));
+      toast.success('Node deleted');
     }
-    
-    // Don't allow deletion if it's the only answer generation step
-    const nodeToDelete = nodes.find(n => n.id === id);
-    if (nodeToDelete?.type === StepType.ANSWER_GENERATION) {
-      const answerSteps = nodes.filter(n => n.type === StepType.ANSWER_GENERATION);
-      if (answerSteps.length <= 1) {
-        toast.error('Workflow must have at least one answer generation step');
-        return;
+  };
+
+  // Convert React Flow nodes/edges to backend format
+  const buildWorkflowSteps = (): WorkflowStep[] => {
+    const steps: WorkflowStep[] = nodes.map(node => {
+      const step: WorkflowStep = {
+        // @ts-ignore
+        id: node.id,
+        // @ts-ignore
+        type: node.data.type,
+        // @ts-ignore
+        config: node.data.config || {}
+      };
+
+      // Find next steps from edges
+      const nextSteps = edges
+      // @ts-ignore
+        .filter(edge => edge.source === node.id)
+        // @ts-ignore
+        .map(edge => edge.target);
+
+      if (nextSteps.length > 0) {
+        step.nextSteps = nextSteps;
       }
-    }
-    
-    setNodes(nodes.filter(n => n.id !== id));
-    if (selectedNodeId === id) {
-      setSelectedNodeId(nodes.length > 1 ? nodes[0].id : null);
-    }
-    toast.success('Step deleted');
-  };
 
-  const handleDragStart = (nodeId: string, e: React.MouseEvent) => {
-    const node = nodes.find(n => n.id === nodeId);
-    if (!node) return;
-    setDraggingNodeId(nodeId);
-    setDragOffset({
-      x: e.clientX - node.position.x,
-      y: e.clientY - node.position.y,
+      return step;
     });
+
+    return steps;
   };
 
-  const handleDrag = (e: React.MouseEvent) => {
-    if (!draggingNodeId || !e.buttons) return; // Check if mouse button is still pressed
-    
-    const canvas = document.getElementById('workflow-canvas');
-    if (!canvas) return;
-    
-    const rect = canvas.getBoundingClientRect();
-    const x = Math.max(20, Math.min(rect.width - 180, e.clientX - rect.left - dragOffset.x));
-    const y = Math.max(20, Math.min(rect.height - 80, e.clientY - rect.top - dragOffset.y));
-    
-    setNodes(nodes.map(n =>
-      n.id === draggingNodeId ? { ...n, position: { x, y } } : n
-    ));
-  };
-
-  const handleDragEnd = () => {
-    setDraggingNodeId(null);
-  };
-
-  const updateNodeConfig = (nodeId: string, config: any) => {
-    setNodes(nodes.map(n =>
-      n.id === nodeId ? { ...n, config: { ...n.config, ...config } } : n
-    ));
-  };
-
+  // Save workflow
   const handleSave = async () => {
     if (!name.trim()) {
       toast.error('Please enter a workflow name');
       return;
     }
 
+    if (nodes.length === 0) {
+      toast.error('Please add at least one node');
+      return;
+    }
+
     // Validate that we have an answer generation step
-    const hasAnswerStep = nodes.some(node => node.type === StepType.ANSWER_GENERATION);
+    const hasAnswerStep = nodes.some((node: any) => node.data.type === StepType.ANSWER_GENERATION);
     if (!hasAnswerStep) {
       toast.error('Workflow must include an answer generation step');
       return;
@@ -184,11 +954,43 @@ export default function EditWorkflowPage() {
     try {
       setSaving(true);
       
-      const configuration = {
+      const workflowSteps = buildWorkflowSteps();
+      // @ts-ignore
+      const entryPoint = nodes[0]?.id;
+
+      const configuration: WorkflowConfig = {
         id: workflowId,
         name,
         description,
-        steps: nodes,
+        // @ts-ignore
+        nodes: nodes.map(node => ({
+          // @ts-ignore
+          id: node.id,
+          // @ts-ignore
+          type: node.data.type,
+          // @ts-ignore
+          position: node.position,
+          data: {
+            // @ts-ignore
+            label: node.data.label,
+            // @ts-ignore
+            config: node.data.config
+          }
+        })),
+          // @ts-ignore
+        edges: edges.map(edge => ({
+          // @ts-ignore
+          id: edge.id,
+          // @ts-ignore
+          source: edge.source,
+          // @ts-ignore
+          target: edge.target,
+          // @ts-ignore
+          type: edge.type
+        })),
+        // @ts-ignore
+        steps: workflowSteps,
+        entryPoint,
         cacheEnabled: true,
         cacheTTL: 3600,
       };
@@ -210,6 +1012,44 @@ export default function EditWorkflowPage() {
     }
   };
 
+  // Fullscreen handling
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (document.fullscreenElement) {
+          document.exitFullscreen().catch(() => {});
+        }
+        setIsFullscreen(false);
+      }
+    };
+    const onFsChange = () => {
+      setIsFullscreen(Boolean(document.fullscreenElement));
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("fullscreenchange", onFsChange);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("fullscreenchange", onFsChange);
+    };
+  }, []);
+
+  const toggleFullscreen = async () => {
+    try {
+      if (!document.fullscreenElement && editorWrapRef.current) {
+        await editorWrapRef.current.requestFullscreen();
+      } else if (document.fullscreenElement) {
+        await document.exitFullscreen();
+      }
+    } catch (e) {
+      console.log("Fullscreen toggle error:", (e as Error).message);
+      setIsFullscreen((v) => !v);
+    }
+  };
+
+  const editorShellClass = isFullscreen
+    ? "fixed inset-0 z-50 bg-gray-900/95 p-4"
+    : "bg-gray-800/50 backdrop-blur-sm rounded-lg p-4 border border-gray-700";
+
   if (!mounted || isLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
@@ -219,9 +1059,6 @@ export default function EditWorkflowPage() {
   }
 
   if (!isAuthenticated || !workflow) return null;
-
-  const selectedNode = nodes.find(n => n.id === selectedNodeId);
-  const hasAnswerStep = nodes.some(node => node.type === StepType.ANSWER_GENERATION);
 
   return (
     <div className="relative min-h-screen text-white">
@@ -244,12 +1081,14 @@ export default function EditWorkflowPage() {
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <Link
-                href={`/workflows/${workflowId}`}
+              <button
+                onClick={() => router.push(`/workflows/${workflowId}`)}
                 className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-white/10 rounded-lg"
               >
-                <ArrowLeft className="w-5 h-5" />
-              </Link>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+              </button>
               <div>
                 <h1 className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-2xl font-bold text-transparent">
                   Edit Workflow
@@ -276,7 +1115,9 @@ export default function EditWorkflowPage() {
                   </>
                 ) : (
                   <>
-                    <Play className="w-4 h-4" />
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
                     Save Changes
                   </>
                 )}
@@ -288,388 +1129,149 @@ export default function EditWorkflowPage() {
 
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Left Sidebar - Step Palette */}
-          <div className="lg:col-span-1">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Plus className="w-5 h-5 text-red-400" />
-                Add Steps
-              </h3>
-              <div className="space-y-3">
-                <button
-                  onClick={() => addNode(StepType.QUERY_REWRITE)}
-                  className="w-full px-4 py-3 bg-blue-500/20 border border-blue-500/30 text-blue-300 rounded-lg hover:bg-blue-500/30 transition-all text-left flex items-center gap-3"
-                >
-                  <MessageSquare className="w-5 h-5" />
-                  <div>
-                    <div className="font-medium">Query Rewrite</div>
-                    <div className="text-sm opacity-75">Improve search queries</div>
-                  </div>
-                </button>
-                
-                <button
-                  onClick={() => addNode(StepType.RETRIEVAL)}
-                  className="w-full px-4 py-3 bg-green-500/20 border border-green-500/30 text-green-300 rounded-lg hover:bg-green-500/30 transition-all text-left flex items-center gap-3"
-                >
-                  <Search className="w-5 h-5" />
-                  <div>
-                    <div className="font-medium">Retrieval</div>
-                    <div className="text-sm opacity-75">Search documents</div>
-                  </div>
-                </button>
-                
-                <button
-                  onClick={() => addNode(StepType.RERANK)}
-                  className="w-full px-4 py-3 bg-purple-500/20 border border-purple-500/30 text-purple-300 rounded-lg hover:bg-purple-500/30 transition-all text-left flex items-center gap-3"
-                >
-                  <Filter className="w-5 h-5" />
-                  <div>
-                    <div className="font-medium">Rerank</div>
-                    <div className="text-sm opacity-75">Sort results by relevance</div>
-                  </div>
-                </button>
-                
-                <button
-                  onClick={() => addNode(StepType.ANSWER_GENERATION)}
-                  className="w-full px-4 py-3 bg-red-500/20 border border-red-500/30 text-red-300 rounded-lg hover:bg-red-500/30 transition-all text-left flex items-center gap-3"
-                >
-                  <Cpu className="w-5 h-5" />
-                  <div>
-                    <div className="font-medium">Answer Generation</div>
-                    <div className="text-sm opacity-75">Generate final answer</div>
-                  </div>
-                </button>
+        <div className="space-y-6">
+          {/* Workflow Info */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Workflow Name *
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter workflow name..."
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400"
+                />
               </div>
-
-              {/* Workflow Info */}
-              <div className="mt-6 pt-6 border-t border-white/10">
-                <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-red-400" />
-                  Workflow Info
-                </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white placeholder-gray-400"
-                      placeholder="Workflow name"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Description
-                    </label>
-                    <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      rows={3}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none text-white placeholder-gray-400"
-                      placeholder="Workflow description"
-                    />
-                  </div>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Brief description of your workflow..."
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400"
+                />
               </div>
             </div>
           </div>
 
-          {/* Center - Canvas */}
-          <div className="lg:col-span-2">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <Zap className="w-5 h-5 text-red-400" />
-                  Workflow Canvas
-                </h3>
-                <div className="text-sm text-gray-400">
-                  {nodes.length} step{nodes.length !== 1 ? 's' : ''}
-                </div>
+          {/* Editor Section */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Visual Workflow Editor</h2>
+              <div className="flex gap-2">
+                <button className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm transition hover:bg-white/5">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Export
+                </button>
+                <button
+                  onClick={toggleFullscreen}
+                  className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm transition hover:bg-white/5"
+                  aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                >
+                  {isFullscreen ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                  )}
+                  {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                </button>
+              </div>
+            </div>
+
+            <div ref={editorWrapRef} className={editorShellClass}>
+              {/* Node Palette */}
+              <NodePalette onAddNode={addNewNode} />
+
+              {/* Delete Node Button */}
+              <div className="mb-4">
+                <button
+                  onClick={deleteSelectedNodes}
+                  className="rounded border border-red-500/30 px-4 py-2 text-red-400 transition hover:bg-red-500/10 flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Delete Last Node
+                </button>
               </div>
 
+              {/* React Flow Canvas */}
               <div
-                id="workflow-canvas"
-                className="relative bg-black/20 border-2 border-dashed border-white/10 rounded-lg min-h-[500px] transition-all"
-                onMouseMove={handleDrag}
-                onMouseUp={handleDragEnd}
-                onMouseLeave={handleDragEnd}
+                style={{ height: isFullscreen ? "calc(100vh - 120px)" : "600px" }}
+                className="rounded-lg border border-white/10 bg-black/50"
               >
-                {nodes.length === 0 ? (
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-400">
-                    <div className="text-center">
-                      <div className="text-6xl mb-4">🎯</div>
-                      <p className="text-lg font-medium">Add your first step</p>
-                      <p className="text-sm">Click on steps from the left to add them</p>
-                    </div>
-                  </div>
-                ) : (
-                  nodes.map((node) => {
-                    const nodeStyle = getNodeStyle(node.type);
-                    return (
-                      <div
-                        key={node.id}
-                        className={`absolute cursor-move p-4 rounded-lg border-2 min-w-[200px] transition-all ${
-                          selectedNodeId === node.id
-                            ? 'border-red-500 bg-red-500/20 shadow-lg shadow-red-500/20'
-                            : `${nodeStyle.background} ${nodeStyle.border} shadow-sm hover:shadow-md`
-                        } ${
-                          draggingNodeId === node.id ? 'shadow-xl z-10 scale-105' : ''
-                        }`}
-                        style={{
-                          left: node.position.x,
-                          top: node.position.y,
-                        }}
-                        onMouseDown={(e) => handleDragStart(node.id, e)}
-                        onClick={() => setSelectedNodeId(node.id)}
-                      >
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-semibold text-white flex items-center gap-2">
-                            {nodeStyle.icon}
-                              {/* @ts-ignore */}
-                            {node.name}
-                          </span>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              deleteNode(node.id);
-                            }}
-                            className="text-red-400 hover:text-red-300 transition-colors p-1 hover:bg-red-500/20 rounded"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        
-                        <div className="text-sm text-gray-300 space-y-1">
-                          {node.config?.llm && (
-                            <div className="flex items-center gap-1">
-                              <Cpu className="w-3 h-3" />
-                              {node.config.llm.provider}: {node.config.llm.model}
-                            </div>
-                          )}
-                          {node.config?.retriever && (
-                            <div className="flex items-center gap-1">
-                              <Search className="w-3 h-3" />
-                              {node.config.retriever.type}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  nodeTypes={nodeTypes}
+                  fitView
+                  panOnDrag
+                  panOnScroll
+                  zoomOnScroll
+                  zoomOnPinch
+                  selectionOnDrag
+                  minZoom={0.25}
+                  maxZoom={2}
+                  defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
+                  snapToGrid
+                  snapGrid={[16, 16]}
+                  connectionLineType={ConnectionLineType.SmoothStep}
+                  defaultEdgeOptions={{
+                    animated: true,
+                    style: { strokeWidth: 2, stroke: '#dc2626' },
+                  }}
+                  proOptions={{ hideAttribution: true }}
+                  className="[--xy-edge-stroke:#dc2626]"
+                >
+                  <Controls className="!bg-gray-800 !border-gray-700" />
+                  <MiniMap 
+                    className="!bg-gray-800 !border-gray-700"
+                    nodeColor="#dc2626"
+                    maskColor="rgba(0, 0, 0, 0.6)"
+                  />
+                  <Background
+                    className="opacity-30"
+                    variant={BackgroundVariant.Dots}
+                    gap={12}
+                    size={1}
+                    color="#dc2626"
+                  />
+                </ReactFlow>
               </div>
 
-              {/* Validation Message */}
-              {!hasAnswerStep && (
-                <div className="mt-4 bg-yellow-500/20 border border-yellow-500/30 rounded-lg p-4">
-                  <p className="text-sm text-yellow-400 flex items-center gap-2">
-                    <span className="text-lg">⚠️</span>
-                    <span><strong>Missing required step:</strong> Add an "Answer Generation" step to make this workflow functional.</span>
-                  </p>
+              {/* Stats Bar */}
+              <div className="mt-4 flex justify-between items-center text-sm text-gray-400">
+                <div className="flex gap-4">
+                  <span>Nodes: {nodes.length}</span>
+                  <span>Connections: {edges.length}</span>
+                  <span>Memory Nodes: {nodes.filter((n: any) => String(n?.data?.type ?? '').includes('MEMORY')).length}</span>
                 </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Sidebar - Step Configuration */}
-          <div className="lg:col-span-1">
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
-              <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <Settings className="w-5 h-5 text-red-400" />
-              {/* @ts-ignore */}
-                {selectedNode ? `Configure ${selectedNode.name}` : 'Select a Step'}
-              </h3>
-              
-              {selectedNode ? (
-                <div className="space-y-4">
-                  {/* LLM Configuration */}
-                  {selectedNode.config?.llm && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        LLM Provider
-                      </label>
-                      <select
-                        value={selectedNode.config.llm.provider || LLMProvider.OPENAI}
-                        onChange={(e) => updateNodeConfig(selectedNode.id, {
-                          llm: { ...selectedNode.config.llm, provider: e.target.value as LLMProvider }
-                        })}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white"
-                      >
-                        <option value={LLMProvider.OPENAI}>OpenAI</option>
-                        <option value={LLMProvider.ANTHROPIC}>Anthropic</option>
-                        <option value={LLMProvider.GOOGLE}>Google</option>
-                      </select>
-                    </div>
-                  )}
-
-                  {/* Model Configuration */}
-                  {selectedNode.config?.llm && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Model
-                      </label>
-                      <input
-                        type="text"
-                        value={selectedNode.config.llm.model || 'gpt-3.5-turbo'}
-                        onChange={(e) => updateNodeConfig(selectedNode.id, {
-                          llm: { ...selectedNode.config.llm, model: e.target.value }
-                        })}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white placeholder-gray-400"
-                        placeholder="Model name"
-                      />
-                    </div>
-                  )}
-
-                  {/* Temperature Configuration */}
-                  {selectedNode.config?.llm && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Temperature: {selectedNode.config.llm.temperature || 0.7}
-                      </label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="2"
-                        step="0.1"
-                        value={selectedNode.config.llm.temperature || 0.7}
-                        onChange={(e) => updateNodeConfig(selectedNode.id, {
-                          llm: { ...selectedNode.config.llm, temperature: parseFloat(e.target.value) }
-                        })}
-                        className="w-full accent-red-500"
-                      />
-                    </div>
-                  )}
-
-                  {/* Retriever Configuration */}
-                  {selectedNode.config?.retriever && (
-                    <div>
-                      <label className="block text-sm font-medium text-gray-300 mb-2">
-                        Retriever Type
-                      </label>
-                      <select
-                        value={selectedNode.config.retriever.type || RetrieverType.PINECONE}
-                        onChange={(e) => updateNodeConfig(selectedNode.id, {
-                          retriever: { ...selectedNode.config.retriever, type: e.target.value as RetrieverType }
-                        })}
-                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white"
-                      >
-                        <option value={RetrieverType.PINECONE}>Pinecone</option>
-                        <option value={RetrieverType.KEYWORD}>Keyword</option>
-                        <option value={RetrieverType.HYBRID}>Hybrid</option>
-                      </select>
-                    </div>
-                  )}
-
-                  <div className="pt-4 border-t border-white/10">
-                    <button
-                      onClick={() => deleteNode(selectedNode.id)}
-                      className="w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                      Delete Step
-                    </button>
-                  </div>
+                <div className="flex gap-2">
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    Drag to connect nodes
+                  </span>
                 </div>
-              ) : (
-                <div className="text-center text-gray-400 py-8">
-                  <Settings className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>Select a step to configure it</p>
-                </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
   );
-}
-
-// Helper functions
-function getDefaultConfig(type: StepType) {
-  const baseConfigs = {
-    [StepType.QUERY_REWRITE]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 200,
-      },
-    },
-    [StepType.RETRIEVAL]: {
-      retriever: {
-        type: RetrieverType.PINECONE,
-        config: { indexName: 'default', topK: 10 },
-      },
-    },
-    [StepType.RERANK]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-3.5-turbo',
-        temperature: 0.3,
-        maxTokens: 100,
-      },
-    },
-    [StepType.ANSWER_GENERATION]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 1000,
-      },
-    },
-  };
-// @ts-ignore
-  return baseConfigs[type] || {};
-}
-
-function getNodeLabel(type: StepType): string {
-  const labels = {
-    [StepType.QUERY_REWRITE]: 'Query Rewrite',
-    [StepType.RETRIEVAL]: 'Retrieval',
-    [StepType.RERANK]: 'Rerank',
-    [StepType.ANSWER_GENERATION]: 'Answer Generation',
-    [StepType.POST_PROCESS]: 'Post Process',
-  };
-  // @ts-ignore
-  return labels[type] || 'Unknown Step';
-}
-
-function getNodeStyle(type: StepType) {
-  const styles = {
-    [StepType.QUERY_REWRITE]: {
-      background: 'bg-blue-500/20',
-      border: 'border-blue-500/50',
-      icon: <MessageSquare className="w-4 h-4 text-blue-400" />
-    },
-    [StepType.RETRIEVAL]: {
-      background: 'bg-green-500/20',
-      border: 'border-green-500/50',
-      icon: <Search className="w-4 h-4 text-green-400" />
-    },
-    [StepType.RERANK]: {
-      background: 'bg-purple-500/20',
-      border: 'border-purple-500/50',
-      icon: <Filter className="w-4 h-4 text-purple-400" />
-    },
-    [StepType.ANSWER_GENERATION]: {
-      background: 'bg-red-500/20',
-      border: 'border-red-500/50',
-      icon: <Cpu className="w-4 h-4 text-red-400" />
-    },
-    [StepType.POST_PROCESS]: {
-      background: 'bg-yellow-500/20',
-      border: 'border-yellow-500/50',
-      icon: <Settings className="w-4 h-4 text-yellow-400" />
-    },
-  };
-// @ts-ignore
-  return styles[type] || {
-    background: 'bg-gray-500/20',
-    border: 'border-gray-500/50',
-    icon: <Settings className="w-4 h-4 text-gray-400" />
-  };
 }
