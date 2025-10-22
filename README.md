@@ -12,18 +12,19 @@ R8R (Rapid RAG Runtime) provides pre-built, optimized RAG workflows accessible v
 🖼️ Platform Preview
 <div align="center">
 Landing Page - Modern & Engaging
-{assets/3.png}
+https://./assets/3.png
 Clean, professional landing page showcasing R8R's value proposition and features
 
 Signup & Authentication
-{assets/2.png}
+https://./assets/2.png
 Streamlined signup process with secure authentication and API key generation
 
 Visual Workflow Editor
-{assets/1.png}
+https://./assets/1.png
 Intuitive drag-and-drop workflow editor with node-based pipeline creation
 
 </div>
+
 The Problem We Solve
 Building production RAG systems takes 4-8 weeks
 
