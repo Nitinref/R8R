@@ -634,6 +634,7 @@ function getNodeLabel(type: StepType): string {
     [StepType.ANSWER_GENERATION]: 'Answer Generation',
     [StepType.POST_PROCESS]: 'Post Process',
   };
+  // @ts-ignore
   return labels[type] || 'Unknown Step';
 }
 
@@ -665,7 +666,7 @@ function getNodeStyle(type: StepType) {
       icon: <Settings className="w-4 h-4 text-yellow-400" />
     },
   };
-
+// @ts-ignore
   return styles[type] || {
     background: 'bg-gray-500/20',
     border: 'border-gray-500/50',

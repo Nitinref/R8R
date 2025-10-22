@@ -47,7 +47,9 @@ export function WorkflowNode({
   onDrag,
   onDragEnd,
 }: WorkflowNodeProps) {
+ // @ts-ignore
   const Icon = NODE_ICONS[node.type];
+  // @ts-ignore
   const colorClass = NODE_COLORS[node.type];
 
   return (

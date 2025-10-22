@@ -10,9 +10,11 @@ export const createWorkflow = async (req, res) => {
         if (!validation.valid) {
             throw new AppError(`Invalid workflow: ${validation.errors.join(', ')}`, 400);
         }
+        // ✅ CRITICAL FIX: Use the ID from configuration, not auto-generated
         const workflow = await prisma.workflow.create({
             // @ts-ignore
             data: {
+                id: configuration.id, // ← This line is the fix!
                 name,
                 description,
                 userId,
@@ -143,13 +145,18 @@ export const cloneWorkflow = async (req, res) => {
         if (!originalWorkflow) {
             throw new AppError('Workflow not found', 404);
         }
+        // Generate a new ID for the cloned workflow
+        const newWorkflowId = `workflow-${Date.now()}`;
         const clonedWorkflow = await prisma.workflow.create({
             data: {
+                id: newWorkflowId, // Use new ID for clone
                 name: name || `${originalWorkflow.name} (Copy)`,
                 description: originalWorkflow.description,
                 userId,
-                // @ts-ignore
-                configuration: originalWorkflow.configuration,
+                configuration: {
+                    ...originalWorkflow.configuration,
+                    id: newWorkflowId // Also update the ID in configuration
+                },
                 status: 'draft'
             }
         });

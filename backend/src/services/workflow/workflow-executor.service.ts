@@ -1,25 +1,29 @@
-// workflow-executor.service.ts - FIXED VERSION FOR PARALLEL EXECUTION
+// workflow-executor.service.ts - COMPLETE VERSION WITH ALL MEMORY OPERATIONS
 
 import type { WorkflowConfig, WorkflowStep, StepType, QueryResponse, LLMProvider, RetrieverType } from '../../types/workflow.types.js';
 import { LLMOrchestrator } from '../llm/llm-orchestrator.service.js';
 import { VectorDBService } from '../retrieval/vector-db.service.js';
 import { CacheService } from '../cache.service.js';
+import { getMemoryService } from '../memory/memory.service.js';
 import { logger } from '../../utils/logger.js';
 
 export class WorkflowExecutor {
   private llmOrchestrator: LLMOrchestrator;
   private vectorDB: VectorDBService;
   private cache: CacheService;
+  private memoryService: ReturnType<typeof getMemoryService>;
 
   constructor() {
     this.llmOrchestrator = new LLMOrchestrator();
     this.vectorDB = new VectorDBService();
     this.cache = new CacheService();
+    this.memoryService = getMemoryService();
   }
 
   async executeWorkflow(
     config: WorkflowConfig,
     query: string,
+    userId: string,
     useCache: boolean = true
   ): Promise<QueryResponse> {
     const startTime = Date.now();
@@ -33,13 +37,13 @@ export class WorkflowExecutor {
       if (useCache && config.cacheEnabled) {
         const cacheKey = this.cache.generateKey(config.id, query);
         const cached = await this.cache.get<QueryResponse>(cacheKey);
-        
+
         if (cached) {
           logger.info('Cache hit', { workflowId: config.id, query });
-          return { 
-            ...cached, 
-            cached: true, 
-            latency: Date.now() - startTime 
+          return {
+            ...cached,
+            cached: true,
+            latency: Date.now() - startTime
           };
         }
       }
@@ -48,13 +52,18 @@ export class WorkflowExecutor {
       const context: ExecutionContext = {
         originalQuery: query,
         currentQuery: query,
-        rewrittenQueries: new Map(), // Store multiple rewritten queries
+        rewrittenQueries: new Map(),
         documents: [],
         answer: '',
         confidence: 0,
-        metadata: {},
+        metadata: {
+          userId: userId,
+          workflowId: config.id,
+          startTime: startTime,
+          memories: [] // Initialize memories array
+        },
         stepResults: new Map(),
-        stepOutputs: new Map() // Store outputs from each step
+        stepOutputs: new Map()
       };
 
       // Execute workflow graph
@@ -63,7 +72,7 @@ export class WorkflowExecutor {
       if (!context.answer || context.answer.trim().length === 0) {
         throw new Error('No answer generated. Ensure workflow includes answer generation step.');
       }
-// @ts-ignore
+
       const result: QueryResponse = {
         answer: context.answer,
         sources: context.documents.slice(0, 10).map(doc => ({
@@ -79,7 +88,10 @@ export class WorkflowExecutor {
         rewrittenQuery: Array.from(context.rewrittenQueries.entries()).reduce((acc, [key, value]) => {
           acc[key] = value;
           return acc;
-        }, {} as Record<string, string>)
+        }, {} as Record<string, string>),
+        query: '',
+        documents: [],
+        metadata: {}
       };
 
       // Cache result
@@ -91,8 +103,8 @@ export class WorkflowExecutor {
       return result;
 
     } catch (error) {
-      logger.error('Workflow execution failed', { 
-        workflowId: config.id, 
+      logger.error('Workflow execution failed', {
+        workflowId: config.id,
         error: (error as Error).message,
         stack: (error as Error).stack
       });
@@ -110,26 +122,26 @@ export class WorkflowExecutor {
     retrieversUsed: string[]
   ): Promise<void> {
     const steps = config.steps;
-    
+
     if (steps.length === 0) {
       throw new Error('No steps defined in workflow');
     }
 
     // Build step map for quick lookup
     const stepMap = new Map(steps.map(step => [step.id, step]));
-    
+
     // Track execution state
     const completed = new Set<string>();
-    
+
     // Find entry points (nodes with no incoming edges)
     const entrySteps = this.findEntrySteps(steps);
-    
+
     logger.info('Starting workflow execution', {
       totalSteps: steps.length,
       entrySteps: entrySteps.map(s => s.id)
     });
 
-    // Execute from entry points - REMOVED inProgress tracking
+    // Execute from entry points
     await this.executeFromEntryPoints(
       entrySteps,
       stepMap,
@@ -145,7 +157,7 @@ export class WorkflowExecutor {
    */
   private findEntrySteps(steps: WorkflowStep[]): WorkflowStep[] {
     const hasIncoming = new Set<string>();
-    
+
     steps.forEach(step => {
       step.nextSteps?.forEach(nextId => {
         hasIncoming.add(nextId);
@@ -153,10 +165,12 @@ export class WorkflowExecutor {
     });
 
     const entrySteps = steps.filter(step => !hasIncoming.has(step.id));
-    
-    // If no clear entry points, use first step
-     // @ts-ignore
-    return entrySteps.length > 0 ? entrySteps : [steps[0]];
+
+    return entrySteps.length > 0
+      ? entrySteps.filter((s): s is WorkflowStep => s !== undefined)
+      : steps[0] !== undefined
+        ? [steps[0]]
+        : [];
   }
 
   /**
@@ -186,64 +200,62 @@ export class WorkflowExecutor {
   }
 
   /**
-   * Execute a step and all its downstream dependencies - FIXED VERSION
+   * Execute a step and all its downstream dependencies
    */
- /**
- * Execute a step and all its downstream dependencies - FIXED VERSION
- */
-private async executeStepWithDependencies(
-  step: WorkflowStep,
-  stepMap: Map<string, WorkflowStep>,
-  completed: Set<string>,
-  context: ExecutionContext,
-  llmsUsed: string[],
-  retrieversUsed: string[]
-): Promise<void> {
-  // Check if already completed - ATOMIC CHECK
-  if (completed.has(step.id)) {
-    logger.debug(`Step ${step.id} already completed, skipping`);
-    return;
-  }
+  private async executeStepWithDependencies(
+    step: WorkflowStep,
+    stepMap: Map<string, WorkflowStep>,
+    completed: Set<string>,
+    context: ExecutionContext,
+    llmsUsed: string[],
+    retrieversUsed: string[]
+  ): Promise<void> {
+    // Check if already completed - ATOMIC CHECK
+    if (completed.has(step.id)) {
+      logger.debug(`Step ${step.id} already completed, skipping`);
+      return;
+    }
 
-  // Wait for all parent steps to complete
-  await this.waitForParentSteps(step, stepMap, completed);
+    // Wait for all parent steps to complete
+    await this.waitForParentSteps(step, stepMap, completed);
 
-  // DOUBLE CHECK completion after waiting (race condition fix)
-  if (completed.has(step.id)) {
-    logger.debug(`Step ${step.id} completed by parallel execution, skipping`);
-    return;
-  }
+    // DOUBLE CHECK completion after waiting (race condition fix)
+    if (completed.has(step.id)) {
+      logger.debug(`Step ${step.id} completed by parallel execution, skipping`);
+      return;
+    }
 
-  // Execute current step
-  logger.info(`Executing step: ${step.type}`, { stepId: step.id });
-  await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
-  
-  // Mark as completed
-  completed.add(step.id);
+    // Execute current step
+    logger.info(`Executing step: ${step.type}`, { stepId: step.id });
+    await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
 
-  // Execute next steps
-  if (step.nextSteps && step.nextSteps.length > 0) {
-    const nextSteps = step.nextSteps
-      .map(id => stepMap.get(id))
-      .filter(s => s !== undefined) as WorkflowStep[];
+    // Mark as completed
+    completed.add(step.id);
 
-    // Execute ALL next steps in parallel
-    await Promise.all(
-      nextSteps.map(nextStep =>
-        this.executeStepWithDependencies(
-          nextStep,
-          stepMap,
-          completed,
-          context,
-          llmsUsed,
-          retrieversUsed
+    // Execute next steps
+    if (step.nextSteps && step.nextSteps.length > 0) {
+      const nextSteps = step.nextSteps
+        .map(id => stepMap.get(id))
+        .filter(s => s !== undefined) as WorkflowStep[];
+
+      // Execute ALL next steps in parallel
+      await Promise.all(
+        nextSteps.map(nextStep =>
+          this.executeStepWithDependencies(
+            nextStep,
+            stepMap,
+            completed,
+            context,
+            llmsUsed,
+            retrieversUsed
+          )
         )
-      )
-    );
+      );
+    }
   }
-}
+
   /**
-   * Wait for all parent steps to complete - FIXED VERSION
+   * Wait for all parent steps to complete
    */
   private async waitForParentSteps(
     step: WorkflowStep,
@@ -252,7 +264,7 @@ private async executeStepWithDependencies(
   ): Promise<void> {
     // Find parent steps (steps that have this step as nextStep)
     const parentSteps: string[] = [];
-    
+
     stepMap.forEach((s, id) => {
       if (s.nextSteps?.includes(step.id)) {
         parentSteps.push(id);
@@ -268,17 +280,17 @@ private async executeStepWithDependencies(
     const maxWaitTime = 30000; // 30 seconds
     const startTime = Date.now();
     const checkInterval = 50; // ms
-    
+
     while (parentSteps.some(parentId => !completed.has(parentId))) {
       // Check for timeout
       if (Date.now() - startTime > maxWaitTime) {
         const missingParents = parentSteps.filter(p => !completed.has(p));
         throw new Error(`Timeout waiting for parent steps: ${missingParents.join(', ')}`);
       }
-      
+
       await new Promise(resolve => setTimeout(resolve, checkInterval));
     }
-    
+
     logger.debug(`All parents completed for step: ${step.id}`, { parentSteps });
   }
 
@@ -313,6 +325,18 @@ private async executeStepWithDependencies(
           await this.executePostProcess(step, context);
           break;
 
+        case 'memory_update':
+          await this.executeMemoryUpdate(step, context, llmsUsed);
+          break;
+
+        case 'memory_retrieve':
+          await this.executeMemoryRetrieve(step, context, llmsUsed);
+          break;
+
+        case 'memory_summarize':
+          await this.executeMemorySummarize(step, context, llmsUsed);
+          break;
+
         default:
           throw new Error(`Unknown step type: ${step.type}`);
       }
@@ -324,11 +348,352 @@ private async executeStepWithDependencies(
       });
 
     } catch (error) {
-      logger.error(`Step execution failed: ${step.type}`, { 
-        stepId: step.id, 
-        error: (error as Error).message 
+      logger.error(`Step execution failed: ${step.type}`, {
+        stepId: step.id,
+        error: (error as Error).message
       });
       throw error;
+    }
+  }
+
+  /**
+   * Execute memory retrieval step
+   */
+  private async executeMemoryRetrieve(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    llmsUsed: string[]
+  ): Promise<void> {
+    const config = step.config?.memoryRetrieve;
+    
+    if (!config?.enabled) {
+      logger.info('Memory retrieve step disabled, skipping');
+      return;
+    }
+
+    try {
+      logger.info('Executing memory retrieval', { 
+        stepId: step.id,
+        topK: config.topK || 5,
+        minScore: config.minScore || 0.7
+      });
+
+      // Retrieve relevant memories
+      // @ts-ignore
+      const memoryResult = await this.memoryService.retrieveMemories({
+        userId: context.metadata.userId,
+        workflowId: context.metadata.workflowId,
+        query: context.currentQuery,
+        topK: config.topK || 5,
+        minScore: config.minScore || 0.7,
+        filters: config.filters
+      });
+
+      if (!memoryResult.success || !memoryResult.data?.memories) {
+        logger.warn('Memory retrieval failed or no memories found', {
+          stepId: step.id,
+          error: memoryResult.error
+        });
+        return;
+      }
+
+      const memories = memoryResult.data.memories;
+
+      if (memories.length > 0) {
+        // Store memories in context for use in answer generation
+        context.metadata.memories = memories;
+        
+        // Add memory context to the current query for better retrieval
+        const memoryContext = memories
+          .slice(0, 3) // Use top 3 most relevant memories
+          .map(memory => `Previous conversation: ${memory.metadata.query} - ${memory.metadata.response}`)
+          .join('\n\n');
+
+        if (memoryContext) {
+          // Enhance the current query with memory context
+          context.currentQuery = `${context.currentQuery}\n\nContext from previous conversations:\n${memoryContext}`;
+        }
+
+        logger.info('Memory retrieval successful', {
+          stepId: step.id,
+          memoryCount: memories.length,
+          topScore: memories[0]?.score || 0,
+          hasContext: !!memoryContext
+        });
+      } else {
+        logger.info('No relevant memories found', { stepId: step.id });
+      }
+
+    } catch (error) {
+      logger.error('Memory retrieval failed', { 
+        stepId: step.id,
+        error: (error as Error).message 
+      });
+      // Don't throw - memory retrieval shouldn't break the workflow
+    }
+  }
+
+  /**
+   * Execute memory summarize step
+   */
+  private async executeMemorySummarize(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    llmsUsed: string[]
+  ): Promise<void> {
+    const config = step.config?.memorySummarize;
+    
+    if (!config?.enabled) {
+      logger.info('Memory summarize step disabled, skipping');
+      return;
+    }
+
+    try {
+      logger.info('Executing memory summarization', { 
+        stepId: step.id,
+        preserveDetails: config.preserveDetails || false
+      });
+
+      // Get memories to summarize (either from context or retrieve new ones)
+      let memoryIds: string[] = [];
+
+      if (Array.isArray(config.memoryIds) && config.memoryIds.length > 0) {
+        // Use specified memory IDs
+        memoryIds = config.memoryIds;
+      } else if (config.similarityThreshold) {
+        // Retrieve similar memories to summarize
+        const memoryResult = await this.memoryService.retrieveMemories({
+          userId: context.metadata.userId,
+          workflowId: context.metadata.workflowId,
+          query: context.currentQuery,
+          topK: config.topK || 10,
+          minScore: config.similarityThreshold
+        });
+
+        if (memoryResult.success && memoryResult.data?.memories) {
+          memoryIds = memoryResult.data.memories.map(m => m.id);
+        }
+      }
+
+      // Need at least 2 memories to summarize
+      if (memoryIds.length < 2) {
+        logger.info('Not enough memories to summarize', {
+          stepId: step.id,
+          memoryCount: memoryIds.length
+        });
+        return;
+      }
+
+      // Perform summarization
+      const summaryResult = await this.memoryService.summarizeMemories(
+        memoryIds,
+        context.metadata.userId,
+        config.preserveDetails || false
+      );
+
+      if (!summaryResult.success) {
+        logger.warn('Memory summarization failed', {
+          stepId: step.id,
+          error: summaryResult.error
+        });
+        return;
+      }
+
+      // Store summary in context for potential use
+      if (summaryResult.data?.summarized) {
+        context.metadata.memorySummary = summaryResult.data.summarized.summary;
+        
+        logger.info('Memory summarization completed', {
+          stepId: step.id,
+          originalCount: summaryResult.data.summarized.original.length,
+          summaryId: summaryResult.data.summarized.summary.id
+        });
+      }
+
+    } catch (error) {
+      logger.error('Memory summarization failed', { 
+        stepId: step.id,
+        error: (error as Error).message 
+      });
+      // Don't throw - memory summarization shouldn't break the workflow
+    }
+  }
+
+  /**
+   * Execute memory update step
+   */
+  private async executeMemoryUpdate(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    llmsUsed: string[]
+  ): Promise<void> {
+    const config = step.config?.memoryUpdate;
+
+    if (!config?.enabled) {
+      logger.info('Memory update step disabled, skipping');
+      return;
+    }
+
+    try {
+      logger.info('Executing memory update', {
+        stepId: step.id,
+        deduplication: config.deduplication?.enabled,
+        importance: config.importance?.auto
+      });
+
+      // Calculate importance if auto is enabled
+      const importance = config.importance?.auto
+        ? this.calculateMemoryImportance(context)
+        : (config.importance?.manualValue || 0.5);
+
+      // Prepare memory data
+      const memoryRequest = {
+        userId: context.metadata.userId,
+        workflowId: context.metadata.workflowId,
+        query: context.originalQuery,
+        response: context.answer,
+        metadata: {
+          importance,
+          type: 'conversation',
+          tags: this.extractTags(context),
+          confidence: context.confidence,
+          documentCount: context.documents.length,
+          rewrittenQueries: Array.from(context.rewrittenQueries.entries()),
+          stepId: step.id
+        }
+      };
+
+      // @ts-ignore
+      const memoryResult = await this.memoryService.storeMemory(memoryRequest);
+
+      if (!memoryResult.success) {
+        logger.warn('Memory storage failed', {
+          stepId: step.id,
+          error: memoryResult.error
+        });
+        return;
+      }
+
+      // Handle deduplication if enabled
+      if (config.deduplication?.enabled) {
+        await this.handleMemoryDeduplication(
+          context,
+          config.deduplication,
+          memoryResult.data?.stored?.id
+        );
+      }
+
+      // Apply retention policies
+      if (config.retention?.enableExpiration) {
+        await this.memoryService.cleanup(
+          context.metadata.userId,
+          config.retention.maxMemories || 1000
+        );
+      }
+
+      logger.info('Memory update completed successfully', {
+        stepId: step.id,
+        memoryId: memoryResult.data?.stored?.id,
+        importance
+      });
+
+    } catch (error) {
+      logger.error('Memory update failed', {
+        stepId: step.id,
+        error: (error as Error).message
+      });
+      // Don't throw - memory update shouldn't break the workflow
+    }
+  }
+
+  /**
+   * Calculate memory importance based on context
+   */
+  private calculateMemoryImportance(context: ExecutionContext): number {
+    let importance = 0.5; // Default importance
+
+    // Increase importance based on answer quality
+    if (context.answer.length > 200) importance += 0.2;
+    if (context.confidence > 0.8) importance += 0.2;
+    if (context.documents.length > 3) importance += 0.1;
+
+    // Decrease importance for very short answers
+    if (context.answer.length < 50) importance -= 0.2;
+
+    return Math.min(1.0, Math.max(0.1, importance));
+  }
+
+  /**
+   * Extract tags from context for memory organization
+   */
+  private extractTags(context: ExecutionContext): string[] {
+    const tags: string[] = [];
+
+    // Add workflow-related tags
+    tags.push(`workflow:${context.metadata.workflowId}`);
+
+    // Add document count tag
+    if (context.documents.length > 0) {
+      tags.push(`documents:${context.documents.length}`);
+    }
+
+    // Add confidence level tag
+    if (context.confidence > 0.8) {
+      tags.push('high-confidence');
+    } else if (context.confidence < 0.4) {
+      tags.push('low-confidence');
+    }
+
+    return tags;
+  }
+
+  /**
+   * Handle memory deduplication
+   */
+  private async handleMemoryDeduplication(
+    context: ExecutionContext,
+    deduplicationConfig: any,
+    currentMemoryId?: string
+  ): Promise<void> {
+    if (!currentMemoryId) return;
+
+    try {
+      // Search for similar memories
+      const similarMemories = await this.memoryService.retrieveMemories({
+        userId: context.metadata.userId,
+        query: context.originalQuery,
+        topK: 10,
+        minScore: deduplicationConfig.similarityThreshold || 0.8
+      });
+
+      if (similarMemories.success && similarMemories.data?.memories) {
+        const duplicates = similarMemories.data.memories
+          .filter(memory => memory.id !== currentMemoryId && memory.score > 0.8);
+
+        if (duplicates.length > 0) {
+          logger.info('Found duplicate memories', {
+            count: duplicates.length,
+            currentMemoryId
+          });
+
+          if (deduplicationConfig.mergeStrategy === 'summarize') {
+            // Summarize and merge duplicates
+            const memoryIds = duplicates.map(m => m.id).concat(currentMemoryId);
+            await this.memoryService.summarizeMemories(
+              memoryIds,
+              context.metadata.userId,
+              true // preserve details
+            );
+          } else {
+            // Delete duplicates (default behavior)
+            for (const duplicate of duplicates) {
+              await this.memoryService.deleteMemoryFromVectorDB(duplicate.id);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      logger.warn('Deduplication failed', { error: (error as Error).message });
     }
   }
 
@@ -341,7 +706,7 @@ private async executeStepWithDependencies(
       throw new Error('No LLM config for query rewrite step');
     }
 
-    const prompt = step.config.prompt || 
+    const prompt = step.config.prompt ||
       `Improve this search query for better document retrieval. Return only the improved query.\n\nQuery: ${context.currentQuery}`;
  // @ts-ignore
     const response = await this.llmOrchestrator.generateCompletion({
@@ -354,125 +719,123 @@ private async executeStepWithDependencies(
     });
 
     const rewrittenQuery = response.content.trim();
-    
+
     // Store each rewritten query by step ID (for parallel rewrites)
     context.rewrittenQueries.set(step.id, rewrittenQuery);
-    
+
     // For downstream steps, use the last rewritten query or combine logic
-    // Simple approach: use the last one, or implement merging logic
     context.currentQuery = rewrittenQuery;
-    
+
     llmsUsed.push(`${response.provider}:${response.model}`);
-    
-    logger.info('Query rewritten', { 
+
+    logger.info('Query rewritten', {
       stepId: step.id,
-      original: context.originalQuery, 
-      rewritten: rewrittenQuery 
+      original: context.originalQuery,
+      rewritten: rewrittenQuery
     });
   }
 
-private async executeRetrieval(
-  step: WorkflowStep,
-  context: ExecutionContext,
-  retrieversUsed: string[]
-): Promise<void> {
-  if (!step.config?.retriever) {
-    throw new Error('No retriever config for retrieval step');
-  }
-
-  const retrieverConfig = step.config.retriever;
-  const topK = retrieverConfig.config?.topK || 10;
-  
-  try {
-    // @ts-ignore
-    if (retrieverConfig.type === 'qdrant') {
-       // @ts-ignore
-      const queryToUse = context.rewrittenQuery || context.currentQuery;
-      const embedding = await this.vectorDB.getEmbedding(queryToUse);
-      
-      const results = await this.vectorDB.searchVectors(
-        embedding,
-        topK,
-        retrieverConfig.config?.filter
-      );
-
-      context.documents.push(...results);
-       // @ts-ignore
-      retrieversUsed.push(`qdrant:${this.vectorDB.collectionName}`);
-      
-      logger.info('Documents retrieved from Qdrant', { 
-        count: results.length,
-        totalDocs: context.documents.length
-      });
-    } else if (retrieverConfig.type === 'pinecone') {
-      // Keep Pinecone as fallback
-      // ... existing Pinecone code
+  private async executeRetrieval(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    retrieversUsed: string[]
+  ): Promise<void> {
+    if (!step.config?.retriever) {
+      throw new Error('No retriever config for retrieval step');
     }
-  } catch (error) {
-    logger.error('Retrieval failed', { error: (error as Error).message });
-    throw error;
-  }
-}
- private async executeRerank(
-  step: WorkflowStep,
-  context: ExecutionContext,
-  llmsUsed: string[]
-): Promise<void> {
-  if (!step.config?.llm) {
-    logger.warn('Skipping rerank - no LLM config');
-    return;
+
+    const retrieverConfig = step.config.retriever;
+    const topK = retrieverConfig.config?.topK || 10;
+
+    try {
+       // @ts-ignore
+      if (retrieverConfig.type === 'qdrant') {
+        const queryToUse = context.currentQuery;
+        const embedding = await this.vectorDB.getEmbedding(queryToUse);
+
+        const results = await this.vectorDB.searchVectors(
+          embedding,
+          topK,
+          retrieverConfig.config?.filter
+        );
+
+        context.documents.push(...results);
+         // @ts-ignore
+        retrieversUsed.push(`qdrant:${this.vectorDB.collectionName}`);
+
+        logger.info('Documents retrieved from Qdrant', {
+          count: results.length,
+          totalDocs: context.documents.length
+        });
+      } else if (retrieverConfig.type === 'pinecone') {
+        // Keep Pinecone as fallback
+        // ... existing Pinecone code
+      }
+    } catch (error) {
+      logger.error('Retrieval failed', { error: (error as Error).message });
+      throw error;
+    }
   }
 
-  // Get all rewritten queries from previous steps
-  const rewrittenQueries = Array.from(context.rewrittenQueries.values());
-  
-  if (rewrittenQueries.length === 0) {
-    logger.warn('Skipping rerank - no rewritten queries available');
-    return;
-  }
+  private async executeRerank(
+    step: WorkflowStep,
+    context: ExecutionContext,
+    llmsUsed: string[]
+  ): Promise<void> {
+    if (!step.config?.llm) {
+      logger.warn('Skipping rerank - no LLM config');
+      return;
+    }
 
-  if (rewrittenQueries.length === 1) {
-    // Only one query, no need to rerank
-      // @ts-ignore
-    context.currentQuery = rewrittenQueries[0];
-    return;
-  }
+    // Get all rewritten queries from previous steps
+    const rewrittenQueries = Array.from(context.rewrittenQueries.values());
 
-  // Rerank multiple queries
-  const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
-  
+    if (rewrittenQueries.length === 0) {
+      logger.warn('Skipping rerank - no rewritten queries available');
+      return;
+    }
+
+    if (rewrittenQueries.length === 1) {
+      // Only one query, no need to rerank
+       // @ts-ignore
+      context.currentQuery = rewrittenQueries[0];
+      return;
+    }
+
+    // Rerank multiple queries
+    const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
+    
 Rewritten queries:
 ${rewrittenQueries.map((query, i) => `${i + 1}. ${query}`).join('\n')}
 
 Which ONE query is the best for document retrieval? Return only the number (1, 2, 3, etc.):`;
 
-  try {
-    // @ts-ignore
-    const response = await this.llmOrchestrator.generateCompletion({
-      provider: step.config.llm.provider as LLMProvider,
-      model: step.config.llm.model,
-      prompt,
-      temperature: 0.1,
-      maxTokens: 10
-    });
-
-    const selectedIndex = parseInt(response.content.trim()) - 1;
-    
-    if (selectedIndex >= 0 && selectedIndex < rewrittenQueries.length) {
-      const bestQuery = rewrittenQueries[selectedIndex];
-        // @ts-ignore
-      context.currentQuery = bestQuery;
-      logger.info('Best query selected by rerank', { 
-        selectedQuery: bestQuery,
-        totalQueries: rewrittenQueries.length 
+    try {
+      const response = await this.llmOrchestrator.generateCompletion({
+        provider: step.config.llm.provider as LLMProvider,
+        model: step.config.llm.model,
+        prompt,
+        temperature: 0.1,
+        maxTokens: 10
       });
+
+      const selectedIndex = parseInt(response.content.trim()) - 1;
+
+      if (selectedIndex >= 0 && selectedIndex < rewrittenQueries.length) {
+        const bestQuery = rewrittenQueries[selectedIndex];
+         // @ts-ignore
+        context.currentQuery = bestQuery;
+        logger.info('Best query selected by rerank', {
+          selectedQuery: bestQuery,
+          totalQueries: rewrittenQueries.length
+        });
+      }
+    } catch (error) {
+      logger.warn('Reranking failed, using first query', { error: (error as Error).message });
+       // @ts-ignore
+      context.currentQuery = rewrittenQueries[0]; // Fallback
     }
-  } catch (error) {
-    logger.warn('Reranking failed, using first query', { error: (error as Error).message });
-      // @ts-ignore
-    context.currentQuery = rewrittenQueries[0]; // Fallback
   }
-}
 
   private async executeAnswerGeneration(
     step: WorkflowStep,
@@ -484,18 +847,22 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
     }
 
     const queryForAnswer = context.currentQuery;
-    
+
     const hasContext = context.documents.length > 0;
     const contextText = context.documents
       .slice(0, 5)
       .map((doc, i) => `[${i + 1}] ${doc.content}`)
       .join('\n\n');
 
-    const prompt = step.config.prompt || (hasContext
-      ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}\n\nAnswer:`
-      : `Answer this question:\n\nQuestion: ${queryForAnswer}\n\nAnswer:`);
+    // Include memory context if available
+    const memoryContext = context.metadata.memories 
+      ? `\n\nPrevious conversations:\n${context.metadata.memories.slice(0, 3).map(m => `- ${m.metadata.query}: ${m.metadata.response}`).join('\n')}`
+      : '';
 
-      // @ts-ignore
+    const prompt = step.config.prompt || (hasContext
+      ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}${memoryContext}\n\nAnswer:`
+      : `Answer this question:\n\nQuestion: ${queryForAnswer}${memoryContext}\n\nAnswer:`);
+ // @ts-ignore
     const response = await this.llmOrchestrator.generateCompletion({
       provider: step.config.llm.provider as LLMProvider,
       model: step.config.llm.model,
@@ -509,11 +876,12 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
     context.answer = response.content.trim();
     llmsUsed.push(`${response.provider}:${response.model}`);
     context.confidence = this.calculateConfidence(context.documents, context.answer);
-    
-    logger.info('Answer generated', { 
+
+    logger.info('Answer generated', {
       answerLength: context.answer.length,
       confidence: context.confidence,
-      documentsUsed: context.documents.length
+      documentsUsed: context.documents.length,
+      memoriesUsed: context.metadata.memories?.length || 0
     });
   }
 
@@ -523,7 +891,7 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
   ): Promise<void> {
     if (context.answer) {
       context.answer = context.answer.trim();
-      
+
       if (step.config?.addSourceAttribution && context.documents.length > 0) {
         context.answer += `\n\nSources: ${context.documents.length} document${context.documents.length > 1 ? 's' : ''}`;
       }
@@ -535,20 +903,27 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
           .join(', ');
         context.answer += `\n\n[Enhanced queries: ${queries}]`;
       }
+
+      // Show memory usage if available
+       // @ts-ignore
+      if (step.config?.showMemoryUsage && context.metadata.memories?.length > 0) {
+         // @ts-ignore
+        context.answer += `\n\n[Used ${context.metadata.memories.length} relevant memories from previous conversations]`;
+      }
     }
   }
 
   private calculateConfidence(documents: any[], answer: string): number {
     if (documents.length === 0) return 0.3;
-    
+
     const avgScore = documents.reduce((sum, doc) => sum + (doc.score || 0), 0) / documents.length;
     const hasSubstantialAnswer = answer.length > 50;
     const hasMultipleSources = documents.length > 1;
-    
+
     let confidence = avgScore * 0.5;
     confidence += hasSubstantialAnswer ? 0.3 : 0.1;
     confidence += hasMultipleSources ? 0.2 : 0.1;
-    
+
     return Math.min(0.95, Math.max(0.1, confidence));
   }
 
@@ -586,11 +961,18 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
 interface ExecutionContext {
   originalQuery: string;
   currentQuery: string;
-  rewrittenQueries: Map<string, string>; // Store multiple rewritten queries by step ID
+  rewrittenQueries: Map<string, string>;
   documents: any[];
   answer: string;
   confidence: number;
-  metadata: Record<string, any>;
+  metadata: {
+    userId: string;
+    workflowId: string;
+    startTime: number;
+    memories?: any[];
+    memorySummary?: any;
+    [key: string]: any;
+  };
   stepResults: Map<string, { completed: boolean; timestamp: number }>;
-  stepOutputs: Map<string, any>; // Store outputs from each step
+  stepOutputs: Map<string, any>;
 }

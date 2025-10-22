@@ -11,7 +11,9 @@ import authRoutes from './routes/auth.routes.js';
 import workflowRoutes from './routes/workflow.routes.js';
 import queryRoutes from './routes/query.routes.js';
 import analyticsRoutes from './routes/analytics.routes.js';
+import { memoryRoutes } from './routes/memory.routes.js';
 const app = express();
+app.use('/api/memory', memoryRoutes);
 const prisma = new PrismaClient({
     log: process.env.NODE_ENV === 'development'
         ? ['query', 'error', 'warn']

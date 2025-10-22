@@ -1,18 +1,21 @@
-// workflow-executor.service.ts - FIXED VERSION FOR PARALLEL EXECUTION
+// workflow-executor.service.ts - COMPLETE VERSION WITH ALL MEMORY OPERATIONS
 import { LLMOrchestrator } from '../llm/llm-orchestrator.service.js';
 import { VectorDBService } from '../retrieval/vector-db.service.js';
 import { CacheService } from '../cache.service.js';
+import { getMemoryService } from '../memory/memory.service.js';
 import { logger } from '../../utils/logger.js';
 export class WorkflowExecutor {
     llmOrchestrator;
     vectorDB;
     cache;
+    memoryService;
     constructor() {
         this.llmOrchestrator = new LLMOrchestrator();
         this.vectorDB = new VectorDBService();
         this.cache = new CacheService();
+        this.memoryService = getMemoryService();
     }
-    async executeWorkflow(config, query, useCache = true) {
+    async executeWorkflow(config, query, userId, useCache = true) {
         const startTime = Date.now();
         const llmsUsed = [];
         const retrieversUsed = [];
@@ -35,20 +38,24 @@ export class WorkflowExecutor {
             const context = {
                 originalQuery: query,
                 currentQuery: query,
-                rewrittenQueries: new Map(), // Store multiple rewritten queries
+                rewrittenQueries: new Map(),
                 documents: [],
                 answer: '',
                 confidence: 0,
-                metadata: {},
+                metadata: {
+                    userId: userId,
+                    workflowId: config.id,
+                    startTime: startTime,
+                    memories: [] // Initialize memories array
+                },
                 stepResults: new Map(),
-                stepOutputs: new Map() // Store outputs from each step
+                stepOutputs: new Map()
             };
             // Execute workflow graph
             await this.executeWorkflowGraph(config, context, llmsUsed, retrieversUsed);
             if (!context.answer || context.answer.trim().length === 0) {
                 throw new Error('No answer generated. Ensure workflow includes answer generation step.');
             }
-            // @ts-ignore
             const result = {
                 answer: context.answer,
                 sources: context.documents.slice(0, 10).map(doc => ({
@@ -64,7 +71,10 @@ export class WorkflowExecutor {
                 rewrittenQuery: Array.from(context.rewrittenQueries.entries()).reduce((acc, [key, value]) => {
                     acc[key] = value;
                     return acc;
-                }, {})
+                }, {}),
+                query: '',
+                documents: [],
+                metadata: {}
             };
             // Cache result
             if (useCache && config.cacheEnabled && context.answer) {
@@ -100,7 +110,7 @@ export class WorkflowExecutor {
             totalSteps: steps.length,
             entrySteps: entrySteps.map(s => s.id)
         });
-        // Execute from entry points - REMOVED inProgress tracking
+        // Execute from entry points
         await this.executeFromEntryPoints(entrySteps, stepMap, completed, context, llmsUsed, retrieversUsed);
     }
     /**
@@ -114,9 +124,11 @@ export class WorkflowExecutor {
             });
         });
         const entrySteps = steps.filter(step => !hasIncoming.has(step.id));
-        // If no clear entry points, use first step
-        // @ts-ignore
-        return entrySteps.length > 0 ? entrySteps : [steps[0]];
+        return entrySteps.length > 0
+            ? entrySteps.filter((s) => s !== undefined)
+            : steps[0] !== undefined
+                ? [steps[0]]
+                : [];
     }
     /**
      * Execute workflow starting from entry points
@@ -126,11 +138,8 @@ export class WorkflowExecutor {
         await Promise.all(entrySteps.map(step => this.executeStepWithDependencies(step, stepMap, completed, context, llmsUsed, retrieversUsed)));
     }
     /**
-     * Execute a step and all its downstream dependencies - FIXED VERSION
+     * Execute a step and all its downstream dependencies
      */
-    /**
-    * Execute a step and all its downstream dependencies - FIXED VERSION
-    */
     async executeStepWithDependencies(step, stepMap, completed, context, llmsUsed, retrieversUsed) {
         // Check if already completed - ATOMIC CHECK
         if (completed.has(step.id)) {
@@ -159,7 +168,7 @@ export class WorkflowExecutor {
         }
     }
     /**
-     * Wait for all parent steps to complete - FIXED VERSION
+     * Wait for all parent steps to complete
      */
     async waitForParentSteps(step, stepMap, completed) {
         // Find parent steps (steps that have this step as nextStep)
@@ -208,6 +217,15 @@ export class WorkflowExecutor {
                 case 'post_process':
                     await this.executePostProcess(step, context);
                     break;
+                case 'memory_update':
+                    await this.executeMemoryUpdate(step, context, llmsUsed);
+                    break;
+                case 'memory_retrieve':
+                    await this.executeMemoryRetrieve(step, context, llmsUsed);
+                    break;
+                case 'memory_summarize':
+                    await this.executeMemorySummarize(step, context, llmsUsed);
+                    break;
                 default:
                     throw new Error(`Unknown step type: ${step.type}`);
             }
@@ -223,6 +241,282 @@ export class WorkflowExecutor {
                 error: error.message
             });
             throw error;
+        }
+    }
+    /**
+     * Execute memory retrieval step
+     */
+    async executeMemoryRetrieve(step, context, llmsUsed) {
+        const config = step.config?.memoryRetrieve;
+        if (!config?.enabled) {
+            logger.info('Memory retrieve step disabled, skipping');
+            return;
+        }
+        try {
+            logger.info('Executing memory retrieval', {
+                stepId: step.id,
+                topK: config.topK || 5,
+                minScore: config.minScore || 0.7
+            });
+            // Retrieve relevant memories
+            // @ts-ignore
+            const memoryResult = await this.memoryService.retrieveMemories({
+                userId: context.metadata.userId,
+                workflowId: context.metadata.workflowId,
+                query: context.currentQuery,
+                topK: config.topK || 5,
+                minScore: config.minScore || 0.7,
+                filters: config.filters
+            });
+            if (!memoryResult.success || !memoryResult.data?.memories) {
+                logger.warn('Memory retrieval failed or no memories found', {
+                    stepId: step.id,
+                    error: memoryResult.error
+                });
+                return;
+            }
+            const memories = memoryResult.data.memories;
+            if (memories.length > 0) {
+                // Store memories in context for use in answer generation
+                context.metadata.memories = memories;
+                // Add memory context to the current query for better retrieval
+                const memoryContext = memories
+                    .slice(0, 3) // Use top 3 most relevant memories
+                    .map(memory => `Previous conversation: ${memory.metadata.query} - ${memory.metadata.response}`)
+                    .join('\n\n');
+                if (memoryContext) {
+                    // Enhance the current query with memory context
+                    context.currentQuery = `${context.currentQuery}\n\nContext from previous conversations:\n${memoryContext}`;
+                }
+                logger.info('Memory retrieval successful', {
+                    stepId: step.id,
+                    memoryCount: memories.length,
+                    topScore: memories[0]?.score || 0,
+                    hasContext: !!memoryContext
+                });
+            }
+            else {
+                logger.info('No relevant memories found', { stepId: step.id });
+            }
+        }
+        catch (error) {
+            logger.error('Memory retrieval failed', {
+                stepId: step.id,
+                error: error.message
+            });
+            // Don't throw - memory retrieval shouldn't break the workflow
+        }
+    }
+    /**
+     * Execute memory summarize step
+     */
+    async executeMemorySummarize(step, context, llmsUsed) {
+        const config = step.config?.memorySummarize;
+        if (!config?.enabled) {
+            logger.info('Memory summarize step disabled, skipping');
+            return;
+        }
+        try {
+            logger.info('Executing memory summarization', {
+                stepId: step.id,
+                preserveDetails: config.preserveDetails || false
+            });
+            // Get memories to summarize (either from context or retrieve new ones)
+            let memoryIds = [];
+            if (Array.isArray(config.memoryIds) && config.memoryIds.length > 0) {
+                // Use specified memory IDs
+                memoryIds = config.memoryIds;
+            }
+            else if (config.similarityThreshold) {
+                // Retrieve similar memories to summarize
+                const memoryResult = await this.memoryService.retrieveMemories({
+                    userId: context.metadata.userId,
+                    workflowId: context.metadata.workflowId,
+                    query: context.currentQuery,
+                    topK: config.topK || 10,
+                    minScore: config.similarityThreshold
+                });
+                if (memoryResult.success && memoryResult.data?.memories) {
+                    memoryIds = memoryResult.data.memories.map(m => m.id);
+                }
+            }
+            // Need at least 2 memories to summarize
+            if (memoryIds.length < 2) {
+                logger.info('Not enough memories to summarize', {
+                    stepId: step.id,
+                    memoryCount: memoryIds.length
+                });
+                return;
+            }
+            // Perform summarization
+            const summaryResult = await this.memoryService.summarizeMemories(memoryIds, context.metadata.userId, config.preserveDetails || false);
+            if (!summaryResult.success) {
+                logger.warn('Memory summarization failed', {
+                    stepId: step.id,
+                    error: summaryResult.error
+                });
+                return;
+            }
+            // Store summary in context for potential use
+            if (summaryResult.data?.summarized) {
+                context.metadata.memorySummary = summaryResult.data.summarized.summary;
+                logger.info('Memory summarization completed', {
+                    stepId: step.id,
+                    originalCount: summaryResult.data.summarized.original.length,
+                    summaryId: summaryResult.data.summarized.summary.id
+                });
+            }
+        }
+        catch (error) {
+            logger.error('Memory summarization failed', {
+                stepId: step.id,
+                error: error.message
+            });
+            // Don't throw - memory summarization shouldn't break the workflow
+        }
+    }
+    /**
+     * Execute memory update step
+     */
+    async executeMemoryUpdate(step, context, llmsUsed) {
+        const config = step.config?.memoryUpdate;
+        if (!config?.enabled) {
+            logger.info('Memory update step disabled, skipping');
+            return;
+        }
+        try {
+            logger.info('Executing memory update', {
+                stepId: step.id,
+                deduplication: config.deduplication?.enabled,
+                importance: config.importance?.auto
+            });
+            // Calculate importance if auto is enabled
+            const importance = config.importance?.auto
+                ? this.calculateMemoryImportance(context)
+                : (config.importance?.manualValue || 0.5);
+            // Prepare memory data
+            const memoryRequest = {
+                userId: context.metadata.userId,
+                workflowId: context.metadata.workflowId,
+                query: context.originalQuery,
+                response: context.answer,
+                metadata: {
+                    importance,
+                    type: 'conversation',
+                    tags: this.extractTags(context),
+                    confidence: context.confidence,
+                    documentCount: context.documents.length,
+                    rewrittenQueries: Array.from(context.rewrittenQueries.entries()),
+                    stepId: step.id
+                }
+            };
+            // @ts-ignore
+            const memoryResult = await this.memoryService.storeMemory(memoryRequest);
+            if (!memoryResult.success) {
+                logger.warn('Memory storage failed', {
+                    stepId: step.id,
+                    error: memoryResult.error
+                });
+                return;
+            }
+            // Handle deduplication if enabled
+            if (config.deduplication?.enabled) {
+                await this.handleMemoryDeduplication(context, config.deduplication, memoryResult.data?.stored?.id);
+            }
+            // Apply retention policies
+            if (config.retention?.enableExpiration) {
+                await this.memoryService.cleanup(context.metadata.userId, config.retention.maxMemories || 1000);
+            }
+            logger.info('Memory update completed successfully', {
+                stepId: step.id,
+                memoryId: memoryResult.data?.stored?.id,
+                importance
+            });
+        }
+        catch (error) {
+            logger.error('Memory update failed', {
+                stepId: step.id,
+                error: error.message
+            });
+            // Don't throw - memory update shouldn't break the workflow
+        }
+    }
+    /**
+     * Calculate memory importance based on context
+     */
+    calculateMemoryImportance(context) {
+        let importance = 0.5; // Default importance
+        // Increase importance based on answer quality
+        if (context.answer.length > 200)
+            importance += 0.2;
+        if (context.confidence > 0.8)
+            importance += 0.2;
+        if (context.documents.length > 3)
+            importance += 0.1;
+        // Decrease importance for very short answers
+        if (context.answer.length < 50)
+            importance -= 0.2;
+        return Math.min(1.0, Math.max(0.1, importance));
+    }
+    /**
+     * Extract tags from context for memory organization
+     */
+    extractTags(context) {
+        const tags = [];
+        // Add workflow-related tags
+        tags.push(`workflow:${context.metadata.workflowId}`);
+        // Add document count tag
+        if (context.documents.length > 0) {
+            tags.push(`documents:${context.documents.length}`);
+        }
+        // Add confidence level tag
+        if (context.confidence > 0.8) {
+            tags.push('high-confidence');
+        }
+        else if (context.confidence < 0.4) {
+            tags.push('low-confidence');
+        }
+        return tags;
+    }
+    /**
+     * Handle memory deduplication
+     */
+    async handleMemoryDeduplication(context, deduplicationConfig, currentMemoryId) {
+        if (!currentMemoryId)
+            return;
+        try {
+            // Search for similar memories
+            const similarMemories = await this.memoryService.retrieveMemories({
+                userId: context.metadata.userId,
+                query: context.originalQuery,
+                topK: 10,
+                minScore: deduplicationConfig.similarityThreshold || 0.8
+            });
+            if (similarMemories.success && similarMemories.data?.memories) {
+                const duplicates = similarMemories.data.memories
+                    .filter(memory => memory.id !== currentMemoryId && memory.score > 0.8);
+                if (duplicates.length > 0) {
+                    logger.info('Found duplicate memories', {
+                        count: duplicates.length,
+                        currentMemoryId
+                    });
+                    if (deduplicationConfig.mergeStrategy === 'summarize') {
+                        // Summarize and merge duplicates
+                        const memoryIds = duplicates.map(m => m.id).concat(currentMemoryId);
+                        await this.memoryService.summarizeMemories(memoryIds, context.metadata.userId, true // preserve details
+                        );
+                    }
+                    else {
+                        // Delete duplicates (default behavior)
+                        for (const duplicate of duplicates) {
+                            await this.memoryService.deleteMemoryFromVectorDB(duplicate.id);
+                        }
+                    }
+                }
+            }
+        }
+        catch (error) {
+            logger.warn('Deduplication failed', { error: error.message });
         }
     }
     async executeQueryRewrite(step, context, llmsUsed) {
@@ -244,7 +538,6 @@ export class WorkflowExecutor {
         // Store each rewritten query by step ID (for parallel rewrites)
         context.rewrittenQueries.set(step.id, rewrittenQuery);
         // For downstream steps, use the last rewritten query or combine logic
-        // Simple approach: use the last one, or implement merging logic
         context.currentQuery = rewrittenQuery;
         llmsUsed.push(`${response.provider}:${response.model}`);
         logger.info('Query rewritten', {
@@ -262,8 +555,7 @@ export class WorkflowExecutor {
         try {
             // @ts-ignore
             if (retrieverConfig.type === 'qdrant') {
-                // @ts-ignore
-                const queryToUse = context.rewrittenQuery || context.currentQuery;
+                const queryToUse = context.currentQuery;
                 const embedding = await this.vectorDB.getEmbedding(queryToUse);
                 const results = await this.vectorDB.searchVectors(embedding, topK, retrieverConfig.config?.filter);
                 context.documents.push(...results);
@@ -303,13 +595,12 @@ export class WorkflowExecutor {
         }
         // Rerank multiple queries
         const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
-  
+    
 Rewritten queries:
 ${rewrittenQueries.map((query, i) => `${i + 1}. ${query}`).join('\n')}
 
 Which ONE query is the best for document retrieval? Return only the number (1, 2, 3, etc.):`;
         try {
-            // @ts-ignore
             const response = await this.llmOrchestrator.generateCompletion({
                 provider: step.config.llm.provider,
                 model: step.config.llm.model,
@@ -344,9 +635,13 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
             .slice(0, 5)
             .map((doc, i) => `[${i + 1}] ${doc.content}`)
             .join('\n\n');
+        // Include memory context if available
+        const memoryContext = context.metadata.memories
+            ? `\n\nPrevious conversations:\n${context.metadata.memories.slice(0, 3).map(m => `- ${m.metadata.query}: ${m.metadata.response}`).join('\n')}`
+            : '';
         const prompt = step.config.prompt || (hasContext
-            ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}\n\nAnswer:`
-            : `Answer this question:\n\nQuestion: ${queryForAnswer}\n\nAnswer:`);
+            ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}${memoryContext}\n\nAnswer:`
+            : `Answer this question:\n\nQuestion: ${queryForAnswer}${memoryContext}\n\nAnswer:`);
         // @ts-ignore
         const response = await this.llmOrchestrator.generateCompletion({
             provider: step.config.llm.provider,
@@ -363,7 +658,8 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
         logger.info('Answer generated', {
             answerLength: context.answer.length,
             confidence: context.confidence,
-            documentsUsed: context.documents.length
+            documentsUsed: context.documents.length,
+            memoriesUsed: context.metadata.memories?.length || 0
         });
     }
     async executePostProcess(step, context) {
@@ -378,6 +674,12 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
                     .map(([id, query]) => `Step ${id}: "${query}"`)
                     .join(', ');
                 context.answer += `\n\n[Enhanced queries: ${queries}]`;
+            }
+            // Show memory usage if available
+            // @ts-ignore
+            if (step.config?.showMemoryUsage && context.metadata.memories?.length > 0) {
+                // @ts-ignore
+                context.answer += `\n\n[Used ${context.metadata.memories.length} relevant memories from previous conversations]`;
             }
         }
     }
