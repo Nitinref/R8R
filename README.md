@@ -12,38 +12,30 @@ R8R (Rapid RAG Runtime) provides pre-built, optimized RAG workflows accessible v
 🖼️ Platform Preview
 <div align="center">
 Landing Page - Modern & Engaging
-https://./assets/3.png
-Clean, professional landing page showcasing R8R's value proposition and features
-
+<img src="./assets/2.png" alt="R8R Landing Page" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" /> <p><em>Clean, professional landing page showcasing R8R's value proposition and features</em></p>
 Signup & Authentication
-https://./assets/2.png
-Streamlined signup process with secure authentication and API key generation
-
+<img src="./assets/3.png" alt="R8R Signup" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" /> <p><em>Streamlined signup process with secure authentication and API key generation</em></p>
 Visual Workflow Editor
-https://./assets/1.png
-Intuitive drag-and-drop workflow editor with node-based pipeline creation
+<img src="./assets/1.png" alt="R8R Workflow Editor" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" /> <p><em>Intuitive drag-and-drop workflow editor with node-based pipeline creation</em></p></div>
+🎯 The Problem We Solve
+🕒 Building production RAG systems takes 4-8 weeks
 
-</div>
+🔧 Managing multiple LLMs and vector databases is complex
 
-The Problem We Solve
-Building production RAG systems takes 4-8 weeks
+⚙️ Query rewriting, hybrid search, and result synthesis require extensive tuning
 
-Managing multiple LLMs and vector databases is complex
+🔄 Most teams reinvent the wheel for every project
 
-Query rewriting, hybrid search, and result synthesis require extensive tuning
+💡 Our Solution
+🚀 API-first RAG workflows - Deploy in 5 minutes
 
-Most teams reinvent the wheel for every project
+🧠 Multi-LLM intelligence - Smart routing and fallbacks
 
-Our Solution
-API-first RAG workflows - Deploy in 5 minutes
+🔍 Built-in query optimization - Automatic query rewriting
 
-Multi-LLM intelligence - Smart routing and fallbacks
+📊 Multiple retrieval strategies - Vector, hybrid, multi-hop in parallel
 
-Built-in query optimization - Automatic query rewriting
-
-Multiple retrieval strategies - Vector, hybrid, multi-hop in parallel
-
-Enterprise ready - Rate limiting, monitoring, security
+🏢 Enterprise ready - Rate limiting, monitoring, security
 
 ⚡ Quick Start
 1. Get Your API Key
@@ -92,22 +84,22 @@ Intelligent Result Synthesis
 Verified, Source-Cited Response
 🔧 Core Features
 🧠 Smart Query Rewriting
-5+ rewriting strategies per query
+✅ 5+ rewriting strategies per query
 
-Multi-LLM ensemble (GPT-4, Claude-3, Llama-3)
+✅ Multi-LLM ensemble (GPT-4, Claude-3, Llama-3)
 
-Automatic intent recognition
+✅ Automatic intent recognition
 
-Domain-specific optimization
+✅ Domain-specific optimization
 
 🔍 Multi-Pipeline Retrieval
-Vector RAG - Semantic similarity search
+✅ Vector RAG - Semantic similarity search
 
-Hybrid RAG - Best of vector + keyword search
+✅ Hybrid RAG - Best of vector + keyword search
 
-Multi-Hop RAG - Complex reasoning chains
+✅ Multi-Hop RAG - Complex reasoning chains
 
-Cross-Modal RAG - Text + structured data
+✅ Cross-Modal RAG - Text + structured data
 
 🎯 Pre-Built Workflows
 javascript
@@ -118,41 +110,13 @@ javascript
 'enterprise'    // Maximum accuracy, multiple validations
 'custom'        // Tailored to your domain
 📊 Built-in Analytics
-Query performance metrics
+📈 Query performance metrics
 
-Source attribution scoring
+🎯 Source attribution scoring
 
-Pipeline effectiveness analysis
+📊 Pipeline effectiveness analysis
 
-Cost optimization insights
-
-🎨 Platform Features
-Visual Workflow Builder
-Drag-and-drop interface for pipeline design
-
-Real-time configuration of LLM parameters
-
-Memory node integration for persistent context
-
-One-click deployment to production
-
-API Management
-Automated API key generation
-
-Usage analytics and monitoring
-
-Rate limit configuration
-
-Integration examples for popular frameworks
-
-Enterprise Dashboard
-Team collaboration features
-
-Cost tracking and optimization
-
-Performance metrics across workflows
-
-Custom domain configuration
+💰 Cost optimization insights
 
 📚 API Reference
 Query Endpoint
@@ -197,37 +161,10 @@ javascript
   }
 }
 💰 Pricing
-Free Tier
-1,000 queries/month
-
-Standard pipeline only
-
-Basic analytics
-
-Community support
-
-Pro - $49/month
-50,000 queries/month
-
-All advanced pipelines
-
-Custom domain tuning
-
-Priority support
-
-Advanced analytics
-
-Enterprise - Custom
-Unlimited queries
-
-Dedicated instances
-
-White-label options
-
-SLAs & custom workflows
-
-On-premise deployment available
-
+Plan	Queries/Month	Features	Price
+Free Tier	1,000	Standard pipeline, Basic analytics, Community support	$0
+Pro	50,000	All advanced pipelines, Custom domain tuning, Priority support, Advanced analytics	$49/month
+Enterprise	Unlimited	Dedicated instances, White-label options, SLAs & custom workflows, On-premise deployment	Custom
 🛠️ Integration Examples
 Next.js Application
 javascript
@@ -272,45 +209,45 @@ response = client.query(
 )
 print(response['answer'])
 🔒 Security & Compliance
-SOC 2 Type II Certified
+✅ SOC 2 Type II Certified
 
-GDPR & CCPA Compliant
+✅ GDPR & CCPA Compliant
 
-End-to-end encryption
+✅ End-to-end encryption
 
-Data isolation per customer
+✅ Data isolation per customer
 
-Zero data retention (optional)
+✅ Zero data retention (optional)
 
-On-premise deployment available
+✅ On-premise deployment available
 
 📈 Why Choose R8R?
-For Developers
-90% faster RAG implementation
+👨‍💻 For Developers
+⚡ 90% faster RAG implementation
 
-No infrastructure management
+🛠️ No infrastructure management
 
-Consistent, high-quality results
+🎯 Consistent, high-quality results
 
-Scalable from prototype to production
+📈 Scalable from prototype to production
 
-For Enterprises
-Proven accuracy across domains
+🏢 For Enterprises
+✅ Proven accuracy across domains
 
-Cost control with predictable pricing
+💰 Cost control with predictable pricing
 
-Security & compliance built-in
+🔒 Security & compliance built-in
 
-Enterprise support with SLAs
+📞 Enterprise support with SLAs
 
-For AI Teams
-Focus on innovation, not infrastructure
+🧠 For AI Teams
+💡 Focus on innovation, not infrastructure
 
-A/B test pipelines easily
+🔄 A/B test pipelines easily
 
-Comprehensive analytics for optimization
+📊 Comprehensive analytics for optimization
 
-Continuous pipeline improvements
+🚀 Continuous pipeline improvements
 
 🚀 Getting Started
 1. Sign Up
@@ -326,26 +263,14 @@ javascript
 // That's it! You're ready to use production-grade RAG
 const answer = await r8r.query("Your question here");
 🆘 Support
-Documentation: docs.r8r.ai
+📚 Documentation: docs.r8r.ai
 
-Community: Discord
+💬 Community: Discord
 
-Email: support@r8r.ai
+📧 Email: support@r8r.ai
 
-Status: status.r8r.ai
-
-🏆 Customer Success Stories
-"R8R reduced our RAG implementation time from 6 weeks to 2 days. The visual workflow editor made complex pipeline design accessible to our entire team."
-— Sarah Chen, CTO at HealthTech Innovations
-
-"The multi-LLM approach consistently delivers more accurate results than any single model. Our customer satisfaction scores improved by 34%."
-— Marcus Rodriguez, Lead AI Engineer at FinServe
+📊 Status: status.r8r.ai
 
 © 2024 FlowForge AI. All rights reserved.
 
 "Stop building RAG infrastructure. Start building AI applications." 🚀
-
-<div align="center">
-[Replace placeholder images with actual screenshots of your landing page, signup flow, and workflow editor]
-
-</div>
