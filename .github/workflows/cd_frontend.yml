@@ -27,8 +27,6 @@ jobs:
         with:
           context: .
           file: ./docker/Dockerfile.frontend
-          build-args: |
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
           push: true
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
@@ -56,4 +54,4 @@ jobs:
           script: |
             cd /home/ubuntu/project
             docker-compose pull frontend
-             docker-compose up -d frontend
+            docker-compose up -d --no-deps --build frontend
