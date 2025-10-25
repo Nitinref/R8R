@@ -156,3 +156,27 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* You'll need to define this in your CSS file (e.g., global.css) or style block */
+
+/* Define the continuous flow keyframes */
+@keyframes continuous-flow {
+  /* Start: The dash is at the beginning of the path */
+  from {
+    stroke-dashoffset: 0; 
+  }
+  /* End: The dash has moved along the entire length of the path */
+  to {
+    /* Set this to a large number (like the estimated path length) 
+       to ensure it moves completely across */
+    stroke-dashoffset: -1500; 
+  }
+}
+
+/* Apply the animation to the path elements */
+.animate-continuous-flow {
+  /* Apply the animation: name | duration | timing-function | iteration-count */
+  animation: continuous-flow 15s linear infinite; 
+  /* Shorter duration = faster movement */
+  /* 'linear' keeps the speed constant */
+  /* 'infinite' makes it loop forever */
+}

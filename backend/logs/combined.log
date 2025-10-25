@@ -9381,3 +9381,298 @@
 {"level":"info","message":"HTTP server closed","timestamp":"2025-10-22T14:53:35.895Z"}
 {"level":"info","message":"Database disconnected","timestamp":"2025-10-22T14:53:35.913Z"}
 {"level":"info","message":"Redis client disconnected","timestamp":"2025-10-22T14:53:35.931Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-24T08:48:46.428Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.431Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-24T08:48:46.431Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.431Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-24T08:48:46.432Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-24T08:48:46.432Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-24T08:48:46.432Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-24T08:48:46.432Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-24T08:48:46.432Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-24T08:48:46.433Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-24T08:48:46.433Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-24T08:48:46.433Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.434Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:48:46.435Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-24T08:48:46.435Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-24T08:48:46.474Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-24T08:48:49.739Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-24T08:48:49.740Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-24T08:48:49.741Z","url":"redis://localhost:6379"}
+{"attempt":0,"delayMs":0,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:49.800Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":0,"timestamp":"2025-10-24T08:48:49.801Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:49.803Z"}
+{"attempt":1,"delayMs":100,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:49.807Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":1,"timestamp":"2025-10-24T08:48:49.807Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:49.915Z"}
+{"attempt":2,"delayMs":200,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:49.919Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":2,"timestamp":"2025-10-24T08:48:49.920Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:50.134Z"}
+{"attempt":3,"delayMs":300,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:50.138Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":3,"timestamp":"2025-10-24T08:48:50.139Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:50.451Z"}
+{"attempt":4,"delayMs":400,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:50.456Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":4,"timestamp":"2025-10-24T08:48:50.457Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:50.864Z"}
+{"attempt":5,"delayMs":500,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:50.868Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":5,"timestamp":"2025-10-24T08:48:50.869Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:51.380Z"}
+{"attempt":6,"delayMs":600,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:51.384Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":6,"timestamp":"2025-10-24T08:48:51.384Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:51.989Z"}
+{"attempt":7,"delayMs":700,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:51.992Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":7,"timestamp":"2025-10-24T08:48:51.993Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:52.707Z"}
+{"attempt":8,"delayMs":800,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:52.712Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":8,"timestamp":"2025-10-24T08:48:52.713Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:53.528Z"}
+{"attempt":9,"delayMs":900,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:53.532Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":9,"timestamp":"2025-10-24T08:48:53.533Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T08:48:54.438Z"}
+{"attempt":10,"delayMs":1000,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T08:48:54.441Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":10,"timestamp":"2025-10-24T08:48:54.441Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-24T08:49:38.667Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.670Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-24T08:49:38.671Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.671Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-24T08:49:38.671Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-24T08:49:38.672Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-24T08:49:38.672Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-24T08:49:38.672Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-24T08:49:38.673Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-24T08:49:38.673Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-24T08:49:38.673Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-24T08:49:38.674Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.675Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:38.676Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-24T08:49:38.676Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-24T08:49:38.695Z"}
+{"error":"Can't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","level":"error","message":"Failed to initialize application","stack":"PrismaClientInitializationError: Can't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.\n    at r (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:115:2770)\n    at async initializeApp (file:///C:/Users/DELL/yy/R8R/backend/dist/server.js:32:9)","timestamp":"2025-10-24T08:49:43.696Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-24T08:49:55.340Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.343Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-24T08:49:55.343Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.343Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-24T08:49:55.343Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-24T08:49:55.343Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-24T08:49:55.344Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-24T08:49:55.344Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-24T08:49:55.344Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-24T08:49:55.345Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-24T08:49:55.345Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-24T08:49:55.345Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-24T08:49:55.345Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-24T08:49:55.345Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.346Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T08:49:55.347Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-24T08:49:55.348Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-24T08:49:55.365Z"}
+{"error":"Can't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.","level":"error","message":"Failed to initialize application","stack":"PrismaClientInitializationError: Can't reach database server at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-calm-scene-a8hffav3-pooler.eastus2.azure.neon.tech:5432`.\n    at r (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:115:2770)\n    at async initializeApp (file:///C:/Users/DELL/yy/R8R/backend/src/server.ts:37:5)","timestamp":"2025-10-24T08:50:00.379Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-24T10:51:10.604Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.620Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-24T10:51:10.622Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.623Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-24T10:51:10.626Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-24T10:51:10.628Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-24T10:51:10.630Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-24T10:51:10.631Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-24T10:51:10.632Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-24T10:51:10.634Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-24T10:51:10.635Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-24T10:51:10.636Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-24T10:51:10.637Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-24T10:51:10.638Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-24T10:51:10.638Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-24T10:51:10.640Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T10:51:10.640Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-24T10:51:10.641Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-24T10:51:10.642Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T10:51:10.643Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.644Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-24T10:51:10.645Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.646Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.648Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-24T10:51:10.648Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.649Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-24T10:51:10.650Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-24T10:51:10.650Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-24T10:51:10.651Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-24T10:51:10.652Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-24T10:51:10.653Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-24T10:51:10.654Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:10.654Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-24T10:51:10.655Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-24T10:51:10.892Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-24T10:51:13.994Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-24T10:51:14.010Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-24T10:51:14.019Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-24T10:51:14.242Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-24T10:51:14.283Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-24T10:51:14.284Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-24T10:51:14.292Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:14.307Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-24T10:51:14.308Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-24T10:51:14.309Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-24T10:51:14.311Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:51:14.312Z"}
+{"error":"Socket closed unexpectedly","level":"error","message":"Redis Client Error","reconnectAttempts":0,"timestamp":"2025-10-24T10:55:26.733Z"}
+{"attempt":0,"delayMs":0,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-24T10:55:26.736Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-24T10:55:26.737Z"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-24T10:55:26.761Z"}
+{"error":"Socket closed unexpectedly","level":"error","message":"Redis Client Error","reconnectAttempts":0,"timestamp":"2025-10-24T10:55:26.770Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-24T10:55:26.772Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-24T10:57:41.265Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.270Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-24T10:57:41.271Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.271Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-24T10:57:41.272Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-24T10:57:41.273Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-24T10:57:41.273Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-24T10:57:41.274Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-24T10:57:41.274Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-24T10:57:41.275Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-24T10:57:41.276Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-24T10:57:41.276Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-24T10:57:41.277Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-24T10:57:41.277Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-24T10:57:41.278Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-24T10:57:41.278Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T10:57:41.278Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-24T10:57:41.279Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-24T10:57:41.279Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-24T10:57:41.280Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.280Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-24T10:57:41.281Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.281Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.282Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-24T10:57:41.282Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.283Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-24T10:57:41.283Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-24T10:57:41.284Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-24T10:57:41.284Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-24T10:57:41.285Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-24T10:57:41.285Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-24T10:57:41.285Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:41.286Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-24T10:57:41.286Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-24T10:57:41.319Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-24T10:57:44.549Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-24T10:57:44.551Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-24T10:57:44.552Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-24T10:57:44.611Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-24T10:57:44.622Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-24T10:57:44.623Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-24T10:57:44.627Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:44.635Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-24T10:57:44.636Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-24T10:57:44.636Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-24T10:57:44.637Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-24T10:57:44.637Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-24T10:59:03.651Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-24T10:59:03.653Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-24T10:59:03.658Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-24T10:59:03.662Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-25T15:20:46.616Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.619Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-25T15:20:46.619Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.619Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-25T15:20:46.620Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-25T15:20:46.620Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-25T15:20:46.620Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-25T15:20:46.620Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-25T15:20:46.620Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-25T15:20:46.621Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-25T15:20:46.621Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-25T15:20:46.621Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-25T15:20:46.621Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-25T15:20:46.621Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-25T15:20:46.621Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.622Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-25T15:20:46.623Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-25T15:20:46.623Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-25T15:20:46.659Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-25T15:20:49.524Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-25T15:20:49.525Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-25T15:20:49.526Z","url":"redis://localhost:6379"}
+{"attempt":0,"delayMs":0,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-25T15:20:49.569Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":0,"timestamp":"2025-10-25T15:20:49.569Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-25T15:20:49.575Z"}
+{"attempt":1,"delayMs":100,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-25T15:20:49.577Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":1,"timestamp":"2025-10-25T15:20:49.577Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-25T15:20:49.684Z"}
+{"attempt":2,"delayMs":200,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-25T15:20:49.688Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":2,"timestamp":"2025-10-25T15:20:49.689Z"}
+{"level":"info","message":"Redis client attempting to reconnect...","timestamp":"2025-10-25T15:20:49.903Z"}
+{"attempt":3,"delayMs":300,"level":"info","message":"Redis reconnecting...","timestamp":"2025-10-25T15:20:49.904Z"}
+{"code":"ECONNREFUSED","error":"","level":"error","message":"Redis Client Error","reconnectAttempts":3,"timestamp":"2025-10-25T15:20:49.905Z"}
