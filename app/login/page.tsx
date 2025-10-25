@@ -6,7 +6,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import { Button } from '@/app/components/ui/Button';
 import { Input } from '@/app/components/ui/Input';
 import { Card } from '@/app/components/ui/Card';
-import { LogIn, ArrowRight, Sparkles, Eye, EyeOff, Lock, Mail , Zap , Shield } from 'lucide-react';
+import { LogIn, ArrowRight, Sparkles, Eye, EyeOff, Lock, Mail, Zap, Shield } from 'lucide-react';
 import { CursorGlow } from '@/app/components/cursor-glow';
 
 export default function LoginPage() {
@@ -107,7 +107,7 @@ export default function LoginPage() {
         .glow-1 {
           width: 600px;
           height: 600px;
-          background: radial-gradient(circle, var(--brand-red-1), transparent 60%);
+          background: radial-gradient(circle, #0ea5e9, transparent 60%);
           animation: glowMove1 25s infinite alternate ease-in-out;
           top: -300px;
           left: -300px;
@@ -116,7 +116,7 @@ export default function LoginPage() {
         .glow-2 {
           width: 700px;
           height: 700px;
-          background: radial-gradient(circle, var(--brand-red-2), transparent 70%);
+          background: radial-gradient(circle, #06b6d4, transparent 70%);
           animation: glowMove2 30s infinite alternate-reverse ease-in-out;
           bottom: -350px;
           right: -350px;
@@ -125,7 +125,7 @@ export default function LoginPage() {
         .glow-3 {
           width: 500px;
           height: 500px;
-          background: radial-gradient(circle, #e91e63, transparent 65%);
+          background: radial-gradient(circle, #1e40af, transparent 65%);
           animation: glowMove3 20s infinite alternate ease-in-out;
           top: 50%;
           left: 50%;
@@ -140,7 +140,7 @@ export default function LoginPage() {
         }
       `}</style>
 
-      <main className="relative min-h-screen overflow-hidden text-[var(--brand-contrast)] bg-[var(--brand-bg)] grid-pattern">
+      <main className="relative min-h-screen overflow-hidden text-white bg-black grid-pattern">
         {/* BACKGROUND GLOWING ELEMENTS */}
         <div className="background-glow glow-1"></div>
         <div className="background-glow glow-2"></div>
@@ -150,7 +150,7 @@ export default function LoginPage() {
         <div
           className="pointer-events-none absolute left-1/2 top-1/2 h-[120vmin] w-[120vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-20 blur-3xl"
           style={{
-            background: "radial-gradient(circle at center, var(--brand-red-1), rgba(0,0,0,0) 75%)",
+            background: "radial-gradient(circle at center, #0ea5e9, rgba(0,0,0,0) 75%)",
           }}
           aria-hidden
         />
@@ -162,12 +162,12 @@ export default function LoginPage() {
           <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative">
-                <img src="/logos/2.png" alt="R8R logo" className="h-10 w-auto transition-transform group-hover:scale-110" />
-                <div className="absolute inset-0 bg-[var(--brand-red-1)] rounded-full opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300"></div>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+                  R8R
+                </span>
+                <div className="absolute inset-0 bg-cyan-500 rounded-full opacity-0 group-hover:opacity-20 blur-md transition-opacity duration-300"></div>
               </div>
-              <span className="text-xl font-bold tracking-tighter bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-                R8R
-              </span>
+              <Sparkles className="h-4 w-4 text-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </Link>
             
             <div className="flex items-center gap-4">
@@ -188,13 +188,13 @@ export default function LoginPage() {
             {/* Animated Card */}
             <div className="relative">
               {/* Card Glow Effect */}
-              <div className="absolute -inset-4 bg-gradient-to-r from-[var(--brand-red-1)] to-[var(--brand-red-2)] rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+              <div className="absolute -inset-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
               
               <Card className="relative backdrop-blur-sm bg-black/40 border-white/10 p-8 rounded-2xl shadow-2xl">
                 {/* Header */}
                 <div className="text-center mb-8">
                   <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 mb-6">
-                    <Sparkles className="h-4 w-4 text-[var(--brand-red-1)]" />
+                    <Sparkles className="h-4 w-4 text-cyan-500" />
                     <span className="text-sm font-medium text-white/80">Welcome Back</span>
                   </div>
                   
@@ -211,7 +211,7 @@ export default function LoginPage() {
                   {/* Email Input */}
                   <div className="space-y-2">
                     <label htmlFor="email" className="flex items-center gap-2 text-sm font-medium text-white/80">
-                      <Mail className="h-4 w-4 text-[var(--brand-red-1)]" />
+                      <Mail className="h-4 w-4 text-cyan-500" />
                       Email Address
                     </label>
                     <div className="relative">
@@ -222,7 +222,7 @@ export default function LoginPage() {
                         onChange={handleChange}
                         placeholder="you@example.com"
                         autoComplete="email"
-                        className="w-full bg-white/5 border-white/10 text-white placeholder-white/40 rounded-xl py-3 px-4 pr-10 focus:border-[var(--brand-red-1)] focus:ring-1 focus:ring-[var(--brand-red-1)] transition-all duration-300"
+                        className="w-full bg-white/5 border-white/10 text-white placeholder-white/40 rounded-xl py-3 px-4 pr-10 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-300"
                       />
                     </div>
                     {errors.email && (
@@ -235,7 +235,7 @@ export default function LoginPage() {
                   {/* Password Input */}
                   <div className="space-y-2">
                     <label htmlFor="password" className="flex items-center gap-2 text-sm font-medium text-white/80">
-                      <Lock className="h-4 w-4 text-[var(--brand-red-1)]" />
+                      <Lock className="h-4 w-4 text-cyan-500" />
                       Password
                     </label>
                     <div className="relative">
@@ -246,7 +246,7 @@ export default function LoginPage() {
                         onChange={handleChange}
                         placeholder="••••••••"
                         autoComplete="current-password"
-                        className="w-full bg-white/5 border-white/10 text-white placeholder-white/40 rounded-xl py-3 px-4 pr-10 focus:border-[var(--brand-red-1)] focus:ring-1 focus:ring-[var(--brand-red-1)] transition-all duration-300"
+                        className="w-full bg-white/5 border-white/10 text-white placeholder-white/40 rounded-xl py-3 px-4 pr-10 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 transition-all duration-300"
                       />
                       <button
                         type="button"
@@ -268,13 +268,13 @@ export default function LoginPage() {
                     <label className="flex items-center gap-2 text-sm text-white/60">
                       <input
                         type="checkbox"
-                        className="rounded border-white/20 bg-white/5 text-[var(--brand-red-1)] focus:ring-[var(--brand-red-1)]"
+                        className="rounded border-white/20 bg-white/5 text-cyan-500 focus:ring-cyan-500"
                       />
                       Remember me
                     </label>
                     <Link
                       href="/forgot-password"
-                      className="text-sm text-[var(--brand-red-1)] hover:text-[var(--brand-red-2)] transition-colors duration-200"
+                      className="text-sm text-cyan-500 hover:text-cyan-400 transition-colors duration-200"
                     >
                       Forgot password?
                     </Link>
@@ -284,12 +284,12 @@ export default function LoginPage() {
                   <Button
                     type="submit"
                     variant="primary"
-                    className="w-full group relative overflow-hidden bg-gradient-to-r from-[var(--brand-red-1)] to-[var(--brand-red-2)] border-0 text-white py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[var(--brand-red-1)]/30"
+                    className="w-full group relative overflow-hidden bg-gradient-to-r from-blue-500 to-cyan-500 border-0 text-white py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/30"
                     isLoading={isLoading}
                   >
                     <LogIn className="w-4 h-4 mr-2 transition-transform group-hover:scale-110" />
                     {isLoading ? 'Signing In...' : 'Sign In'}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[var(--brand-red-2)] to-[var(--brand-red-1)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 to-blue-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </Button>
                 </form>
 
@@ -334,7 +334,7 @@ export default function LoginPage() {
                     Don't have an account?{' '}
                     <Link 
                       href="/signup" 
-                      className="text-[var(--brand-red-1)] hover:text-[var(--brand-red-2)] font-semibold transition-colors duration-200 group"
+                      className="text-cyan-500 hover:text-cyan-400 font-semibold transition-colors duration-200 group"
                     >
                       Sign up now
                       <ArrowRight className="w-4 h-4 inline ml-1 transition-transform group-hover:translate-x-1" />
@@ -352,7 +352,7 @@ export default function LoginPage() {
                 { label: 'Reliable', icon: Lock },
               ].map((item, index) => (
                 <div key={index} className="text-white/60">
-                  <item.icon className="h-5 w-5 mx-auto mb-2 text-[var(--brand-red-1)]" />
+                  <item.icon className="h-5 w-5 mx-auto mb-2 text-cyan-500" />
                   <div className="text-xs font-medium">{item.label}</div>
                 </div>
               ))}
@@ -366,8 +366,9 @@ export default function LoginPage() {
             <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
               <div className="flex items-center gap-4">
                 <Link href="/" className="flex items-center gap-2">
-                  <img src="/logos/4.png" alt="R8R logo" className="h-6 w-auto" />
-                  <span className="font-bold text-white">R8R</span>
+                  <span className="text-xl font-bold bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
+                    R8R
+                  </span>
                 </Link>
                 <p className="text-sm text-white/50">
                   Powering the future of AI workflows

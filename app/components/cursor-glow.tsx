@@ -1,55 +1,50 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef } from "react"
 
-type Props = {
+interface CursorGlowProps {
   size?: number
   opacity?: number
-  colorVar?: string
-  className?: string
   hoverOnly?: boolean
 }
 
-export function CursorGlow({
-  size = 600,
-  opacity = 0.35,
-  colorVar = "var(--brand-red-1)",
-  className = "",
-  hoverOnly = true,
-}: Props) {
-  const [pos, setPos] = useState<{ x: string; y: string }>({ x: "50%", y: "50%" })
-  const [visible, setVisible] = useState(false)
+export function CursorGlow({ size = 400, opacity = 0.3, hoverOnly = false }: CursorGlowProps) {
+  const glowRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 100
-      const y = (e.clientY / window.innerHeight) * 100
-      setPos({ x: `${x.toFixed(2)}%`, y: `${y.toFixed(2)}%` })
-      if (hoverOnly) setVisible(true)
-    }
-    const onLeave = () => {
-      if (hoverOnly) setVisible(false)
+    const handleMouseMove = (e: MouseEvent) => {
+      if (glowRef.current) {
+        glowRef.current.style.left = `${e.clientX - size / 2}px`
+        glowRef.current.style.top = `${e.clientY - size / 2}px`
+        glowRef.current.style.opacity = (opacity * 0.6).toString()
+      }
     }
 
-    window.addEventListener("mousemove", onMove, { passive: true })
-    window.addEventListener("mouseleave", onLeave, { passive: true })
+    const handleMouseLeave = () => {
+      if (glowRef.current && hoverOnly) {
+        glowRef.current.style.opacity = "0"
+      }
+    }
+
+    window.addEventListener("mousemove", handleMouseMove)
+    window.addEventListener("mouseleave", handleMouseLeave)
+
     return () => {
-      window.removeEventListener("mousemove", onMove)
-      window.removeEventListener("mouseleave", onLeave)
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("mouseleave", handleMouseLeave)
     }
-  }, [hoverOnly])
-
-  const finalOpacity = hoverOnly ? (visible ? opacity : 0) : opacity
+  }, [size, opacity, hoverOnly])
 
   return (
     <div
-      className={`pointer-events-none absolute inset-0 z-0 ${className}`}
+      ref={glowRef}
+      className="pointer-events-none fixed rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 blur-2xl transition-opacity duration-300"
       style={{
-        background: `radial-gradient(${size}px circle at ${pos.x} ${pos.y}, ${colorVar}, rgba(0,0,0,0) 60%)`,
-        opacity: finalOpacity,
-        transition: "background-position 120ms ease-out, opacity 150ms ease-out",
+        width: `${size}px`,
+        height: `${size}px`,
+        opacity: hoverOnly ? 0 : opacity * 0.6,
       }}
-      aria-hidden
+      aria-hidden="true"
     />
   )
 }
