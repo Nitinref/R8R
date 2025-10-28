@@ -22,7 +22,13 @@ import {
   EyeOff,
   Activity,
   Settings,
-  Zap
+  Zap,
+  Download,
+  Code,
+  Terminal,
+  Shield,
+  Clock,
+  Cpu
 } from 'lucide-react';
 
 export default function WorkflowDetailPage() {
@@ -37,7 +43,7 @@ export default function WorkflowDetailPage() {
   const [query, setQuery] = useState('');
   const [executing, setExecuting] = useState(false);
   const [result, setResult] = useState<QueryResponse | null>(null);
-  const [activeTab, setActiveTab] = useState<'test' | 'api-keys'>('test');
+  const [activeTab, setActiveTab] = useState<'test' | 'api-keys' | 'integration'>('test');
   
   // API Keys state
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
@@ -46,6 +52,8 @@ export default function WorkflowDetailPage() {
   const [creatingKey, setCreatingKey] = useState(false);
   const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
   const [selectedApiKey, setSelectedApiKey] = useState<string>('');
+  const [customApiKey, setCustomApiKey] = useState<string>('');
+  const [useCustomKey, setUseCustomKey] = useState(false);
   const [showFullKeys, setShowFullKeys] = useState<Set<string>>(new Set());
 
   useEffect(() => {
@@ -104,8 +112,10 @@ export default function WorkflowDetailPage() {
       return;
     }
 
-    if (!selectedApiKey) {
-      toast.error('Please select an API key');
+    const apiKeyToUse = useCustomKey ? customApiKey : selectedApiKey;
+
+    if (!apiKeyToUse) {
+      toast.error('Please provide an API key');
       return;
     }
 
@@ -116,7 +126,7 @@ export default function WorkflowDetailPage() {
         workflowId,
         query,
         // @ts-ignore
-      }, selectedApiKey);
+      }, apiKeyToUse);
       
       setResult(response);
       toast.success('Query executed successfully!');
@@ -201,10 +211,69 @@ export default function WorkflowDetailPage() {
     return `${key.substring(0, 8)}${'*'.repeat(key.length - 8)}`;
   };
 
+  const generateCurlCommand = () => {
+    const apiKey = useCustomKey ? customApiKey : selectedApiKey;
+    if (!apiKey) return '';
+    
+    return `curl -X POST http://localhost:3001/api/query \\
+  -H "x-api-key: ${apiKey}" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "workflowId": "${workflowId}",
+    "query": "Your query here"
+  }'`;
+  };
+
+  const generatePythonCode = () => {
+    const apiKey = useCustomKey ? customApiKey : selectedApiKey;
+    if (!apiKey) return '';
+    
+    return `import requests
+
+url = "http://localhost:3001/api/query"
+headers = {
+    "x-api-key": "${apiKey}",
+    "Content-Type": "application/json"
+}
+data = {
+    "workflowId": "${workflowId}",
+    "query": "Your query here"
+}
+
+response = requests.post(url, headers=headers, json=data)
+result = response.json()
+
+print("Answer:", result["answer"])
+print("Sources:", len(result["sources"]))
+print("Latency:", result["latency"], "ms")`;
+  };
+
+  const generateJSCode = () => {
+    const apiKey = useCustomKey ? customApiKey : selectedApiKey;
+    if (!apiKey) return '';
+    
+    return `const response = await fetch('http://localhost:3001/api/query', {
+  method: 'POST',
+  headers: {
+    'x-api-key': '${apiKey}',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    workflowId: '${workflowId}',
+    query: 'Your query here'
+  })
+});
+
+const result = await response.json();
+console.log('Answer:', result.answer);
+console.log('Sources:', result.sources.length);
+console.log('Latency:', result.latency, 'ms');`;
+  };
+
   if (!mounted || isLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
       </div>
     );
   }
@@ -218,12 +287,12 @@ export default function WorkflowDetailPage() {
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 blur-2xl"
         style={{
-          background: "radial-gradient(circle at center, #dc2626, rgba(0,0,0,0) 60%)",
+          background: "radial-gradient(circle at center, #2563eb, rgba(0,0,0,0) 60%)",
         }}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-red-700/10 -z-10"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-blue-700/10 -z-10"
         aria-hidden
       />
 
@@ -239,7 +308,7 @@ export default function WorkflowDetailPage() {
                 <ArrowLeft className="w-5 h-5" />
               </Link>
               <div>
-                <h1 className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-2xl font-bold text-transparent">
+                <h1 className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-2xl font-bold text-transparent">
                   {workflow.name}
                 </h1>
                 {workflow.description && (
@@ -284,7 +353,7 @@ export default function WorkflowDetailPage() {
               onClick={() => setActiveTab('test')}
               className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                 activeTab === 'test'
-                  ? 'border-red-500 text-red-400'
+                  ? 'border-blue-500 text-blue-400'
                   : 'border-transparent text-gray-400 hover:text-gray-300'
               }`}
             >
@@ -295,12 +364,23 @@ export default function WorkflowDetailPage() {
               onClick={() => setActiveTab('api-keys')}
               className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
                 activeTab === 'api-keys'
-                  ? 'border-red-500 text-red-400'
+                  ? 'border-blue-500 text-blue-400'
                   : 'border-transparent text-gray-400 hover:text-gray-300'
               }`}
             >
               <Key className="w-4 h-4" />
               API Keys ({apiKeys.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('integration')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm transition-colors flex items-center gap-2 ${
+                activeTab === 'integration'
+                  ? 'border-blue-500 text-blue-400'
+                  : 'border-transparent text-gray-400 hover:text-gray-300'
+              }`}
+            >
+              <Code className="w-4 h-4" />
+              API Integration
             </button>
           </div>
         </div>
@@ -314,33 +394,80 @@ export default function WorkflowDetailPage() {
             <div className="lg:col-span-2">
               <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
                 <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                  <Play className="w-5 h-5 text-red-400" />
+                  <Play className="w-5 h-5 text-blue-400" />
                   Test Workflow
                 </h2>
                 
-                {/* API Key Selector */}
-                {apiKeys.length > 0 && (
-                  <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      Use API Key
-                    </label>
-                    <select 
-                      value={selectedApiKey}
-                      onChange={(e) => setSelectedApiKey(e.target.value)}
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white"
+                {/* API Key Selection */}
+                <div className="mb-6 space-y-4">
+                  <div className="flex gap-4 mb-4">
+                    <button
+                      onClick={() => setUseCustomKey(false)}
+                      className={`flex-1 px-4 py-3 rounded-lg border transition-all ${
+                        !useCustomKey
+                          ? 'bg-blue-600/20 border-blue-500 text-blue-400'
+                          : 'bg-white/5 border-white/10 text-gray-400 hover:border-blue-500/30'
+                      }`}
                     >
-                      <option value="" className="bg-gray-800">Select an API key...</option>
-                      {apiKeys.map((key) => (
-                        <option key={key.id} value={key.key} className="bg-gray-800">
-                          {key.name} ({maskApiKey(key.key)})
-                        </option>
-                      ))}
-                    </select>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Select which API key to use for this test
-                    </p>
+                      <div className="flex items-center gap-2">
+                        <Key className="w-4 h-4" />
+                        Use Saved API Key
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => setUseCustomKey(true)}
+                      className={`flex-1 px-4 py-3 rounded-lg border transition-all ${
+                        useCustomKey
+                          ? 'bg-blue-600/20 border-blue-500 text-blue-400'
+                          : 'bg-white/5 border-white/10 text-gray-400 hover:border-blue-500/30'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Terminal className="w-4 h-4" />
+                        Use Custom API Key
+                      </div>
+                    </button>
                   </div>
-                )}
+
+                  {!useCustomKey ? (
+                    <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Select API Key
+                      </label>
+                      <select 
+                        value={selectedApiKey}
+                        onChange={(e) => setSelectedApiKey(e.target.value)}
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white"
+                      >
+                        <option value="" className="bg-gray-800">Select an API key...</option>
+                        {apiKeys.map((key) => (
+                          <option key={key.id} value={key.key} className="bg-gray-800">
+                            {key.name} ({maskApiKey(key.key)})
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-xs text-gray-400 mt-2">
+                        Choose from your saved API keys
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-white/5 rounded-lg border border-white/10">
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        Enter Custom API Key
+                      </label>
+                      <input
+                        type="text"
+                        value={customApiKey}
+                        onChange={(e) => setCustomApiKey(e.target.value)}
+                        placeholder="Enter your API key here..."
+                        className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400 font-mono text-sm"
+                      />
+                      <p className="text-xs text-gray-400 mt-2">
+                        Paste any valid API key for this workflow
+                      </p>
+                    </div>
+                  )}
+                </div>
 
                 <div className="space-y-6">
                   <div>
@@ -352,14 +479,14 @@ export default function WorkflowDetailPage() {
                       onChange={(e) => setQuery(e.target.value)}
                       rows={4}
                       placeholder="What would you like to ask?"
-                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 resize-none text-white placeholder-gray-400"
+                      className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none text-white placeholder-gray-400"
                     />
                   </div>
 
                   <button
                     onClick={handleExecute}
-                    disabled={executing || workflow.status !== 'active' || !selectedApiKey}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+                    disabled={executing || workflow.status !== 'active' || (!selectedApiKey && !customApiKey)}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
                   >
                     {executing ? (
                       <>
@@ -382,7 +509,7 @@ export default function WorkflowDetailPage() {
                     </div>
                   )}
 
-                  {apiKeys.length === 0 && (
+                  {apiKeys.length === 0 && !useCustomKey && (
                     <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
                       <p className="text-sm text-blue-400">
                         No API keys found.{' '}
@@ -392,7 +519,7 @@ export default function WorkflowDetailPage() {
                         >
                           Create an API key
                         </button>{' '}
-                        to test this workflow.
+                        or use a custom API key to test this workflow.
                       </p>
                     </div>
                   )}
@@ -430,7 +557,7 @@ export default function WorkflowDetailPage() {
             <div className="space-y-6">
               <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                  <Settings className="w-5 h-5 text-red-400" />
+                  <Settings className="w-5 h-5 text-blue-400" />
                   Workflow Info
                 </h3>
                 <div className="space-y-4">
@@ -456,7 +583,7 @@ export default function WorkflowDetailPage() {
               {workflow.analytics && (
                 <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
                   <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                    <Activity className="w-5 h-5 text-red-400" />
+                    <Activity className="w-5 h-5 text-blue-400" />
                     Analytics
                   </h3>
                   <div className="space-y-4">
@@ -483,14 +610,14 @@ export default function WorkflowDetailPage() {
               )}
             </div>
           </div>
-        ) : (
+        ) : activeTab === 'api-keys' ? (
           /* API Keys Tab */
           <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10">
             <div className="p-6 border-b border-white/10">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold flex items-center gap-2">
-                    <Key className="w-5 h-5 text-red-400" />
+                    <Key className="w-5 h-5 text-blue-400" />
                     API Keys for {workflow.name}
                   </h2>
                   <p className="text-gray-400 mt-1">
@@ -499,7 +626,7 @@ export default function WorkflowDetailPage() {
                 </div>
                 <button
                   onClick={() => setShowCreateKeyModal(true)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all"
+                  className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all"
                 >
                   <Plus className="w-4 h-4" />
                   Create API Key
@@ -519,7 +646,7 @@ export default function WorkflowDetailPage() {
                   </p>
                   <button
                     onClick={() => setShowCreateKeyModal(true)}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all mx-auto"
+                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all mx-auto"
                   >
                     <Plus className="w-4 h-4" />
                     Create API Key
@@ -528,7 +655,7 @@ export default function WorkflowDetailPage() {
               ) : (
                 <div className="space-y-4">
                   {apiKeys.map((apiKey) => (
-                    <div key={apiKey.id} className="bg-white/5 border border-white/10 rounded-lg p-4 hover:border-red-500/30 transition-all">
+                    <div key={apiKey.id} className="bg-white/5 border border-white/10 rounded-lg p-4 hover:border-blue-500/30 transition-all">
                       <div className="flex items-center justify-between">
                         <div className="flex-1">
                           <div className="flex items-center gap-3 mb-3">
@@ -594,6 +721,129 @@ export default function WorkflowDetailPage() {
               )}
             </div>
           </div>
+        ) : (
+          /* API Integration Tab */
+          <div className="space-y-6">
+            <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-6">
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <Code className="w-5 h-5 text-blue-400" />
+                API Integration Guide
+              </h2>
+              
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Shield className="w-5 h-5 text-blue-400" />
+                    <h3 className="font-semibold text-white">Authentication</h3>
+                  </div>
+                  <p className="text-sm text-blue-300">
+                    Include your API key in the <code className="bg-black/30 px-1 rounded">x-api-key</code> header for all requests.
+                  </p>
+                </div>
+                
+                <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Cpu className="w-5 h-5 text-blue-400" />
+                    <h3 className="font-semibold text-white">Endpoint</h3>
+                  </div>
+                  <code className="text-sm text-blue-300 bg-black/30 px-2 py-1 rounded block">
+                    POST /api/query
+                  </code>
+                </div>
+                
+                <div className="bg-blue-500/20 border border-blue-500/30 rounded-lg p-4">
+                  <div className="flex items-center gap-3 mb-3">
+                    <Clock className="w-5 h-5 text-blue-400" />
+                    <h3 className="font-semibold text-white">Rate Limits</h3>
+                  </div>
+                  <p className="text-sm text-blue-300">
+                    100 requests per minute per API key
+                  </p>
+                </div>
+              </div>
+
+              {/* API Key Selection for Code Examples */}
+              <div className="mb-6 p-4 bg-white/5 rounded-lg border border-white/10">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Select API Key for Code Examples
+                </label>
+                <select 
+                  value={selectedApiKey}
+                  onChange={(e) => setSelectedApiKey(e.target.value)}
+                  className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white mb-3"
+                >
+                  <option value="" className="bg-gray-800">Select an API key...</option>
+                  {apiKeys.map((key) => (
+                    <option key={key.id} value={key.key} className="bg-gray-800">
+                      {key.name} ({maskApiKey(key.key)})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-400">
+                  Choose which API key to show in the code examples below
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="bg-black/60 rounded-lg border border-white/10 overflow-hidden">
+                  <div className="flex justify-between items-center px-4 py-3 bg-gray-800 border-b border-white/10">
+                    <span className="font-medium text-white flex items-center gap-2">
+                      <Terminal className="w-4 h-4" />
+                      cURL
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(generateCurlCommand())}
+                      className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </button>
+                  </div>
+                  <pre className="p-4 overflow-x-auto text-sm text-gray-300">
+                    <code>{generateCurlCommand() || 'Select an API key to generate code examples'}</code>
+                  </pre>
+                </div>
+
+                <div className="bg-black/60 rounded-lg border border-white/10 overflow-hidden">
+                  <div className="flex justify-between items-center px-4 py-3 bg-gray-800 border-b border-white/10">
+                    <span className="font-medium text-white flex items-center gap-2">
+                      <Code className="w-4 h-4" />
+                      Python
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(generatePythonCode())}
+                      className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </button>
+                  </div>
+                  <pre className="p-4 overflow-x-auto text-sm text-gray-300">
+                    <code>{generatePythonCode() || 'Select an API key to generate code examples'}</code>
+                  </pre>
+                </div>
+
+                <div className="bg-black/60 rounded-lg border border-white/10 overflow-hidden">
+                  <div className="flex justify-between items-center px-4 py-3 bg-gray-800 border-b border-white/10">
+                    <span className="font-medium text-white flex items-center gap-2">
+                      <Code className="w-4 h-4" />
+                      JavaScript
+                    </span>
+                    <button
+                      onClick={() => copyToClipboard(generateJSCode())}
+                      className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
+                    >
+                      <Copy className="w-4 h-4" />
+                      Copy
+                    </button>
+                  </div>
+                  <pre className="p-4 overflow-x-auto text-sm text-gray-300">
+                    <code>{generateJSCode() || 'Select an API key to generate code examples'}</code>
+                  </pre>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
@@ -638,7 +888,7 @@ export default function WorkflowDetailPage() {
             ) : (
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <Key className="w-5 h-5 text-red-400" />
+                  <Key className="w-5 h-5 text-blue-400" />
                   Create API Key
                 </h3>
                 <div>
@@ -650,7 +900,7 @@ export default function WorkflowDetailPage() {
                     value={newKeyName}
                     onChange={(e) => setNewKeyName(e.target.value)}
                     placeholder="e.g., Production, Development, Mobile App"
-                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 text-white placeholder-gray-400"
+                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-white placeholder-gray-400"
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') handleCreateApiKey();
                     }}
@@ -677,7 +927,7 @@ export default function WorkflowDetailPage() {
                   <button
                     onClick={handleCreateApiKey}
                     disabled={creatingKey || !newKeyName.trim()}
-                    className="px-4 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
+                    className="px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
                   >
                     {creatingKey ? (
                       <>

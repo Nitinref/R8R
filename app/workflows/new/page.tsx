@@ -1,5 +1,3 @@
-// app/workflows/new/page.tsx
-
 'use client';
 
 import { useAuth } from '@/app/context/AuthContext';
@@ -43,22 +41,22 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     
     switch (type) {
       case StepType.MEMORY_RETRIEVE:
-        return `${base} border-purple-500/30 bg-gradient-to-br from-purple-600 to-purple-700`;
+        return `${base} border-blue-400/30 bg-gradient-to-br from-blue-600 to-blue-700`;
       case StepType.MEMORY_UPDATE:
-        return `${base} border-green-500/30 bg-gradient-to-br from-green-600 to-green-700`;
+        return `${base} border-blue-500/30 bg-gradient-to-br from-blue-700 to-blue-800`;
       case StepType.MEMORY_SUMMARIZE:
-        return `${base} border-blue-500/30 bg-gradient-to-br from-blue-600 to-blue-700`;
+        return `${base} border-blue-300/30 bg-gradient-to-br from-blue-500 to-blue-600`;
       default:
-        return `${base} border-red-500/30 bg-gradient-to-br from-red-600 to-red-700`;
+        return `${base} border-blue-600/30 bg-gradient-to-br from-blue-800 to-blue-900`;
     }
   };
 
   const handleColor = (type: StepType) => {
     switch (type) {
-      case StepType.MEMORY_RETRIEVE: return '!bg-purple-500';
-      case StepType.MEMORY_UPDATE: return '!bg-green-500';
-      case StepType.MEMORY_SUMMARIZE: return '!bg-blue-500';
-      default: return '!bg-red-500';
+      case StepType.MEMORY_RETRIEVE: return '!bg-blue-400';
+      case StepType.MEMORY_UPDATE: return '!bg-blue-500';
+      case StepType.MEMORY_SUMMARIZE: return '!bg-blue-300';
+      default: return '!bg-blue-600';
     }
   };
 
@@ -83,7 +81,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
           onChange={(e) => handleConfigChange({
             llm: { ...config.llm, provider: e.target.value as LLMProvider }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         >
           {Object.values(LLMProvider).map(provider => (
             <option key={provider} value={provider}>
@@ -101,7 +99,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
             llm: { ...config.llm, model: e.target.value }
           })}
           placeholder="gpt-4"
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
         />
       </div>
       <div>
@@ -117,7 +115,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
           onChange={(e) => handleConfigChange({
             llm: { ...config.llm, temperature: parseFloat(e.target.value) }
           })}
-          className="w-full accent-white"
+          className="w-full accent-blue-400"
         />
       </div>
       <div>
@@ -128,7 +126,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
           onChange={(e) => handleConfigChange({
             llm: { ...config.llm, maxTokens: parseInt(e.target.value) }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         />
       </div>
     </div>
@@ -148,7 +146,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
               config: config.retriever?.config || { indexName: 'default', topK: 10 }
             }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         >
           {Object.values(RetrieverType).map(type => (
             <option key={type} value={type}>
@@ -169,7 +167,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
             }
           })}
           placeholder="my-index"
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs"
         />
       </div>
       <div>
@@ -183,7 +181,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
               config: { ...config.retriever?.config, topK: parseInt(e.target.value) }
             }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         />
       </div>
     </div>
@@ -213,7 +211,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
             onChange={(e) => handleConfigChange({
               memoryRetrieve: { ...config.memoryRetrieve, topK: parseInt(e.target.value) }
             })}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+            className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
           />
         </div>
         <div>
@@ -227,7 +225,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
             onChange={(e) => handleConfigChange({
               memoryRetrieve: { ...config.memoryRetrieve, minScore: parseFloat(e.target.value) }
             })}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+            className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
           />
         </div>
       </div>
@@ -267,7 +265,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
           onChange={(e) => handleConfigChange({
             memoryRetrieve: { ...config.memoryRetrieve, keywordWeight: parseFloat(e.target.value) }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         />
       </div>
     </div>
@@ -298,7 +296,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
               importance: { auto: e.target.value === 'auto' }
             }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         >
           <option value="auto">Auto-calculate</option>
           <option value="manual">Manual score</option>
@@ -320,7 +318,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
                 importance: { ...config.memoryUpdate?.importance, baseScore: parseFloat(e.target.value) }
               }
             })}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+            className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
           />
         </div>
       )}
@@ -355,7 +353,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
                 deduplication: { ...config.memoryUpdate?.deduplication, similarityThreshold: parseFloat(e.target.value) }
               }
             })}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+            className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
           />
         </div>
       )}
@@ -371,7 +369,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
               retention: { ...config.memoryUpdate?.retention, maxMemories: parseInt(e.target.value) }
             }
           })}
-          className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+          className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
         />
       </div>
     </div>
@@ -404,7 +402,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
                 triggers: { ...config.memorySummarize?.triggers, minMemories: parseInt(e.target.value) }
               }
             })}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+            className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
           />
         </div>
         <div>
@@ -421,7 +419,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
                 triggers: { ...config.memorySummarize?.triggers, maxSimilarity: parseFloat(e.target.value) }
               }
             })}
-            className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 text-xs"
+            className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 text-xs"
           />
         </div>
       </div>
@@ -460,7 +458,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
                 value={config.prompt || ''}
                 onChange={(e) => handleConfigChange({ prompt: e.target.value })}
                 placeholder="Enter custom processing instructions..."
-                className="w-full rounded bg-white/20 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs h-20"
+                className="w-full rounded bg-white/10 px-2 py-1 text-white border border-white/20 placeholder-white/50 text-xs h-20"
               />
             </div>
           </div>
@@ -596,7 +594,7 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
             {renderConfigForm()}
             <button
               onClick={() => setIsEditing(false)}
-              className="w-full mt-2 px-3 py-1 bg-red-500 hover:bg-red-600 rounded transition-colors text-white text-xs"
+              className="w-full mt-2 px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white text-xs"
             >
               Save
             </button>
@@ -617,23 +615,22 @@ const nodeTypes = {
 // Node Palette Component
 const NodePalette = ({ onAddNode }: { onAddNode: (type: StepType) => void }) => {
   const nodeTypes = [
-    { type: StepType.QUERY_REWRITE, label: 'Query Rewrite', color: 'red' },
-    { type: StepType.RETRIEVAL, label: 'Retrieval', color: 'red' },
-    { type: StepType.RERANK, label: 'Rerank', color: 'red' },
-    { type: StepType.ANSWER_GENERATION, label: 'Answer Generation', color: 'red' },
-    { type: StepType.POST_PROCESS, label: 'Post Process', color: 'red' },
-    { type: StepType.MEMORY_RETRIEVE, label: 'Memory Retrieve', color: 'purple' },
-    { type: StepType.MEMORY_UPDATE, label: 'Memory Update', color: 'green' },
-    { type: StepType.MEMORY_SUMMARIZE, label: 'Memory Summarize', color: 'blue' },
+    { type: StepType.QUERY_REWRITE, label: 'Query Rewrite', color: 'blue' },
+    { type: StepType.RETRIEVAL, label: 'Retrieval', color: 'blue' },
+    { type: StepType.RERANK, label: 'Rerank', color: 'blue' },
+    { type: StepType.ANSWER_GENERATION, label: 'Answer Generation', color: 'blue' },
+    { type: StepType.POST_PROCESS, label: 'Post Process', color: 'blue' },
+    { type: StepType.MEMORY_RETRIEVE, label: 'Memory Retrieve', color: 'light-blue' },
+    { type: StepType.MEMORY_UPDATE, label: 'Memory Update', color: 'blue' },
+    { type: StepType.MEMORY_SUMMARIZE, label: 'Memory Summarize', color: 'cyan' },
   ];
 
   const getButtonClass = (color: string) => {
     const base = "rounded px-4 py-2 text-white transition flex items-center gap-2";
     switch (color) {
-      case 'purple': return `${base} bg-purple-600 hover:bg-purple-700`;
-      case 'green': return `${base} bg-green-600 hover:bg-green-700`;
-      case 'blue': return `${base} bg-blue-600 hover:bg-blue-700`;
-      default: return `${base} bg-red-600 hover:bg-red-700`;
+      case 'light-blue': return `${base} bg-blue-500 hover:bg-blue-600`;
+      case 'cyan': return `${base} bg-blue-400 hover:bg-blue-500`;
+      default: return `${base} bg-blue-600 hover:bg-blue-700`;
     }
   };
 
@@ -655,217 +652,10 @@ const NodePalette = ({ onAddNode }: { onAddNode: (type: StepType) => void }) => 
   );
 };
 
-// API Keys Component
-const ApiKeysSection = () => {
-  const [apiKeys, setApiKeys] = useState([
-    { id: '1', name: 'Production Key', key: 'sk_prod_1234567890abcdef', lastUsed: '2 hours ago', status: 'active' },
-    { id: '2', name: 'Development Key', key: 'sk_dev_abcdef1234567890', lastUsed: '1 day ago', status: 'active' },
-  ]);
-  const [newKeyName, setNewKeyName] = useState('');
-
-  const createApiKey = () => {
-    if (!newKeyName.trim()) {
-      toast.error('Please enter a key name');
-      return;
-    }
-
-    const newKey = {
-      id: `${apiKeys.length + 1}`,
-      name: newKeyName,
-      key: `sk_${Math.random().toString(36).substr(2, 24)}`,
-      lastUsed: 'Never',
-      status: 'active'
-    };
-
-    setApiKeys([...apiKeys, newKey]);
-    setNewKeyName('');
-    toast.success('API key created successfully!');
-  };
-
-  const revokeApiKey = (id: string) => {
-    setApiKeys(apiKeys.map(key => 
-      key.id === id ? { ...key, status: 'revoked' } : key
-    ));
-    toast.success('API key revoked');
-  };
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-white/10">
-        <h3 className="text-lg font-semibold mb-4">Create New API Key</h3>
-        <div className="flex gap-3">
-          <input
-            type="text"
-            value={newKeyName}
-            onChange={(e) => setNewKeyName(e.target.value)}
-            placeholder="Enter key name..."
-            className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400"
-          />
-          <button
-            onClick={createApiKey}
-            className="px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-          >
-            Create Key
-          </button>
-        </div>
-      </div>
-
-      <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden">
-        <div className="p-6 border-b border-white/10">
-          <h3 className="text-lg font-semibold">Your API Keys</h3>
-        </div>
-        <div className="divide-y divide-white/10">
-          {apiKeys.map((apiKey) => (
-            <div key={apiKey.id} className="p-6">
-              <div className="flex items-center justify-between mb-3">
-                <div>
-                  <h4 className="font-semibold">{apiKey.name}</h4>
-                  <code className="text-sm text-gray-300 bg-gray-800 px-2 py-1 rounded">
-                    {apiKey.key}
-                  </code>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className={`px-2 py-1 rounded text-xs ${
-                    apiKey.status === 'active' 
-                      ? 'bg-green-500/20 text-green-400 border border-green-500/30'
-                      : 'bg-red-500/20 text-red-400 border border-red-500/30'
-                  }`}>
-                    {apiKey.status}
-                  </span>
-                  <button
-                    onClick={() => revokeApiKey(apiKey.id)}
-                    className="text-red-400 hover:text-red-300 text-sm"
-                  >
-                    Revoke
-                  </button>
-                </div>
-              </div>
-              <div className="text-sm text-gray-400">
-                Last used: {apiKey.lastUsed}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-// Code Block Component
-const CodeBlock = ({ title, code, language }: { title: string; code: string; language: string }) => {
-  const [copied, setCopied] = useState(false);
-
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-    toast.success('Code copied to clipboard!');
-  };
-
-  return (
-    <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 overflow-hidden">
-      <div className="flex justify-between items-center px-6 py-3 bg-gray-800 border-b border-white/10">
-        <span className="font-medium text-white">{title}</span>
-        <button
-          onClick={copyToClipboard}
-          className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-sm"
-        >
-          {copied ? (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          ) : (
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-          )}
-          {copied ? 'Copied!' : 'Copy'}
-        </button>
-      </div>
-      <pre className="p-6 overflow-x-auto">
-        <code className="text-sm text-gray-300">{code}</code>
-      </pre>
-    </div>
-  );
-};
-
-// API Examples Component
-const ApiExamplesSection = () => {
-  const curlExample = `curl -X POST http://localhost:3001/api/query \\
-  -H "x-api-key: YOUR_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "workflowId": "your-workflow-id",
-    "query": "What is the capital of France?"
-  }'`;
-
-  const pythonExample = `import requests
-
-url = "http://localhost:3001/api/query"
-headers = {
-    "x-api-key": "YOUR_API_KEY",
-    "Content-Type": "application/json"
-}
-data = {
-    "workflowId": "your-workflow-id",
-    "query": "What is the capital of France?"
-}
-
-response = requests.post(url, headers=headers, json=data)
-result = response.json()
-
-print("Answer:", result["answer"])
-print("Latency:", result["latency"], "ms")`;
-
-  const javascriptExample = `const response = await fetch('http://localhost:3001/api/query', {
-  method: 'POST',
-  headers: {
-    'x-api-key': 'YOUR_API_KEY',
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({
-    workflowId: 'your-workflow-id',
-    query: 'What is the capital of France?'
-  })
-});
-
-const result = await response.json();
-console.log('Answer:', result.answer);
-console.log('Latency:', result.latency, 'ms');`;
-
-  return (
-    <div className="space-y-6">
-      <div className="bg-red-500/20 border border-red-500/30 rounded-lg p-6">
-        <h3 className="text-lg font-semibold mb-2 flex items-center gap-2">
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          API Endpoint
-        </h3>
-        <code className="text-sm bg-black/30 px-3 py-2 rounded border border-white/10">
-          http://localhost:3001/api/query
-        </code>
-        <div className="mt-4 space-y-2 text-sm text-gray-300">
-          <p><strong>Authentication:</strong> Include your API key in the <code className="bg-black/30 px-1 py-0.5 rounded">x-api-key</code> header</p>
-          <p><strong>Rate Limits:</strong> 100 requests per minute per API key</p>
-          <p><strong>Response Format:</strong> JSON with answer, sources, and metadata</p>
-        </div>
-      </div>
-
-      <div className="space-y-4">
-        <CodeBlock title="cURL" code={curlExample} language="bash" />
-        <CodeBlock title="Python" code={pythonExample} language="python" />
-        <CodeBlock title="JavaScript" code={javascriptExample} language="javascript" />
-      </div>
-    </div>
-  );
-};
-
 export default function NewWorkflowPage() {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const [activeTab, setActiveTab] = useState<'editor' | 'api'>('editor');
   
   // Form state
   const [name, setName] = useState('');
@@ -878,7 +668,7 @@ export default function NewWorkflowPage() {
   // @ts-ignore
   const onConnect = useCallback((params: any) => setEdges((eds) => addEdge({
     ...params,
-    style: { stroke: '#dc2626', strokeWidth: 2 },
+    style: { stroke: '#2563eb', strokeWidth: 2 },
     animated: true
   }, eds)), [setEdges]);
 
@@ -935,7 +725,6 @@ const getDefaultConfig = (type: StepType) => {
     [StepType.POST_PROCESS]: {
       prompt: 'Format the answer appropriately and add source attribution if needed.',
     },
-    // UPDATED: Changed from StepType.MEMORY_RETRIEVE to StepType.MEMORY_RETRIEVE (now lowercase)
     [StepType.MEMORY_RETRIEVE]: {
       memoryRetrieve: {
         enabled: true,
@@ -947,7 +736,6 @@ const getDefaultConfig = (type: StepType) => {
         keywordWeight: 0.3,
       },
     },
-    // UPDATED: Changed from StepType.MEMORY_UPDATE to StepType.MEMORY_UPDATE (now lowercase)
     [StepType.MEMORY_UPDATE]: {
       memoryUpdate: {
         enabled: true,
@@ -966,7 +754,6 @@ const getDefaultConfig = (type: StepType) => {
         },
       },
     },
-    // UPDATED: Changed from StepType.MEMORY_SUMMARIZE to StepType.MEMORY_SUMMARIZE (now lowercase)
     [StepType.MEMORY_SUMMARIZE]: {
       memorySummarize: {
         enabled: true,
@@ -991,9 +778,7 @@ const getDefaultConfig = (type: StepType) => {
       [StepType.RERANK]: 'Rerank',
       [StepType.ANSWER_GENERATION]: 'Answer Generation',
       [StepType.POST_PROCESS]: 'Post Process',
-         // @ts-ignore
       [StepType.MEMORY_RETRIEVE]: 'Memory Retrieve',
-
       [StepType.MEMORY_UPDATE]: 'Memory Update',
       [StepType.MEMORY_SUMMARIZE]: 'Memory Summarize',
     };
@@ -1020,8 +805,8 @@ useEffect(() => {
       position: { x: 100, y: 200 },
       data: { 
         label: "Memory Retrieve",
-        type: StepType.MEMORY_RETRIEVE, // UPDATED: Now uses corrected enum
-        config: getDefaultConfig(StepType.MEMORY_RETRIEVE), // UPDATED
+        type: StepType.MEMORY_RETRIEVE,
+        config: getDefaultConfig(StepType.MEMORY_RETRIEVE),
         onConfigChange: handleNodeConfigChange
       },
     },
@@ -1064,8 +849,8 @@ useEffect(() => {
       position: { x: 250, y: 650 },
       data: { 
         label: "Memory Update", 
-        type: StepType.MEMORY_UPDATE, // UPDATED: Now uses corrected enum
-        config: getDefaultConfig(StepType.MEMORY_UPDATE), // UPDATED
+        type: StepType.MEMORY_UPDATE,
+        config: getDefaultConfig(StepType.MEMORY_UPDATE),
         onConfigChange: handleNodeConfigChange
       },
     },
@@ -1076,38 +861,38 @@ useEffect(() => {
         source: "1", 
         target: "2", 
         animated: true,
-        style: { stroke: '#dc2626', strokeWidth: 2 }
+        style: { stroke: '#2563eb', strokeWidth: 2 }
       },
       { 
         id: "e1-3", 
         source: "1", 
         target: "3", 
         animated: true,
-        style: { stroke: '#dc2626', strokeWidth: 2 }
+        style: { stroke: '#2563eb', strokeWidth: 2 }
       },
       { 
         id: "e2-4", 
         source: "2", 
         target: "4",
-        style: { stroke: '#dc2626', strokeWidth: 2 }
+        style: { stroke: '#2563eb', strokeWidth: 2 }
       },
       { 
         id: "e3-4", 
         source: "3", 
         target: "4",
-        style: { stroke: '#dc2626', strokeWidth: 2 }
+        style: { stroke: '#2563eb', strokeWidth: 2 }
       },
       { 
         id: "e4-5", 
         source: "4", 
         target: "5",
-        style: { stroke: '#dc2626', strokeWidth: 2 }
+        style: { stroke: '#2563eb', strokeWidth: 2 }
       },
       { 
         id: "e5-6", 
         source: "5", 
         target: "6",
-        style: { stroke: '#dc2626', strokeWidth: 2 }
+        style: { stroke: '#2563eb', strokeWidth: 2 }
       },
     ];
     // @ts-ignore
@@ -1298,7 +1083,7 @@ useEffect(() => {
   if (!mounted || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
       </div>
     );
   }
@@ -1312,12 +1097,12 @@ useEffect(() => {
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 blur-2xl"
         style={{
-          background: "radial-gradient(circle at center, #dc2626, rgba(0,0,0,0) 60%)",
+          background: "radial-gradient(circle at center, #2563eb, rgba(0,0,0,0) 60%)",
         }}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-red-700/10 -z-10"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-blue-700/10 -z-10"
         aria-hidden
       />
 
@@ -1326,7 +1111,7 @@ useEffect(() => {
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-2xl font-bold text-transparent">
+              <h1 className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-2xl font-bold text-transparent">
                 Create New Workflow
               </h1>
               <p className="text-sm opacity-70">Design your multi-LLM RAG pipeline with Memory</p>
@@ -1341,7 +1126,7 @@ useEffect(() => {
               <button
                 onClick={handleSave}
                 disabled={saving}
-                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-red-600 to-red-700 px-6 py-2 text-white transition hover:from-red-700 hover:to-red-800 disabled:opacity-50"
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-2 text-white transition hover:from-blue-700 hover:to-blue-800 disabled:opacity-50"
               >
                 {saving ? (
                   <>
@@ -1362,185 +1147,150 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="mx-auto mt-6 max-w-7xl px-6">
-        <div className="flex gap-2 border-b border-white/10">
-          {(['editor', 'api'] as const).map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-3 capitalize font-medium transition ${
-                activeTab === tab
-                  ? "border-b-2 border-red-500 text-white"
-                  : "opacity-70 hover:opacity-100"
-              }`}
-            >
-              {tab === 'editor' ? 'Workflow Editor' : 'API & Integration'}
-            </button>
-          ))}
-        </div>
-      </div>
-
       {/* Main Content */}
       <div className="mx-auto max-w-7xl px-6 py-6">
-        {activeTab === 'editor' ? (
+        <div className="space-y-4">
+          {/* Workflow Info */}
+          <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-white/10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Workflow Name *
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter workflow name..."
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Description
+                </label>
+                <input
+                  type="text"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Brief description of your workflow..."
+                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Editor Section */}
           <div className="space-y-4">
-            {/* Workflow Info */}
-            <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-white/10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Workflow Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Enter workflow name..."
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Description
-                  </label>
-                  <input
-                    type="text"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Brief description of your workflow..."
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 text-white placeholder-gray-400"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Editor Section */}
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold">Visual Workflow Editor</h2>
-                <div className="flex gap-2">
-                  <button className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm transition hover:bg-white/5">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                    Export
-                  </button>
-                  <button
-                    onClick={toggleFullscreen}
-                    className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm transition hover:bg-white/5"
-                    aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                  >
-                    {isFullscreen ? (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
-                      </svg>
-                    ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                      </svg>
-                    )}
-                    {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-                  </button>
-                </div>
-              </div>
-
-              <div ref={editorWrapRef} className={editorShellClass}>
-                {/* Node Palette */}
-                <NodePalette onAddNode={addNewNode} />
-
-                {/* Delete Node Button */}
-                <div className="mb-4">
-                  <button
-                    onClick={deleteSelectedNodes}
-                    className="rounded border border-red-500/30 px-4 py-2 text-red-400 transition hover:bg-red-500/10 flex items-center gap-2"
-                  >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    Delete Last Node
-                  </button>
-                </div>
-
-                {/* React Flow Canvas */}
-                <div
-                  style={{ height: isFullscreen ? "calc(100vh - 120px)" : "600px" }}
-                  className="rounded-lg border border-white/10 bg-black/50"
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Visual Workflow Editor</h2>
+              <div className="flex gap-2">
+                <button className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm transition hover:bg-white/5">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Export
+                </button>
+                <button
+                  onClick={toggleFullscreen}
+                  className="flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm transition hover:bg-white/5"
+                  aria-label={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
                 >
-                  <ReactFlow
-                    nodes={nodes}
-                    edges={edges}
-                    onNodesChange={onNodesChange}
-                    onEdgesChange={onEdgesChange}
-                    onConnect={onConnect}
-                    nodeTypes={nodeTypes}
-                    fitView
-                    panOnDrag
-                    panOnScroll
-                    zoomOnScroll
-                    zoomOnPinch
-                    selectionOnDrag
-                    minZoom={0.25}
-                    maxZoom={2}
-                    defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
-                    snapToGrid
-                    snapGrid={[16, 16]}
-                    connectionLineType={ConnectionLineType.SmoothStep}
-                    defaultEdgeOptions={{
-                      animated: true,
-                      style: { strokeWidth: 2, stroke: '#dc2626' },
-                    }}
-                    proOptions={{ hideAttribution: true }}
-                    className="[--xy-edge-stroke:#dc2626]"
-                  >
-                    <Controls className="!bg-gray-800 !border-gray-700" />
-                    <MiniMap 
-                      className="!bg-gray-800 !border-gray-700"
-                      nodeColor="#dc2626"
-                      maskColor="rgba(0, 0, 0, 0.6)"
-                    />
-                    <Background
-                      className="opacity-30"
-                      variant={BackgroundVariant.Dots}
-                      gap={12}
-                      size={1}
-                      color="#dc2626"
-                    />
-                  </ReactFlow>
-                </div>
+                  {isFullscreen ? (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
+                    </svg>
+                  ) : (
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                    </svg>
+                  )}
+                  {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
+                </button>
+              </div>
+            </div>
 
-                {/* Stats Bar */}
-                <div className="mt-4 flex justify-between items-center text-sm text-gray-400">
-                  <div className="flex gap-4">
-                    <span>Nodes: {nodes.length}</span>
-                    <span>Connections: {edges.length}</span>
-                    
-                    <span>Memory Nodes: {nodes.filter((n: any) => String(n?.data?.type ?? '').includes('MEMORY')).length}</span>
-                  </div>
-                  <div className="flex gap-2">
-                    <span className="flex items-center gap-1">
-                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                      Drag to connect nodes
-                    </span>
-                  </div>
+            <div ref={editorWrapRef} className={editorShellClass}>
+              {/* Node Palette */}
+              <NodePalette onAddNode={addNewNode} />
+
+              {/* Delete Node Button */}
+              <div className="mb-4">
+                <button
+                  onClick={deleteSelectedNodes}
+                  className="rounded border border-blue-500/30 px-4 py-2 text-blue-400 transition hover:bg-blue-500/10 flex items-center gap-2"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  Delete Last Node
+                </button>
+              </div>
+
+              {/* React Flow Canvas */}
+              <div
+                style={{ height: isFullscreen ? "calc(100vh - 120px)" : "600px" }}
+                className="rounded-lg border border-white/10 bg-black/50"
+              >
+                <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}
+                  nodeTypes={nodeTypes}
+                  fitView
+                  panOnDrag
+                  panOnScroll
+                  zoomOnScroll
+                  zoomOnPinch
+                  selectionOnDrag
+                  minZoom={0.25}
+                  maxZoom={2}
+                  defaultViewport={{ x: 0, y: 0, zoom: 0.9 }}
+                  snapToGrid
+                  snapGrid={[16, 16]}
+                  connectionLineType={ConnectionLineType.SmoothStep}
+                  defaultEdgeOptions={{
+                    animated: true,
+                    style: { strokeWidth: 2, stroke: '#2563eb' },
+                  }}
+                  proOptions={{ hideAttribution: true }}
+                  className="[--xy-edge-stroke:#2563eb]"
+                >
+                  <Controls className="!bg-gray-800 !border-gray-700" />
+                  <MiniMap 
+                    className="!bg-gray-800 !border-gray-700"
+                    nodeColor="#2563eb"
+                    maskColor="rgba(0, 0, 0, 0.6)"
+                  />
+                  <Background
+                    className="opacity-30"
+                    variant={BackgroundVariant.Dots}
+                    gap={12}
+                    size={1}
+                    color="#2563eb"
+                  />
+                </ReactFlow>
+              </div>
+
+              {/* Stats Bar */}
+              <div className="mt-4 flex justify-between items-center text-sm text-gray-400">
+                <div className="flex gap-4">
+                  <span>Nodes: {nodes.length}</span>
+                  <span>Connections: {edges.length}</span>
+                  <span>Memory Nodes: {nodes.filter((n: any) => String(n?.data?.type ?? '').includes('MEMORY')).length}</span>
+                </div>
+                <div className="flex gap-2">
+                  <span className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                    Drag to connect nodes
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        ) : (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div>
-                <h2 className="text-xl font-semibold mb-4">API Keys</h2>
-                <ApiKeysSection />
-              </div>
-              <div>
-                <h2 className="text-xl font-semibold mb-4">API Examples</h2>
-                <ApiExamplesSection />
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
