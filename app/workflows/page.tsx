@@ -69,7 +69,7 @@ export default function WorkflowsPage() {
   if (!mounted || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
       </div>
     );
   }
@@ -83,12 +83,12 @@ export default function WorkflowsPage() {
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[80vmin] w-[80vmin] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-50 blur-2xl"
         style={{
-          background: "radial-gradient(circle at center, #dc2626, rgba(0,0,0,0) 60%)",
+          background: "radial-gradient(circle at center, #2563eb, rgba(0,0,0,0) 60%)",
         }}
         aria-hidden
       />
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-red-600/10 via-transparent to-red-700/10 -z-10"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-600/10 via-transparent to-blue-700/10 -z-10"
         aria-hidden
       />
 
@@ -97,14 +97,14 @@ export default function WorkflowsPage() {
         <div className="mx-auto max-w-7xl px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="bg-gradient-to-r from-red-500 to-red-600 bg-clip-text text-2xl font-bold text-transparent">
+              <h1 className="bg-gradient-to-r from-blue-500 to-blue-600 bg-clip-text text-2xl font-bold text-transparent">
                 Workflows
               </h1>
               <p className="text-sm opacity-70">Create and manage your multi-LLM RAG pipelines</p>
             </div>
             <Link
               href="/workflows/new"
-              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-red-600 to-red-700 px-6 py-2 text-white transition hover:from-red-700 hover:to-red-800"
+              className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-2 text-white transition hover:from-blue-700 hover:to-blue-800"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -119,7 +119,7 @@ export default function WorkflowsPage() {
       <div className="mx-auto max-w-7xl px-6 py-8">
         {loading ? (
           <div className="flex justify-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-600 border-t-transparent"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
           </div>
         ) : workflows.length === 0 ? (
           <div className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 p-12 text-center">
@@ -128,7 +128,7 @@ export default function WorkflowsPage() {
             <p className="text-gray-400 mb-6">Create your first workflow to start building intelligent RAG pipelines</p>
             <Link
               href="/workflows/new"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transition-all"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -141,7 +141,7 @@ export default function WorkflowsPage() {
             {workflows.map((workflow) => (
               <div 
                 key={workflow.id} 
-                className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 hover:border-red-500/30 transition-all duration-300 hover:transform hover:scale-[1.02]"
+                className="bg-black/40 backdrop-blur-sm rounded-lg border border-white/10 hover:border-blue-500/30 transition-all duration-300 hover:transform hover:scale-[1.02]"
               >
                 <div className="p-6">
                   {/* Header */}
@@ -188,7 +188,7 @@ export default function WorkflowsPage() {
                           </div>
                           <div className="w-full bg-gray-700 rounded-full h-2">
                             <div 
-                              className="bg-gradient-to-r from-red-500 to-red-600 h-2 rounded-full transition-all duration-500"
+                              className="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-500"
                               style={{ width: `${Math.round((workflow.analytics.avgConfidence || 0) * 100)}%` }}
                             ></div>
                           </div>
@@ -209,7 +209,7 @@ export default function WorkflowsPage() {
                   <div className="flex gap-2">
                     <Link
                       href={`/workflows/${workflow.id}`}
-                      className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                      className="flex-1 flex items-center justify-center gap-1 px-3 py-2 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -228,7 +228,7 @@ export default function WorkflowsPage() {
                     </Link>
                     <button
                       onClick={() => handleDelete(workflow.id, workflow.name)}
-                      className="flex items-center justify-center px-3 py-2 text-sm bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors border border-red-500/30"
+                      className="flex items-center justify-center px-3 py-2 text-sm bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors border border-blue-500/30"
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
