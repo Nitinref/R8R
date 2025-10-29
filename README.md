@@ -279,6 +279,3 @@ const answer = await r8r.query("Your question here");
 🚧 Telegram Workflow Builder (Under Development, showing great results)
 
 © 2025 FlowForge AI. All rights reserved.
-
-yaml
-Copy code
