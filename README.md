@@ -22,26 +22,6 @@ We handle everything — **query rewriting, hybrid retrieval, memory persistence
 
 ---
 
-## 🖼️ Platform Preview
-
-<div align="center">
-
-### 🌐 Landing Page - Modern & Engaging
-<img src="./assets/2.png" alt="R8R Landing Page" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" />
-<p><em>Clean, professional landing page showcasing R8R's value proposition and features</em></p>
-
-### 🔐 Signup & Authentication
-<img src="./assets/3.png" alt="R8R Signup" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" />
-<p><em>Secure signup process with instant API key generation</em></p>
-
-### 🧩 Visual Workflow Editor
-<img src="./assets/1.png" alt="R8R Workflow Editor" width="600" style="border-radius: 8px; border: 1px solid #333; margin-bottom: 10px;" />
-<p><em>Drag-and-drop node-based workflow builder for RAG pipelines</em></p>
-
-</div>
-
----
-
 ## 🚨 The Problem We Solve
 
 ❌ Building production-grade RAG systems takes **4–8 weeks**  
