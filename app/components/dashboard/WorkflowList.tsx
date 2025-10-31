@@ -45,7 +45,7 @@ export function WorkflowList({ workflows }: WorkflowListProps) {
           <Code className={`w-6 h-6 inline mr-2 ${ACCENT_RED}`} />
           Workflow Automation
         </CardTitle>
-        <Link href="/workflows/new" passHref legacyBehavior>
+        <Link href="/workflows/new">
           {/* Primary Action Button in Red */}
           <Button 
             size="sm" 
@@ -64,7 +64,7 @@ export function WorkflowList({ workflows }: WorkflowListProps) {
             <p className={`text-lg ${TEXT_MUTED} mb-4`}>
               No active workflows. Launch your first automation script!
             </p>
-            <Link href="/workflows/new" passHref legacyBehavior>
+            <Link href="/workflows/new" >
               <Button className="bg-red-600 hover:bg-red-700 text-white">
                 <Zap className="w-4 h-4 mr-2" />
                 Create Workflow Now

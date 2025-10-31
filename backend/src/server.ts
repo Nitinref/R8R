@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config(); // ← THIS LOADS YOUR .ENV FILE
+
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -13,9 +16,13 @@ import queryRoutes from './routes/query.routes.js';
 import analyticsRoutes from './routes/analytics.routes.js';
 import { memoryRoutes } from './routes/memory.routes.js';
 
+// Import Telegram and DAG workflow services
+import { getTelegramBot } from './services/telegram/telegram-bot.service.js';
 
+// ... rest of your code
 const app = express();
 app.use('/api/memory', memoryRoutes);
+
 const prisma = new PrismaClient({
   log: process.env.NODE_ENV === 'development' 
     ? ['query', 'error', 'warn'] 
@@ -47,25 +54,29 @@ async function initializeApp() {
       logger.warn('⚠ Redis cache not available - continuing without cache');
     }
 
-    // 4. Setup middleware
+    // 4. Initialize Telegram Bot (only if token is configured)
+    await initializeTelegramBot();
+
+    // 5. Setup middleware
     setupMiddleware();
 
-    // 5. Setup routes
+    // 6. Setup routes
     setupRoutes();
 
-    // 6. Setup error handling
+    // 7. Setup error handling
     setupErrorHandling();
 
-    // 7. Start server
+    // 8. Start server
     const server = app.listen(PORT, () => {
       logger.info('='.repeat(50));
       logger.info(`🚀 RAG Workflow Server running on port ${PORT}`);
       logger.info(`📝 Environment: ${process.env.NODE_ENV}`);
       logger.info(`🔗 API Base URL: http://localhost:${PORT}/api`);
+      logger.info(`🤖 Telegram Bot: ${process.env.TELEGRAM_BOT_TOKEN ? '✅ Active' : '❌ Not configured'}`);
       logger.info('='.repeat(50));
     });
 
-    // 8. Graceful shutdown
+    // 9. Graceful shutdown
     setupGracefulShutdown(server);
 
   } catch (error) {
@@ -74,6 +85,28 @@ async function initializeApp() {
       stack: (error as Error).stack
     });
     process.exit(1);
+  }
+}
+
+// Initialize Telegram Bot
+async function initializeTelegramBot() {
+  if (process.env.TELEGRAM_BOT_TOKEN) {
+    try {
+      logger.info('Initializing Telegram bot...');
+      const telegramBot = getTelegramBot();
+      logger.info('✓ Telegram bot initialized successfully');
+      
+      // Test bot connection
+      const botInfo = await telegramBot.getBot().getMe();
+      logger.info(`✓ Telegram bot connected: @${botInfo.username}`);
+      
+    } catch (error) {
+      logger.warn('⚠ Telegram bot initialization failed - continuing without bot', {
+        error: (error as Error).message
+      });
+    }
+  } else {
+    logger.warn('⚠ TELEGRAM_BOT_TOKEN not set - Telegram bot disabled');
   }
 }
 
@@ -127,7 +160,8 @@ function setupRoutes() {
       environment: process.env.NODE_ENV,
       services: {
         database: 'connected',
-        cache: cacheHealthy ? 'connected' : 'disconnected'
+        cache: cacheHealthy ? 'connected' : 'disconnected',
+        telegram: process.env.TELEGRAM_BOT_TOKEN ? 'configured' : 'not_configured'
       }
     });
   });
@@ -141,6 +175,18 @@ function setupRoutes() {
       // Check cache
       const cacheService = getCacheService();
       const cacheStats = await cacheService.getStats();
+
+      // Check Telegram bot status
+      let telegramStatus = 'not_configured';
+      if (process.env.TELEGRAM_BOT_TOKEN) {
+        try {
+          const telegramBot = getTelegramBot();
+          const botInfo = await telegramBot.getBot().getMe();
+          telegramStatus = `connected (@${botInfo.username})`;
+        } catch (error) {
+          telegramStatus = 'connection_failed';
+        }
+      }
 
       res.json({
         status: 'healthy',
@@ -157,6 +203,10 @@ function setupRoutes() {
             status: cacheStats.connected ? 'connected' : 'disconnected',
             type: 'redis',
             stats: cacheStats
+          },
+          telegram: {
+            status: telegramStatus,
+            configured: !!process.env.TELEGRAM_BOT_TOKEN
           }
         }
       });
@@ -173,6 +223,8 @@ function setupRoutes() {
   app.use('/api/workflows', workflowRoutes);
   app.use('/api/query', queryRoutes);
   app.use('/api/analytics', analyticsRoutes);
+  
+  // NEW: DAG Workflow routes
 
   // Root endpoint
   app.get('/', (req, res) => {
@@ -184,10 +236,16 @@ function setupRoutes() {
         health: '/health',
         auth: '/api/auth',
         workflows: '/api/workflows',
+        'dag-workflows': '/api/dag-workflows',
         query: '/api/query',
-        analytics: '/api/analytics'
+        analytics: '/api/analytics',
+        memory: '/api/memory'
       },
-      documentation: '/api/docs' // Add later if needed
+      features: {
+        telegram_bot: !!process.env.TELEGRAM_BOT_TOKEN,
+        dag_workflows: true,
+        memory_system: true
+      }
     });
   });
 }
@@ -239,6 +297,13 @@ function setupGracefulShutdown(server: any) {
         const cacheService = getCacheService();
         await cacheService.disconnect();
         logger.info('Cache disconnected');
+
+        // Close Telegram bot
+        if (process.env.TELEGRAM_BOT_TOKEN) {
+          const telegramBot = getTelegramBot();
+          telegramBot.getBot().stopPolling();
+          logger.info('Telegram bot disconnected');
+        }
 
         logger.info('Graceful shutdown completed');
         process.exit(0);

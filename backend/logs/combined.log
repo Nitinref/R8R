@@ -9785,3 +9785,762 @@
 {"level":"info","message":"HTTP server closed","timestamp":"2025-10-27T09:18:23.215Z"}
 {"level":"info","message":"Database disconnected","timestamp":"2025-10-27T09:18:23.219Z"}
 {"level":"info","message":"Redis client disconnected","timestamp":"2025-10-27T09:18:23.226Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-28T15:06:02.293Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.296Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-28T15:06:02.296Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.296Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-28T15:06:02.297Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-28T15:06:02.297Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-28T15:06:02.298Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-28T15:06:02.298Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-28T15:06:02.298Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-28T15:06:02.298Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-28T15:06:02.299Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-28T15:06:02.299Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-28T15:06:02.299Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-28T15:06:02.299Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.300Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-28T15:06:02.301Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-28T15:06:02.302Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:06:02.302Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-28T15:06:02.302Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-10-28T15:06:03.811Z"}
+{"error":"Can't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","level":"error","message":"Failed to initialize application","stack":"PrismaClientInitializationError: Can't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.\n    at r (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:115:2770)\n    at async initializeApp (file:///C:/Users/DELL/yy/R8R/backend/dist/server.js:32:9)","timestamp":"2025-10-28T15:06:08.810Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-28T15:08:20.129Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.132Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-28T15:08:20.132Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.132Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-28T15:08:20.133Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-28T15:08:20.133Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-28T15:08:20.133Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-28T15:08:20.133Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-28T15:08:20.134Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-28T15:08:20.134Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-28T15:08:20.134Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-28T15:08:20.134Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-28T15:08:20.134Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-28T15:08:20.134Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.135Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:20.136Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-28T15:08:20.136Z"}
+{"collection":"r8r-memories","level":"info","message":"✅ Memory collection created","timestamp":"2025-10-28T15:08:20.421Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-28T15:08:23.132Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-28T15:08:23.133Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-28T15:08:23.135Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-28T15:08:23.172Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-28T15:08:23.190Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-28T15:08:23.191Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-28T15:08:23.193Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:23.198Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-28T15:08:23.198Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-28T15:08:23.199Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-28T15:08:23.199Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:08:23.199Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-28T15:25:13.688Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-28T15:25:13.694Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-28T15:25:13.699Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-28T15:25:13.709Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-28T15:25:45.778Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.781Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-28T15:25:45.781Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.781Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-28T15:25:45.782Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-28T15:25:45.782Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-28T15:25:45.782Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-28T15:25:45.782Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-28T15:25:45.782Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-28T15:25:45.783Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-28T15:25:45.783Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-28T15:25:45.783Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-28T15:25:45.783Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-28T15:25:45.784Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.785Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.785Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-28T15:25:45.785Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.785Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-28T15:25:45.785Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-28T15:25:45.785Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-28T15:25:45.786Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-28T15:25:45.786Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-28T15:25:45.786Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-28T15:25:45.786Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:45.787Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-28T15:25:45.787Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-28T15:25:49.239Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-28T15:25:49.240Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-28T15:25:49.240Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-28T15:25:49.274Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-28T15:25:49.277Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-28T15:25:49.277Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-28T15:25:49.279Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:49.284Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-28T15:25:49.284Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-28T15:25:49.284Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-28T15:25:49.285Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-28T15:25:49.285Z"}
+{"ip":"::1","level":"info","message":"GET /health","query":{},"timestamp":"2025-10-28T15:26:15.288Z"}
+{"ip":"::1","level":"info","message":"GET /health/detailed","query":{},"timestamp":"2025-10-28T15:26:26.964Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:02:06.073Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.079Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:02:06.080Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.080Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:02:06.080Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:02:06.081Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:02:06.082Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:02:06.082Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:02:06.083Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:02:06.084Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:02:06.086Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:02:06.086Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:02:06.087Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:02:06.087Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:02:06.087Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:02:06.088Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:02:06.088Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:02:06.089Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:02:06.089Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:02:06.089Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.089Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:02:06.090Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.090Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.090Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:02:06.090Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.090Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:02:06.090Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:02:06.091Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:02:06.091Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:02:06.091Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:02:06.091Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:02:06.091Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:02:06.091Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:02:06.092Z"}
+{"collection":"r8r-memories","level":"info","message":"✅ Memory collection created","timestamp":"2025-10-29T05:02:06.311Z"}
+{"error":"Can't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","level":"error","message":"Failed to initialize application","stack":"PrismaClientInitializationError: Can't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.\n    at r (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:115:2770)\n    at async initializeApp (file:///C:/Users/DELL/yy/R8R/backend/dist/server.js:32:9)","timestamp":"2025-10-29T05:02:11.142Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:05:42.715Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.717Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:05:42.718Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.718Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:05:42.718Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:05:42.719Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:05:42.719Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:05:42.719Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:05:42.719Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:05:42.720Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:05:42.720Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:05:42.720Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:05:42.721Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:05:42.721Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:05:42.721Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:05:42.721Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:05:42.722Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:05:42.722Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:05:42.722Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:05:42.723Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.723Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:05:42.723Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.723Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.724Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:05:42.724Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.724Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:05:42.724Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:05:42.724Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:05:42.725Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:05:42.725Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:05:42.725Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:05:42.725Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:42.725Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:05:42.725Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-29T05:05:45.521Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-29T05:05:45.522Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-29T05:05:45.522Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-29T05:05:45.562Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-29T05:05:45.681Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-29T05:05:45.682Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-29T05:05:45.683Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:45.686Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-29T05:05:45.686Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-29T05:05:45.687Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-29T05:05:45.687Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:05:45.687Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-29T05:07:01.090Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-29T05:07:01.091Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-29T05:07:01.092Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-29T05:07:01.094Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:23:23.923Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.926Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:23:23.927Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.927Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:23:23.927Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:23:23.928Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:23:23.928Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:23:23.928Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:23:23.929Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:23:23.929Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:23:23.929Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:23:23.929Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:23:23.929Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:23:23.929Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:23:23.930Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:23:23.930Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:23:23.930Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:23:23.930Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:23:23.930Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:23:23.930Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:23:23.931Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:23:23.932Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:23:23.932Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:23:23.932Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:23:23.932Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:23.932Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:23:23.932Z"}
+{"collection":"r8r-memories","level":"info","message":"✅ Memory collection created","timestamp":"2025-10-29T05:23:24.121Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-29T05:23:26.230Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-29T05:23:26.231Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-29T05:23:26.232Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-29T05:23:26.272Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-29T05:23:26.281Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-29T05:23:26.282Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-29T05:23:26.284Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:26.291Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-29T05:23:26.291Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-29T05:23:26.291Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-29T05:23:26.292Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:23:26.292Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-29T05:33:06.667Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-29T05:33:06.672Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-29T05:33:06.676Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-29T05:33:06.682Z"}
+{"level":"info","message":"Telegram bot handlers registered","timestamp":"2025-10-29T05:33:17.967Z"}
+{"level":"info","message":"Telegram bot initialized successfully","timestamp":"2025-10-29T05:33:17.971Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:33:17.975Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.976Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:33:17.976Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.976Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:33:17.976Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:33:17.977Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:33:17.977Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:33:17.977Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:33:17.977Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:33:17.978Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:33:17.978Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:33:17.978Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:33:17.978Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:33:17.978Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:33:17.979Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:33:17.979Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:33:17.979Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:33:17.979Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:33:17.980Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:33:17.980Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.980Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:33:17.980Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.980Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.980Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:33:17.981Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:33:17.982Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:33:17.982Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:33:17.982Z"}
+{"level":"info","message":"Telegram bot handlers registered","timestamp":"2025-10-29T05:35:15.284Z"}
+{"level":"info","message":"Telegram bot initialized successfully","timestamp":"2025-10-29T05:35:15.287Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:35:15.292Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.293Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:35:15.294Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.295Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:35:15.295Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:35:15.296Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:35:15.297Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:35:15.297Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:35:15.298Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.299Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:35:15.300Z"}
+{"level":"info","message":"Telegram bot handlers registered","timestamp":"2025-10-29T05:36:18.262Z"}
+{"level":"info","message":"Telegram bot initialized successfully","timestamp":"2025-10-29T05:36:18.265Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:36:18.269Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.269Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:36:18.270Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.270Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:36:18.271Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:36:18.271Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:36:18.272Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:36:18.272Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:36:18.272Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:36:18.273Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:36:18.273Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:36:18.273Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:36:18.274Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:36:18.274Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:36:18.274Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:36:18.275Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:36:18.276Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:36:18.276Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:36:18.276Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:36:18.276Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.277Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:36:18.277Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.277Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.277Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:36:18.277Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.278Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:36:18.278Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:36:18.278Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:36:18.278Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:36:18.279Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:36:18.279Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:36:18.279Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:18.279Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:36:18.280Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-29T05:36:20.320Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-29T05:36:20.321Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-29T05:36:20.323Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-29T05:36:20.362Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-29T05:36:20.375Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-29T05:36:20.375Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-29T05:36:20.379Z"}
+{"level":"info","message":"Initializing Telegram bot...","timestamp":"2025-10-29T05:36:20.381Z"}
+{"level":"info","message":"✓ Telegram bot initialized successfully","timestamp":"2025-10-29T05:36:20.381Z"}
+{"level":"info","message":"✓ Telegram bot connected: @RapidRagRuntime_bot","timestamp":"2025-10-29T05:36:20.606Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:20.609Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-29T05:36:20.610Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-29T05:36:20.610Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-29T05:36:20.610Z"}
+{"level":"info","message":"🤖 Telegram Bot: ✅ Active","timestamp":"2025-10-29T05:36:20.611Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:36:20.612Z"}
+{"chatId":5186366411,"error":{"clientVersion":"6.16.3","code":"P2024","meta":{"connection_limit":21,"modelName":"User","timeout":10},"name":"PrismaClientKnownRequestError"},"level":"error","message":"Registration failed","timestamp":"2025-10-29T05:38:58.256Z"}
+{"chatId":5186366411,"error":{"clientVersion":"6.16.3","code":"P2024","meta":{"connection_limit":21,"modelName":"User","timeout":10},"name":"PrismaClientKnownRequestError"},"level":"error","message":"Registration failed","timestamp":"2025-10-29T05:40:33.699Z"}
+{"chatId":5186366411,"level":"info","message":"User registered via Telegram","timestamp":"2025-10-29T05:41:00.693Z","userId":"a70088d7-40bb-4676-adc1-f77747b1bffb"}
+{"level":"error","message":"Unhandled Rejection","promise":{},"reason":"ETELEGRAM: 400 Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 30","stack":"Error: ETELEGRAM: 400 Bad Request: can't parse entities: Can't find end of the entity starting at byte offset 30\n    at C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:316:15\nFrom previous event:\n    at Request.RP$exposed [as then] (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\request-promise-core\\lib\\plumbing.js:145:61)\n    at TelegramBot._request (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:304:8)\n    at TelegramBot.sendMessage (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:970:17)\n    at TelegramBotService.handleWorkflowNodes (file:///C:/Users/DELL/yy/R8R/backend/dist/services/telegram/telegram-bot.service.js:407:24)\n    at TelegramBotService.handleMessage (file:///C:/Users/DELL/yy/R8R/backend/dist/services/telegram/telegram-bot.service.js:335:28)\n    at TelegramBot.<anonymous> (file:///C:/Users/DELL/yy/R8R/backend/dist/services/telegram/telegram-bot.service.js:57:24)\n    at TelegramBot.emit (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\eventemitter3\\index.js:182:35)\n    at TelegramBot.processUpdate (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:706:12)\n    at C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:110:22\n    at Array.forEach (<anonymous>)\n    at C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:106:17\n    at process.processImmediate (node:internal/timers:491:21)\nFrom previous event:\n    at TelegramBotPolling._polling (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:103:8)\n    at Timeout._onTimeout (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:168:56)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-10-29T05:49:16.622Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-29T05:52:31.705Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-29T05:52:31.708Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-29T05:52:31.710Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-29T05:52:31.714Z"}
+{"level":"info","message":"Telegram bot handlers registered","timestamp":"2025-10-29T05:52:50.473Z"}
+{"level":"info","message":"Telegram bot initialized successfully","timestamp":"2025-10-29T05:52:50.483Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-29T05:52:50.500Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.501Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-29T05:52:50.502Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.503Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-29T05:52:50.504Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-29T05:52:50.504Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-29T05:52:50.505Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-29T05:52:50.506Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-29T05:52:50.506Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-29T05:52:50.507Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-29T05:52:50.507Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-29T05:52:50.508Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-29T05:52:50.508Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-29T05:52:50.508Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-29T05:52:50.509Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-29T05:52:50.509Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:52:50.510Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-29T05:52:50.510Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-29T05:52:50.511Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-29T05:52:50.512Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.512Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-29T05:52:50.513Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.514Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.514Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-29T05:52:50.515Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.515Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-29T05:52:50.515Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-29T05:52:50.516Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-29T05:52:50.516Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-29T05:52:50.516Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-29T05:52:50.517Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-29T05:52:50.517Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:50.517Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-29T05:52:50.518Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-29T05:52:53.270Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-29T05:52:53.271Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-29T05:52:53.273Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-29T05:52:53.328Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-29T05:52:53.347Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-29T05:52:53.349Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-29T05:52:53.353Z"}
+{"level":"info","message":"Initializing Telegram bot...","timestamp":"2025-10-29T05:52:53.354Z"}
+{"level":"info","message":"✓ Telegram bot initialized successfully","timestamp":"2025-10-29T05:52:53.355Z"}
+{"level":"info","message":"✓ Telegram bot connected: @RapidRagRuntime_bot","timestamp":"2025-10-29T05:52:54.736Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:54.747Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-29T05:52:54.748Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-29T05:52:54.749Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-29T05:52:54.750Z"}
+{"level":"info","message":"🤖 Telegram Bot: ✅ Active","timestamp":"2025-10-29T05:52:54.750Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-29T05:52:54.750Z"}
+{"chatId":5186366411,"error":{"clientVersion":"6.16.3","code":"P2024","meta":{"connection_limit":21,"modelName":"User","timeout":10},"name":"PrismaClientKnownRequestError"},"level":"error","message":"Registration failed","timestamp":"2025-10-29T05:55:27.239Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-29T06:08:59.058Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-29T06:08:59.059Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-29T06:08:59.061Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-29T06:08:59.065Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-30T10:23:21.849Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.857Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-30T10:23:21.858Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.858Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-30T10:23:21.858Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-30T10:23:21.859Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-30T10:23:21.859Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-30T10:23:21.859Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-30T10:23:21.860Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-30T10:23:21.861Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-30T10:23:21.862Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-30T10:23:21.862Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-30T10:23:21.862Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-30T10:23:21.862Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-30T10:23:21.863Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-30T10:23:21.864Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-30T10:23:21.865Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:21.865Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-30T10:23:21.865Z"}
+{"error":"Can't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","level":"error","message":"Failed to initialize application","stack":"PrismaClientInitializationError: Can't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.\n    at r (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:115:2770)\n    at async initializeApp (file:///C:/Users/DELL/yy/R8R/backend/dist/server.js:37:9)","timestamp":"2025-10-30T10:23:26.917Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-10-30T10:23:41.609Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.611Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-10-30T10:23:41.612Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.612Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-10-30T10:23:41.612Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-10-30T10:23:41.613Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-10-30T10:23:41.613Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-10-30T10:23:41.613Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-10-30T10:23:41.614Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-10-30T10:23:41.614Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-10-30T10:23:41.615Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-10-30T10:23:41.615Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-10-30T10:23:41.615Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-10-30T10:23:41.615Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-10-30T10:23:41.616Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-10-30T10:23:41.616Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-30T10:23:41.616Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-10-30T10:23:41.617Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-10-30T10:23:41.617Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-10-30T10:23:41.617Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.617Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-10-30T10:23:41.618Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.618Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.618Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-10-30T10:23:41.618Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.618Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-10-30T10:23:41.618Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-10-30T10:23:41.619Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-10-30T10:23:44.915Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-10-30T10:23:44.916Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-30T10:23:44.918Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-30T10:23:44.985Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-30T10:23:44.998Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-30T10:23:44.998Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-10-30T10:23:45.001Z"}
+{"level":"info","message":"Initializing Telegram bot...","timestamp":"2025-10-30T10:23:45.001Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-30T10:23:45.009Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Telegram bot handlers registered","timestamp":"2025-10-30T10:23:45.010Z"}
+{"level":"info","message":"Telegram bot initialized successfully","timestamp":"2025-10-30T10:23:45.010Z"}
+{"level":"info","message":"✓ Telegram bot initialized successfully","timestamp":"2025-10-30T10:23:45.011Z"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-30T10:23:45.061Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-30T10:23:45.064Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-30T10:23:45.064Z"}
+{"level":"info","message":"✓ Telegram bot connected: @RapidRagRuntime_bot","timestamp":"2025-10-30T10:23:52.129Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:52.138Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-10-30T10:23:52.139Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-10-30T10:23:52.139Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-10-30T10:23:52.140Z"}
+{"level":"info","message":"🤖 Telegram Bot: ✅ Active","timestamp":"2025-10-30T10:23:52.150Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-10-30T10:23:52.150Z"}
+{"body":{"query":"what  is photo synthesis  explain its working  ?\n","stream":false,"workflowId":"workflow-1761817976771"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-30T10:23:55.912Z"}
+{"level":"info","message":"Executing query","queryLength":49,"timestamp":"2025-10-30T10:23:58.701Z","userId":"ba7a5731-3e84-46a8-a03a-37faf5d5dd67","workflowId":"workflow-1761817976771"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-30T10:23:58.710Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-30T10:23:58.719Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-30T10:23:58.729Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-30T10:23:58.729Z"}
+{"key":"workflow:workflow-1761817976771:query:7cc7b61ad6bf93dd","level":"debug","message":"Cache miss","timestamp":"2025-10-30T10:23:58.732Z"}
+{"entrySteps":["1761817957922"],"hasAnswerGeneration":false,"level":"info","message":"Starting workflow execution","timestamp":"2025-10-30T10:23:58.733Z","totalSteps":2}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761817957922","timestamp":"2025-10-30T10:23:58.734Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:23:58.734Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:24:01.379Z","tokensUsed":44}
+{"contentLength":38,"duration":2646,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:24:01.380Z","tokensUsed":44}
+{"level":"info","message":"Query rewritten","original":"what  is photo synthesis  explain its working  ?","rewritten":"Explain the process of photosynthesis.","stepId":"1761817957922","timestamp":"2025-10-30T10:24:01.381Z"}
+{"level":"debug","message":"All parents completed for step: 1761817962930","parentSteps":["1761817957922"],"timestamp":"2025-10-30T10:24:01.382Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761817962930","timestamp":"2025-10-30T10:24:01.383Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:24:01.383Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:24:02.379Z","tokensUsed":36}
+{"contentLength":34,"duration":997,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:24:02.380Z","tokensUsed":36}
+{"level":"info","message":"Query rewritten","original":"what  is photo synthesis  explain its working  ?","rewritten":"Photosynthesis process explanation","stepId":"1761817962930","timestamp":"2025-10-30T10:24:02.381Z"}
+{"completedSteps":2,"documentCount":0,"hasAnswer":false,"level":"info","message":"Workflow execution completed","rewriteCount":2,"timestamp":"2025-10-30T10:24:02.382Z","totalSteps":2}
+{"key":"workflow:workflow-1761817976771:query:7cc7b61ad6bf93dd","level":"debug","message":"Cache set successful","timestamp":"2025-10-30T10:24:02.391Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:24:35.858Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1-1761819951205","source":"1","target":"1761819951205"},{"id":"xy-edge__1761819909419-1761819951205","source":"1761819909419","target":"1761819951205"},{"id":"xy-edge__1761819911747-1761819951205","source":"1761819911747","target":"1761819951205"},{"id":"xy-edge__1761819951205-1761819987245","source":"1761819951205","target":"1761819987245"}],"entryPoint":"1","id":"workflow-1761820028207","name":"trying ","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":-176,"y":64},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1761819909419","position":{"x":192,"y":80},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1761819911747","position":{"x":528,"y":80},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":100,"model":"gemini-2.0-flash","provider":"google","temperature":0.3}},"label":"Rerank"},"id":"1761819951205","position":{"x":80,"y":288},"type":"rerank"},{"data":{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"label":"Answer Generation"},"id":"1761819987245","position":{"x":64,"y":464},"type":"answer_generation"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"id":"1","nextSteps":["1761819951205"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"id":"1761819909419","nextSteps":["1761819951205"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1761819911747","nextSteps":["1761819951205"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":100,"model":"gemini-2.0-flash","provider":"google","temperature":0.3}},"id":"1761819951205","nextSteps":["1761819987245"],"type":"rerank"},{"config":{"llm":{"maxTokens":1000,"model":"gpt-4","provider":"openai","temperature":0.7}},"id":"1761819987245","type":"answer_generation"}]},"description":"","name":"trying ","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-30T10:27:08.294Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:27:12.730Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/workflow-1761820028207","query":{},"timestamp":"2025-10-30T10:27:25.075Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:27:27.686Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761820028207","query":{},"timestamp":"2025-10-30T10:27:36.469Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:27:36.476Z"}
+{"body":{"name":"kirat"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:27:50.773Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:27:52.008Z"}
+{"body":{"query":"What are the ethical limits of human genetic engineering (e.g., designer babies, curing all diseases)?","stream":false,"workflowId":"workflow-1761820028207"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-30T10:28:53.257Z"}
+{"level":"info","message":"Executing query","queryLength":102,"timestamp":"2025-10-30T10:28:55.002Z","userId":"ba7a5731-3e84-46a8-a03a-37faf5d5dd67","workflowId":"workflow-1761820028207"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-30T10:28:55.006Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-30T10:28:55.017Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-30T10:28:55.021Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-30T10:28:55.021Z"}
+{"key":"workflow:workflow-1761820028207:query:7920d40b661e0a56","level":"debug","message":"Cache miss","timestamp":"2025-10-30T10:28:55.028Z"}
+{"entrySteps":["1","1761819909419","1761819911747"],"hasAnswerGeneration":true,"level":"info","message":"Starting workflow execution","timestamp":"2025-10-30T10:28:55.028Z","totalSteps":5}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-30T10:28:55.029Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761819909419","timestamp":"2025-10-30T10:28:55.029Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761819911747","timestamp":"2025-10-30T10:28:55.030Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:55.030Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:55.030Z"}
+{"attemptIndex":0,"level":"debug","message":"Rate limiting google","timestamp":"2025-10-30T10:28:55.031Z","waitTime":1999}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:28:55.032Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:57.139Z","tokensUsed":58}
+{"contentLength":122,"duration":2111,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:57.140Z","tokensUsed":58}
+{"level":"info","message":"Query rewritten","original":"What are the ethical limits of human genetic engineering (e.g., designer babies, curing all diseases)?","rewritten":"ethical boundaries human genetic engineering: designer babies, disease eradication - implications, risks, societal impact","stepId":"1","timestamp":"2025-10-30T10:28:57.141Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:28:57.480Z","tokensUsed":57}
+{"contentLength":79,"duration":2451,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:28:57.481Z","tokensUsed":57}
+{"level":"info","message":"Query rewritten","original":"What are the ethical limits of human genetic engineering (e.g., designer babies, curing all diseases)?","rewritten":"Ethical limits of human genetic engineering designer babies curing all diseases","stepId":"1761819911747","timestamp":"2025-10-30T10:28:57.482Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:58.297Z","tokensUsed":51}
+{"contentLength":79,"duration":3268,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:58.298Z","tokensUsed":51}
+{"level":"info","message":"Query rewritten","original":"What are the ethical limits of human genetic engineering (e.g., designer babies, curing all diseases)?","rewritten":"ethical limits human genetic engineering \"designer babies\" disease eradication","stepId":"1761819909419","timestamp":"2025-10-30T10:28:58.299Z"}
+{"level":"debug","message":"All parents completed for step: 1761819951205","parentSteps":["1","1761819909419","1761819911747"],"timestamp":"2025-10-30T10:28:58.300Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1761819951205","timestamp":"2025-10-30T10:28:58.301Z"}
+{"level":"debug","message":"Provider google in cooldown","timestamp":"2025-10-30T10:28:58.302Z","waitTime":737}
+{"level":"debug","message":"All parents completed for step: 1761819951205","parentSteps":["1","1761819909419","1761819911747"],"timestamp":"2025-10-30T10:28:58.354Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1761819951205","timestamp":"2025-10-30T10:28:58.355Z"}
+{"level":"debug","message":"Provider google in cooldown","timestamp":"2025-10-30T10:28:58.355Z","waitTime":684}
+{"level":"debug","message":"All parents completed for step: 1761819951205","parentSteps":["1","1761819909419","1761819911747"],"timestamp":"2025-10-30T10:28:58.355Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1761819951205","timestamp":"2025-10-30T10:28:58.356Z"}
+{"level":"debug","message":"Provider google in cooldown","timestamp":"2025-10-30T10:28:58.356Z","waitTime":683}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:59.046Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:59.050Z"}
+{"attemptIndex":0,"level":"debug","message":"Rate limiting google","timestamp":"2025-10-30T10:28:59.051Z","waitTime":1996}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:28:59.052Z"}
+{"attemptIndex":0,"level":"debug","message":"Rate limiting google","timestamp":"2025-10-30T10:28:59.052Z","waitTime":1995}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:29:00.280Z","tokensUsed":118}
+{"contentLength":2,"duration":1925,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:29:00.280Z","tokensUsed":118}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"Ethical limits of human genetic engineering designer babies curing all diseases","timestamp":"2025-10-30T10:29:00.280Z","totalQueries":3}
+{"level":"debug","message":"All parents completed for step: 1761819987245","parentSteps":["1761819951205"],"timestamp":"2025-10-30T10:29:00.281Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1761819987245","timestamp":"2025-10-30T10:29:00.281Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:00.281Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:29:02.015Z","tokensUsed":118}
+{"contentLength":2,"duration":3714,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:29:02.016Z","tokensUsed":118}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"Ethical limits of human genetic engineering designer babies curing all diseases","timestamp":"2025-10-30T10:29:02.017Z","totalQueries":3}
+{"level":"debug","message":"All parents completed for step: 1761819987245","parentSteps":["1761819951205"],"timestamp":"2025-10-30T10:29:02.018Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1761819987245","timestamp":"2025-10-30T10:29:02.019Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:02.020Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:29:02.309Z","tokensUsed":118}
+{"contentLength":2,"duration":3954,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:29:02.310Z","tokensUsed":118}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"Ethical limits of human genetic engineering designer babies curing all diseases","timestamp":"2025-10-30T10:29:02.311Z","totalQueries":3}
+{"level":"debug","message":"All parents completed for step: 1761819987245","parentSteps":["1761819951205"],"timestamp":"2025-10-30T10:29:02.312Z"}
+{"level":"info","message":"Executing step: answer_generation","stepId":"1761819987245","timestamp":"2025-10-30T10:29:02.312Z"}
+{"level":"debug","message":"Provider openai in cooldown","timestamp":"2025-10-30T10:29:02.312Z","waitTime":208}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:02.536Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:08.401Z","tokensUsed":255}
+{"contentLength":1180,"duration":6382,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:08.402Z","tokensUsed":255}
+{"answerLength":1180,"confidence":0.3,"documentsUsed":0,"level":"info","memoriesUsed":0,"message":"Answer generated","timestamp":"2025-10-30T10:29:08.403Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:11.187Z","tokensUsed":302}
+{"contentLength":1388,"duration":8876,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:11.188Z","tokensUsed":302}
+{"answerLength":1388,"confidence":0.3,"documentsUsed":0,"level":"info","memoriesUsed":0,"message":"Answer generated","timestamp":"2025-10-30T10:29:11.189Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:11.840Z","tokensUsed":246}
+{"contentLength":1129,"duration":11560,"level":"info","message":"LLM generation completed","model":"gpt-4","provider":"openai","timestamp":"2025-10-30T10:29:11.841Z","tokensUsed":246}
+{"answerLength":1129,"confidence":0.3,"documentsUsed":0,"level":"info","memoriesUsed":0,"message":"Answer generated","timestamp":"2025-10-30T10:29:11.842Z"}
+{"completedSteps":5,"documentCount":0,"hasAnswer":true,"level":"info","message":"Workflow execution completed","rewriteCount":3,"timestamp":"2025-10-30T10:29:11.843Z","totalSteps":5}
+{"key":"workflow:workflow-1761820028207:query:7920d40b661e0a56","level":"debug","message":"Cache set successful","timestamp":"2025-10-30T10:29:11.851Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761820028207","query":{},"timestamp":"2025-10-30T10:29:40.736Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761820028207","query":{},"timestamp":"2025-10-30T10:30:05.406Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:30:05.408Z"}
+{"error":"Authentication failed","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/auth/api-keys","query":{},"stack":"Error: Authentication failed\n    at authenticateJWT (file:///C:/Users/DELL/yy/R8R/backend/dist/middleware/auth.middleware.js:43:14)","timestamp":"2025-10-30T10:30:10.427Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-30T10:30:13.265Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:30:14.375Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:30:14.378Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:30:14.380Z"}
+{"error":"Authentication failed","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/analytics/dashboard","query":{},"stack":"Error: Authentication failed\n    at authenticateJWT (file:///C:/Users/DELL/yy/R8R/backend/dist/middleware/auth.middleware.js:43:14)","timestamp":"2025-10-30T10:30:19.393Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:30:19.398Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:30:19.519Z"}
+{"error":"\nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","level":"error","message":"Failed to fetch query history","timestamp":"2025-10-30T10:30:22.084Z"}
+{"error":"\nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/query/history","query":{"limit":"5"},"stack":"PrismaClientKnownRequestError: \nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.\n    at ei.handleRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:7268)\n    at ei.handleAndLogRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6593)\n    at ei.request (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6300)\n    at async a (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:133:9551)\n    at async Promise.all (index 1)\n    at async getQueryHistory (file:///C:/Users/DELL/yy/R8R/backend/dist/controllers/query.controller.js:181:31)","timestamp":"2025-10-30T10:30:22.085Z","userId":"ba7a5731-3e84-46a8-a03a-37faf5d5dd67"}
+{"code":"P1001","level":"error","message":"Unhandled Prisma error \nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","meta":{"database_location":"ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432","modelName":"QueryLog"},"timestamp":"2025-10-30T10:30:22.085Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-30T10:31:10.712Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:31:12.354Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:31:12.357Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:31:12.359Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:31:17.726Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:31:17.738Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:31:18.861Z"}
+{"body":{"configuration":{"cacheEnabled":true,"cacheTTL":3600,"description":"","edges":[{"id":"xy-edge__1761820354123-1761820409860","source":"1761820354123","target":"1761820409860"},{"id":"xy-edge__1-1761820409860","source":"1","target":"1761820409860"},{"id":"xy-edge__1761820387676-1761820409860","source":"1761820387676","target":"1761820409860"},{"id":"xy-edge__1761820409860-1761820441951","source":"1761820409860","target":"1761820441951"}],"entryPoint":"1","id":"workflow-1761820454664","name":"hhhhhhhhh","nodes":[{"data":{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"label":"Query Rewrite"},"id":"1","position":{"x":448,"y":96},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1761820354123","position":{"x":112,"y":96},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"label":"Query Rewrite"},"id":"1761820387676","position":{"x":752,"y":96},"type":"query_rewrite"},{"data":{"config":{"llm":{"maxTokens":100,"model":"gemini-2.0-flash","provider":"google","temperature":0.3}},"label":"Rerank"},"id":"1761820409860","position":{"x":432,"y":288},"type":"rerank"},{"data":{"config":{"memoryUpdate":{"deduplication":{"enabled":true,"mergeStrategy":"summarize","similarityThreshold":0.8},"enabled":true,"importance":{"auto":true},"retention":{"enableExpiration":true,"expirationDays":90,"maxMemories":1000}}},"label":"Memory Update"},"id":"1761820441951","position":{"x":432,"y":464},"type":"memory_update"}],"steps":[{"config":{"llm":{"maxTokens":200,"model":"gpt-3.5-turbo","provider":"openai","temperature":0.7}},"id":"1","nextSteps":["1761820409860"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"id":"1761820354123","nextSteps":["1761820409860"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":200,"model":"gemini-2.0-flash","provider":"google","temperature":0.7}},"id":"1761820387676","nextSteps":["1761820409860"],"type":"query_rewrite"},{"config":{"llm":{"maxTokens":100,"model":"gemini-2.0-flash","provider":"google","temperature":0.3}},"id":"1761820409860","nextSteps":["1761820441951"],"type":"rerank"},{"config":{"memoryUpdate":{"deduplication":{"enabled":true,"mergeStrategy":"summarize","similarityThreshold":0.8},"enabled":true,"importance":{"auto":true},"retention":{"enableExpiration":true,"expirationDays":90,"maxMemories":1000}}},"id":"1761820441951","type":"memory_update"}]},"description":"","name":"hhhhhhhhh","status":"active"},"ip":"::1","level":"info","message":"POST /api/workflows","query":{},"timestamp":"2025-10-30T10:34:14.724Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:34:18.672Z"}
+{"body":{"status":"active"},"ip":"::1","level":"info","message":"PUT /api/workflows/workflow-1761820454664","query":{},"timestamp":"2025-10-30T10:34:27.307Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:34:29.394Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761820454664","query":{},"timestamp":"2025-10-30T10:34:39.717Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:34:39.720Z"}
+{"error":"Authentication failed","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/auth/api-keys","query":{},"stack":"Error: Authentication failed\n    at authenticateJWT (file:///C:/Users/DELL/yy/R8R/backend/dist/middleware/auth.middleware.js:43:14)","timestamp":"2025-10-30T10:34:44.732Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-10-30T10:34:47.460Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:34:49.610Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:34:49.611Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:34:49.613Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:34:54.789Z"}
+{"error":"\nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/analytics/dashboard","query":{},"stack":"PrismaClientKnownRequestError: \nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.\n    at ei.handleRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:7268)\n    at ei.handleAndLogRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6593)\n    at ei.request (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6300)\n    at async a (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:133:9551)\n    at async Promise.all (index 2)\n    at async getDashboardStats (file:///C:/Users/DELL/yy/R8R/backend/dist/controllers/analytics.controller.js:69:80)","timestamp":"2025-10-30T10:34:54.988Z","userId":"ba7a5731-3e84-46a8-a03a-37faf5d5dd67"}
+{"code":"P1001","level":"error","message":"Unhandled Prisma error \nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","meta":{"database_location":"ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432","modelName":"QueryLog"},"timestamp":"2025-10-30T10:34:54.998Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:34:55.011Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:34:55.091Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:35:00.174Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:35:00.179Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:35:00.190Z"}
+{"error":"\nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","level":"error","message":"Failed to fetch query history","timestamp":"2025-10-30T10:35:05.679Z"}
+{"error":"\nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/query/history","query":{"limit":"5"},"stack":"PrismaClientKnownRequestError: \nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.\n    at ei.handleRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:7268)\n    at ei.handleAndLogRequestError (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6593)\n    at ei.request (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:124:6300)\n    at async a (C:\\Users\\DELL\\yy\\R8R\\backend\\generated\\prisma\\runtime\\library.js:133:9551)\n    at async Promise.all (index 1)\n    at async getQueryHistory (file:///C:/Users/DELL/yy/R8R/backend/dist/controllers/query.controller.js:181:31)","timestamp":"2025-10-30T10:35:05.680Z","userId":"ba7a5731-3e84-46a8-a03a-37faf5d5dd67"}
+{"code":"P1001","level":"error","message":"Unhandled Prisma error \nInvalid `prisma.queryLog.count()` invocation:\n\n\nCan't reach database server at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`\n\nPlease make sure your database server is running at `ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432`.","meta":{"database_location":"ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech:5432","modelName":"QueryLog"},"timestamp":"2025-10-30T10:35:05.681Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-10-30T10:35:11.934Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-10-30T10:35:11.937Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-10-30T10:35:11.940Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761820454664","query":{},"timestamp":"2025-10-30T10:35:24.572Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:35:24.574Z"}
+{"body":{"name":"34t"},"ip":"::1","level":"info","message":"POST /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:35:35.151Z"}
+{"ip":"::1","level":"info","message":"GET /api/auth/api-keys","query":{},"timestamp":"2025-10-30T10:35:37.709Z"}
+{"body":{"query":"What do you value most, and are you living in a way that reflects those values?","stream":false,"workflowId":"workflow-1761820454664"},"ip":"::1","level":"info","message":"POST /api/query","query":{},"timestamp":"2025-10-30T10:36:11.680Z"}
+{"level":"info","message":"Executing query","queryLength":79,"timestamp":"2025-10-30T10:36:12.956Z","userId":"ba7a5731-3e84-46a8-a03a-37faf5d5dd67","workflowId":"workflow-1761820454664"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-10-30T10:36:12.959Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-10-30T10:36:12.963Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-10-30T10:36:12.972Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-10-30T10:36:12.972Z"}
+{"key":"workflow:workflow-1761820454664:query:4fb14fe56ff3435c","level":"debug","message":"Cache miss","timestamp":"2025-10-30T10:36:12.976Z"}
+{"entrySteps":["1","1761820354123","1761820387676"],"hasAnswerGeneration":false,"level":"info","message":"Starting workflow execution","timestamp":"2025-10-30T10:36:12.976Z","totalSteps":5}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1","timestamp":"2025-10-30T10:36:12.977Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761820354123","timestamp":"2025-10-30T10:36:12.977Z"}
+{"level":"info","message":"Executing step: query_rewrite","stepId":"1761820387676","timestamp":"2025-10-30T10:36:12.977Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:36:12.978Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:12.978Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:12.978Z"}
+{"attemptIndex":0,"level":"debug","message":"Rate limiting google","timestamp":"2025-10-30T10:36:12.979Z","waitTime":2000}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:16.814Z","tokensUsed":46}
+{"contentLength":55,"duration":3837,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:16.814Z","tokensUsed":46}
+{"level":"info","message":"Query rewritten","original":"What do you value most, and are you living in a way that reflects those values?","rewritten":"\"personal values alignment self-assessment reflection\"","stepId":"1761820387676","timestamp":"2025-10-30T10:36:16.814Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:18.137Z","tokensUsed":43}
+{"contentLength":39,"duration":5161,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:18.138Z","tokensUsed":43}
+{"level":"info","message":"Query rewritten","original":"What do you value most, and are you living in a way that reflects those values?","rewritten":"\"personal values alignment reflection\"","stepId":"1761820354123","timestamp":"2025-10-30T10:36:18.139Z"}
+{"level":"info","message":"LLM call successful","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:36:18.619Z","tokensUsed":58}
+{"contentLength":70,"duration":5643,"level":"info","message":"LLM generation completed","model":"gpt-3.5-turbo","provider":"openai","timestamp":"2025-10-30T10:36:18.620Z","tokensUsed":58}
+{"level":"info","message":"Query rewritten","original":"What do you value most, and are you living in a way that reflects those values?","rewritten":"What are your core values and are you aligning your actions with them?","stepId":"1","timestamp":"2025-10-30T10:36:18.620Z"}
+{"level":"debug","message":"All parents completed for step: 1761820409860","parentSteps":["1","1761820354123","1761820387676"],"timestamp":"2025-10-30T10:36:18.621Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1761820409860","timestamp":"2025-10-30T10:36:18.622Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:18.622Z"}
+{"level":"debug","message":"All parents completed for step: 1761820409860","parentSteps":["1","1761820354123","1761820387676"],"timestamp":"2025-10-30T10:36:18.653Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1761820409860","timestamp":"2025-10-30T10:36:18.653Z"}
+{"level":"debug","message":"Provider google in cooldown","timestamp":"2025-10-30T10:36:18.654Z","waitTime":1969}
+{"level":"debug","message":"All parents completed for step: 1761820409860","parentSteps":["1","1761820354123","1761820387676"],"timestamp":"2025-10-30T10:36:18.655Z"}
+{"level":"info","message":"Executing step: rerank","stepId":"1761820409860","timestamp":"2025-10-30T10:36:18.656Z"}
+{"level":"debug","message":"Provider google in cooldown","timestamp":"2025-10-30T10:36:18.657Z","waitTime":1966}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:19.555Z","tokensUsed":103}
+{"contentLength":2,"duration":934,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:19.556Z","tokensUsed":103}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"What are your core values and are you aligning your actions with them?","timestamp":"2025-10-30T10:36:19.556Z","totalQueries":3}
+{"level":"debug","message":"All parents completed for step: 1761820441951","parentSteps":["1761820409860"],"timestamp":"2025-10-30T10:36:19.557Z"}
+{"level":"info","message":"Executing step: memory_update","stepId":"1761820441951","timestamp":"2025-10-30T10:36:19.557Z"}
+{"deduplication":true,"importance":true,"level":"info","message":"Executing memory update","stepId":"1761820441951","timestamp":"2025-10-30T10:36:19.558Z"}
+{"error":"Validation failed: Response cannot be empty","level":"warn","message":"Memory storage failed","stepId":"1761820441951","timestamp":"2025-10-30T10:36:19.559Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:20.624Z"}
+{"level":"info","message":"Attempting LLM call (1/1)","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:20.627Z"}
+{"attemptIndex":0,"level":"debug","message":"Rate limiting google","timestamp":"2025-10-30T10:36:20.627Z","waitTime":1998}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:21.711Z","tokensUsed":103}
+{"contentLength":2,"duration":3058,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:21.712Z","tokensUsed":103}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"What are your core values and are you aligning your actions with them?","timestamp":"2025-10-30T10:36:21.712Z","totalQueries":3}
+{"level":"debug","message":"Step 1761820441951 already completed, skipping","timestamp":"2025-10-30T10:36:21.713Z"}
+{"level":"info","message":"LLM call successful","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:25.096Z","tokensUsed":103}
+{"contentLength":2,"duration":6440,"level":"info","message":"LLM generation completed","model":"gemini-2.0-flash","provider":"google","timestamp":"2025-10-30T10:36:25.097Z","tokensUsed":103}
+{"level":"info","message":"Best query selected by rerank","selectedQuery":"What are your core values and are you aligning your actions with them?","timestamp":"2025-10-30T10:36:25.098Z","totalQueries":3}
+{"level":"debug","message":"Step 1761820441951 already completed, skipping","timestamp":"2025-10-30T10:36:25.098Z"}
+{"completedSteps":5,"documentCount":0,"hasAnswer":false,"level":"info","message":"Workflow execution completed","rewriteCount":3,"timestamp":"2025-10-30T10:36:25.099Z","totalSteps":5}
+{"key":"workflow:workflow-1761820454664:query:4fb14fe56ff3435c","level":"debug","message":"Cache set successful","timestamp":"2025-10-30T10:36:25.107Z","ttl":3600}
+{"ip":"::1","level":"info","message":"GET /api/workflows/workflow-1761820454664","query":{},"timestamp":"2025-10-30T10:42:46.800Z"}
+{"error":"Authentication failed","ip":"::1","level":"error","message":"Error occurred","method":"GET","params":{},"path":"/api/workflows/workflow-1761820454664","query":{},"stack":"Error: Authentication failed\n    at authenticateJWT (file:///C:/Users/DELL/yy/R8R/backend/dist/middleware/auth.middleware.js:43:14)","timestamp":"2025-10-30T10:42:51.813Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-10-30T10:43:01.812Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-10-30T10:43:01.815Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-10-30T10:43:01.819Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-10-30T10:43:01.826Z"}

@@ -10,8 +10,9 @@ import {
   LLMProvider, 
   RetrieverType, 
   WorkflowConfig, 
-  WorkflowStep, 
+  WorkflowStep,
 } from '@/app/lib/types/workflow.types';
+import { WorkflowExecutionStatus } from '@/app/lib/types/workflow.types';
 import toast from 'react-hot-toast';
 import {
   ReactFlow,
@@ -30,15 +31,30 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
-// Enhanced Custom Node Component with Memory Support
+// Enhanced Custom Node Component with Delete Option and Execution Status
 const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [config, setConfig] = useState(data.config || {});
 
-  // Node styling based on type
-  const getNodeStyle = (type: StepType) => {
-    const base = "rounded-lg shadow-lg p-4 min-w-[220px] border-2";
+  // Node styling based on type and execution status
+  const getNodeStyle = (type: StepType, status?: WorkflowExecutionStatus) => {
+    const base = "rounded-lg shadow-lg p-4 min-w-[220px] border-2 transition-all duration-300";
     
+    // Status-based styling
+    if (status) {
+      switch (status) {
+        case WorkflowExecutionStatus.RUNNING:
+          return `${base} border-yellow-400 bg-gradient-to-br from-yellow-600 to-yellow-700 animate-pulse`;
+        case WorkflowExecutionStatus.COMPLETED:
+          return `${base} border-green-400 bg-gradient-to-br from-green-600 to-green-700`;
+        case WorkflowExecutionStatus.FAILED:
+          return `${base} border-red-400 bg-gradient-to-br from-red-600 to-red-700`;
+        default:
+          break;
+      }
+    }
+    
+    // Type-based styling
     switch (type) {
       case StepType.MEMORY_RETRIEVE:
         return `${base} border-blue-400/30 bg-gradient-to-br from-blue-600 to-blue-700`;
@@ -51,7 +67,16 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     }
   };
 
-  const handleColor = (type: StepType) => {
+  const handleColor = (type: StepType, status?: WorkflowExecutionStatus) => {
+    if (status) {
+      switch (status) {
+        case WorkflowExecutionStatus.RUNNING: return '!bg-yellow-400';
+        case WorkflowExecutionStatus.COMPLETED: return '!bg-green-400';
+        case WorkflowExecutionStatus.FAILED: return '!bg-red-400';
+        default: break;
+      }
+    }
+    
     switch (type) {
       case StepType.MEMORY_RETRIEVE: return '!bg-blue-400';
       case StepType.MEMORY_UPDATE: return '!bg-blue-500';
@@ -60,8 +85,8 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     }
   };
 
-  const nodeBase = getNodeStyle(data.type);
-  const handleClass = handleColor(data.type);
+  const nodeBase = getNodeStyle(data.type, data.executionStatus);
+  const handleClass = handleColor(data.type, data.executionStatus);
 
   const handleConfigChange = (newConfig: any) => {
     const updatedConfig = { ...config, ...newConfig };
@@ -69,6 +94,43 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
     if (data.onConfigChange) {
       data.onConfigChange(id, updatedConfig);
     }
+  };
+
+  const handleDelete = () => {
+    if (data.onDelete) {
+      data.onDelete(id);
+    }
+  };
+
+  // Status indicator icon
+  const getStatusIcon = () => {
+    switch (data.executionStatus) {
+      case WorkflowExecutionStatus.RUNNING:
+        return (
+          <div className="w-3 h-3 bg-yellow-400 rounded-full animate-ping">
+            <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+          </div>
+        );
+      case WorkflowExecutionStatus.COMPLETED:
+        return <div className="w-3 h-3 bg-green-400 rounded-full"></div>;
+      case WorkflowExecutionStatus.FAILED:
+        return <div className="w-3 h-3 bg-red-400 rounded-full"></div>;
+      default:
+        return <div className="w-3 h-3 bg-gray-400 rounded-full"></div>;
+    }
+  };
+
+  // Error message display
+  const renderErrorMessage = () => {
+    if (data.executionStatus === WorkflowExecutionStatus.FAILED && data.error) {
+      return (
+        <div className="mt-2 p-2 bg-red-900/50 border border-red-500 rounded text-xs">
+          <div className="font-semibold text-red-300">Error:</div>
+          <div className="text-red-200">{data.error}</div>
+        </div>
+      );
+    }
+    return null;
   };
 
   // LLM Configuration
@@ -576,17 +638,31 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
       <Handle type="target" position={Position.Top} className={`w-3 h-3 ${handleClass}`} />
       <div className="text-white">
         <div className="mb-2 flex items-center justify-between">
-          <span className="text-sm font-bold">{data.label}</span>
-          <button
-            onClick={() => setIsEditing(!isEditing)}
-            className="rounded p-1 hover:bg-white/10 transition"
-            aria-label="Edit node"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </button>
+          <div className="flex items-center gap-2">
+            {getStatusIcon()}
+            <span className="text-sm font-bold">{data.label}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="rounded p-1 hover:bg-white/10 transition"
+              aria-label="Edit node"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
+            <button
+              onClick={handleDelete}
+              className="rounded p-1 hover:bg-red-500/20 transition"
+              aria-label="Delete node"
+            >
+              <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {isEditing ? (
@@ -602,6 +678,8 @@ const WorkflowNode = ({ data, id }: { data: any; id: string }) => {
         ) : (
           renderConfigPreview()
         )}
+
+        {renderErrorMessage()}
       </div>
       <Handle type="source" position={Position.Bottom} className={`w-3 h-3 ${handleClass}`} />
     </div>
@@ -612,7 +690,7 @@ const nodeTypes = {
   workflowNode: WorkflowNode,
 };
 
-// Node Palette Component
+// Enhanced Node Palette Component
 const NodePalette = ({ onAddNode }: { onAddNode: (type: StepType) => void }) => {
   const nodeTypes = [
     { type: StepType.QUERY_REWRITE, label: 'Query Rewrite', color: 'blue' },
@@ -652,6 +730,89 @@ const NodePalette = ({ onAddNode }: { onAddNode: (type: StepType) => void }) => 
   );
 };
 
+// Query Execution Panel Component
+const QueryExecutionPanel = ({ 
+  onExecute, 
+  onReset, 
+  isExecuting, 
+  executionResult 
+}: { 
+  onExecute: () => void;
+  onReset: () => void;
+  isExecuting: boolean;
+  executionResult: any;
+}) => {
+  const [query, setQuery] = useState('');
+
+  const handleExecute = () => {
+    if (!query.trim()) {
+      toast.error('Please enter a query');
+      return;
+    }
+    onExecute();
+  };
+
+  return (
+    <div className="bg-black/40 backdrop-blur-sm rounded-lg p-6 border border-white/10 mb-4">
+      <h3 className="text-lg font-semibold mb-4">Test Workflow Execution</h3>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-300 mb-2">
+            Input Query
+          </label>
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Enter your query to test the workflow..."
+            className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-400"
+          />
+        </div>
+        
+        <div className="flex items-end gap-2">
+          <button
+            onClick={handleExecute}
+            disabled={isExecuting}
+            className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white px-6 py-3 rounded-lg transition flex items-center justify-center gap-2"
+          >
+            {isExecuting ? (
+              <>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                Executing...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Execute
+              </>
+            )}
+          </button>
+          
+          <button
+            onClick={onReset}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 rounded-lg transition"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      {executionResult && (
+        <div className="mt-4 p-4 bg-gray-800 rounded-lg">
+          <h4 className="font-semibold mb-2">Execution Result:</h4>
+          <pre className="text-sm bg-black/50 p-3 rounded overflow-auto max-h-40">
+            {JSON.stringify(executionResult, null, 2)}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+};
+
 export default function NewWorkflowPage() {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
@@ -662,9 +823,14 @@ export default function NewWorkflowPage() {
   const [description, setDescription] = useState('');
   const [saving, setSaving] = useState(false);
 
+  // Execution state
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [executionResult, setExecutionResult] = useState<any>(null);
+
   // React Flow state
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  
   // @ts-ignore
   const onConnect = useCallback((params: any) => setEdges((eds) => addEdge({
     ...params,
@@ -689,88 +855,98 @@ export default function NewWorkflowPage() {
     );
   }, [setNodes]);
 
+  // Handle node deletion
+  const handleNodeDelete = useCallback((nodeId: string) => {
+    // @ts-ignore
+    setNodes((nds) => nds.filter(node => node.id !== nodeId));
+    // @ts-ignore
+    setEdges((eds) => eds.filter(edge => edge.source !== nodeId && edge.target !== nodeId));
+    toast.success('Node deleted');
+  }, [setNodes, setEdges]);
+
   // Helper functions
-const getDefaultConfig = (type: StepType) => {
-  const baseConfigs = {
-    [StepType.QUERY_REWRITE]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-3.5-turbo',
-        temperature: 0.7,
-        maxTokens: 200,
-      },
-    },
-    [StepType.RETRIEVAL]: {
-      retriever: {
-        type: RetrieverType.PINECONE,
-        config: { indexName: 'default', topK: 10 },
-      },
-    },
-    [StepType.RERANK]: {
-      llm: {
-        provider: LLMProvider.ANTHROPIC,
-        model: 'claude-3-sonnet',
-        temperature: 0.3,
-        maxTokens: 100,
-      },
-    },
-    [StepType.ANSWER_GENERATION]: {
-      llm: {
-        provider: LLMProvider.OPENAI,
-        model: 'gpt-4',
-        temperature: 0.7,
-        maxTokens: 1000,
-      },
-    },
-    [StepType.POST_PROCESS]: {
-      prompt: 'Format the answer appropriately and add source attribution if needed.',
-    },
-    [StepType.MEMORY_RETRIEVE]: {
-      memoryRetrieve: {
-        enabled: true,
-        topK: 5,
-        minScore: 0.7,
-        includeMetadata: true,
-        useReranking: false,
-        useHybridSearch: false,
-        keywordWeight: 0.3,
-      },
-    },
-    [StepType.MEMORY_UPDATE]: {
-      memoryUpdate: {
-        enabled: true,
-        importance: {
-          auto: true,
+  const getDefaultConfig = (type: StepType) => {
+    const baseConfigs = {
+      [StepType.QUERY_REWRITE]: {
+        llm: {
+          provider: LLMProvider.OPENAI,
+          model: 'gpt-3.5-turbo',
+          temperature: 0.7,
+          maxTokens: 200,
         },
-        deduplication: {
+      },
+      [StepType.RETRIEVAL]: {
+        retriever: {
+          type: RetrieverType.PINECONE,
+          config: { indexName: 'default', topK: 10 },
+        },
+      },
+      [StepType.RERANK]: {
+        llm: {
+          provider: LLMProvider.ANTHROPIC,
+          model: 'claude-3-sonnet',
+          temperature: 0.3,
+          maxTokens: 100,
+        },
+      },
+      [StepType.ANSWER_GENERATION]: {
+        llm: {
+          provider: LLMProvider.OPENAI,
+          model: 'gpt-4',
+          temperature: 0.7,
+          maxTokens: 1000,
+        },
+      },
+      [StepType.POST_PROCESS]: {
+        prompt: 'Format the answer appropriately and add source attribution if needed.',
+      },
+      [StepType.MEMORY_RETRIEVE]: {
+        memoryRetrieve: {
           enabled: true,
-          similarityThreshold: 0.8,
-          mergeStrategy: 'summarize' as const,
-        },
-        retention: {
-          maxMemories: 1000,
-          enableExpiration: true,
-          expirationDays: 90,
-        },
-      },
-    },
-    [StepType.MEMORY_SUMMARIZE]: {
-      memorySummarize: {
-        enabled: true,
-        triggers: {
-          minMemories: 3,
-          maxSimilarity: 0.8,
-          minGroupSize: 2,
-        },
-        strategy: {
-          preserveDetails: false,
+          topK: 5,
+          minScore: 0.7,
+          includeMetadata: true,
+          useReranking: false,
+          useHybridSearch: false,
+          keywordWeight: 0.3,
         },
       },
-    },
+      [StepType.MEMORY_UPDATE]: {
+        memoryUpdate: {
+          enabled: true,
+          importance: {
+            auto: true,
+          },
+          deduplication: {
+            enabled: true,
+            similarityThreshold: 0.8,
+            mergeStrategy: 'summarize' as const,
+          },
+          retention: {
+            maxMemories: 1000,
+            enableExpiration: true,
+            expirationDays: 90,
+          },
+        },
+      },
+      [StepType.MEMORY_SUMMARIZE]: {
+        memorySummarize: {
+          enabled: true,
+          triggers: {
+            minMemories: 3,
+            maxSimilarity: 0.8,
+            minGroupSize: 2,
+          },
+          strategy: {
+            preserveDetails: false,
+          },
+        },
+      },
+    };
+
+    return baseConfigs[type] || {};
   };
 
-  return baseConfigs[type] || {};
-};
   const getNodeLabel = (type: StepType) => {
     const labels = {
       [StepType.QUERY_REWRITE]: 'Query Rewrite',
@@ -786,75 +962,82 @@ const getDefaultConfig = (type: StepType) => {
   };
 
   // Initialize with sample workflow including memory nodes
-useEffect(() => {
-  const initialNodes: Node[] = [
-    {
-      id: "1",
-      type: "workflowNode",
-      position: { x: 250, y: 50 },
-      data: { 
-        label: "Query Rewrite", 
-        type: StepType.QUERY_REWRITE,
-        config: getDefaultConfig(StepType.QUERY_REWRITE),
-        onConfigChange: handleNodeConfigChange
+  useEffect(() => {
+    const initialNodes: Node[] = [
+      {
+        id: "1",
+        type: "workflowNode",
+        position: { x: 250, y: 50 },
+        data: { 
+          label: "Query Rewrite", 
+          type: StepType.QUERY_REWRITE,
+          config: getDefaultConfig(StepType.QUERY_REWRITE),
+          onConfigChange: handleNodeConfigChange,
+          onDelete: handleNodeDelete,
+        },
       },
-    },
-    {
-      id: "2",
-      type: "workflowNode",
-      position: { x: 100, y: 200 },
-      data: { 
-        label: "Memory Retrieve",
-        type: StepType.MEMORY_RETRIEVE,
-        config: getDefaultConfig(StepType.MEMORY_RETRIEVE),
-        onConfigChange: handleNodeConfigChange
+      {
+        id: "2",
+        type: "workflowNode",
+        position: { x: 100, y: 200 },
+        data: { 
+          label: "Memory Retrieve",
+          type: StepType.MEMORY_RETRIEVE,
+          config: getDefaultConfig(StepType.MEMORY_RETRIEVE),
+          onConfigChange: handleNodeConfigChange,
+          onDelete: handleNodeDelete,
+        },
       },
-    },
-    {
-      id: "3",
-      type: "workflowNode",
-      position: { x: 400, y: 200 },
-      data: { 
-        label: "Vector Search", 
-        type: StepType.RETRIEVAL,
-        config: getDefaultConfig(StepType.RETRIEVAL),
-        onConfigChange: handleNodeConfigChange
+      {
+        id: "3",
+        type: "workflowNode",
+        position: { x: 400, y: 200 },
+        data: { 
+          label: "Vector Search", 
+          type: StepType.RETRIEVAL,
+          config: getDefaultConfig(StepType.RETRIEVAL),
+          onConfigChange: handleNodeConfigChange,
+          onDelete: handleNodeDelete,
+        },
       },
-    },
-    {
-      id: "4",
-      type: "workflowNode",
-      position: { x: 250, y: 350 },
-      data: { 
-        label: "Rerank Results", 
-        type: StepType.RERANK,
-        config: getDefaultConfig(StepType.RERANK),
-        onConfigChange: handleNodeConfigChange
+      {
+        id: "4",
+        type: "workflowNode",
+        position: { x: 250, y: 350 },
+        data: { 
+          label: "Rerank Results", 
+          type: StepType.RERANK,
+          config: getDefaultConfig(StepType.RERANK),
+          onConfigChange: handleNodeConfigChange,
+          onDelete: handleNodeDelete,
+        },
       },
-    },
-    {
-      id: "5",
-      type: "workflowNode",
-      position: { x: 250, y: 500 },
-      data: { 
-        label: "Generate Answer", 
-        type: StepType.ANSWER_GENERATION,
-        config: getDefaultConfig(StepType.ANSWER_GENERATION),
-        onConfigChange: handleNodeConfigChange
+      {
+        id: "5",
+        type: "workflowNode",
+        position: { x: 250, y: 500 },
+        data: { 
+          label: "Generate Answer", 
+          type: StepType.ANSWER_GENERATION,
+          config: getDefaultConfig(StepType.ANSWER_GENERATION),
+          onConfigChange: handleNodeConfigChange,
+          onDelete: handleNodeDelete,
+        },
       },
-    },
-    {
-      id: "6",
-      type: "workflowNode",
-      position: { x: 250, y: 650 },
-      data: { 
-        label: "Memory Update", 
-        type: StepType.MEMORY_UPDATE,
-        config: getDefaultConfig(StepType.MEMORY_UPDATE),
-        onConfigChange: handleNodeConfigChange
+      {
+        id: "6",
+        type: "workflowNode",
+        position: { x: 250, y: 650 },
+        data: { 
+          label: "Memory Update", 
+          type: StepType.MEMORY_UPDATE,
+          config: getDefaultConfig(StepType.MEMORY_UPDATE),
+          onConfigChange: handleNodeConfigChange,
+          onDelete: handleNodeDelete,
+        },
       },
-    },
-  ];
+    ];
+
     const initialEdges: Edge[] = [
       { 
         id: "e1-2", 
@@ -895,11 +1078,12 @@ useEffect(() => {
         style: { stroke: '#2563eb', strokeWidth: 2 }
       },
     ];
+    
     // @ts-ignore
     setNodes(initialNodes);
     // @ts-ignore
     setEdges(initialEdges);
-  }, [handleNodeConfigChange]);
+  }, [handleNodeConfigChange, handleNodeDelete]);
 
   useEffect(() => {
     setMounted(true);
@@ -921,7 +1105,8 @@ useEffect(() => {
         label: getNodeLabel(type),
         type,
         config: getDefaultConfig(type),
-        onConfigChange: handleNodeConfigChange
+        onConfigChange: handleNodeConfigChange,
+        onDelete: handleNodeDelete,
       },
     };
     // @ts-ignore
@@ -929,15 +1114,129 @@ useEffect(() => {
     toast.success(`${getNodeLabel(type)} node added`);
   };
 
-  // Delete selected nodes
-  const deleteSelectedNodes = () => {
-    if (nodes.length > 0) {
-      const lastNode = nodes[nodes.length - 1];
-      setNodes(nodes.slice(0, -1));
+  // Simulate workflow execution with real-time updates
+  const simulateWorkflowExecution = async () => {
+    setIsExecuting(true);
+    setExecutionResult(null);
+    
+    // Reset all node statuses
+    // @ts-ignore
+    setNodes((nds) => nds.map(node => ({
       // @ts-ignore
-      setEdges(edges.filter(edge => edge.source !== lastNode.id && edge.target !== lastNode.id));
-      toast.success('Node deleted');
+      ...node,
+      data: {
+          // @ts-ignore
+        ...node.data,
+        executionStatus: undefined,
+        error: undefined
+      }
+    })));
+
+    try {
+      // Simulate execution through each node
+      for (const node of nodes) {
+        // @ts-ignore
+        const nodeId = node.id;
+        
+        // Update current node to running status
+        // @ts-ignore
+        setNodes((nds) => nds.map(n => 
+          // @ts-ignore
+          n.id === nodeId 
+            ? {
+                // @ts-ignore
+                ...n, 
+                data: { 
+                    // @ts-ignore
+                  ...n.data, 
+                  executionStatus: WorkflowExecutionStatus.RUNNING 
+                } 
+              }
+            : n
+        ));
+
+        // Simulate processing time
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Simulate random failures (10% chance)
+        const shouldFail = Math.random() < 0.1;
+        
+        if (shouldFail) {
+          // @ts-ignore
+          setNodes((nds) => nds.map(n => 
+            // @ts-ignore
+            n.id === nodeId 
+              ? { 
+                  // @ts-ignore
+                  ...n, 
+                  data: { 
+                      // @ts-ignore
+                    ...n.data, 
+                    executionStatus: WorkflowExecutionStatus.FAILED,
+                      // @ts-ignore
+                    error: `Failed to execute ${node.data.label}. Simulated error.`
+                  } 
+                }
+              : n
+          ));
+            // @ts-ignore
+          throw new Error(`Execution failed at ${node.data.label}`);
+        } else {
+          // Mark node as completed
+          // @ts-ignore
+          setNodes((nds) => nds.map(n => 
+            // @ts-ignore
+            n.id === nodeId 
+              ? { 
+                  // @ts-ignore
+                  ...n, 
+                  data: { 
+                      // @ts-ignore
+                    ...n.data, 
+                    executionStatus: WorkflowExecutionStatus.COMPLETED 
+                  } 
+                }
+              : n
+          ));
+        }
+      }
+
+      // Final result
+      setExecutionResult({
+        success: true,
+        message: 'Workflow executed successfully',
+        timestamp: new Date().toISOString(),
+        nodesExecuted: nodes.length
+      });
+
+      toast.success('Workflow execution completed!');
+    } catch (error: any) {
+      setExecutionResult({
+        success: false,
+        error: error.message,
+        timestamp: new Date().toISOString()
+      });
+      toast.error('Workflow execution failed');
+    } finally {
+      setIsExecuting(false);
     }
+  };
+
+  // Reset execution state
+  const resetExecution = () => {
+    setIsExecuting(false);
+    setExecutionResult(null);
+    // @ts-ignore
+    setNodes((nds) => nds.map(node => ({
+        // @ts-ignore
+      ...node,
+      data: {
+          // @ts-ignore
+        ...node.data,
+        executionStatus: undefined,
+        error: undefined
+      }
+    })));
   };
 
   // Convert React Flow nodes/edges to backend format
@@ -1180,6 +1479,14 @@ useEffect(() => {
             </div>
           </div>
 
+          {/* Query Execution Panel */}
+          <QueryExecutionPanel
+            onExecute={simulateWorkflowExecution}
+            onReset={resetExecution}
+            isExecuting={isExecuting}
+            executionResult={executionResult}
+          />
+
           {/* Editor Section */}
           <div className="space-y-4">
             <div className="flex justify-between items-center">
@@ -1213,19 +1520,6 @@ useEffect(() => {
             <div ref={editorWrapRef} className={editorShellClass}>
               {/* Node Palette */}
               <NodePalette onAddNode={addNewNode} />
-
-              {/* Delete Node Button */}
-              <div className="mb-4">
-                <button
-                  onClick={deleteSelectedNodes}
-                  className="rounded border border-blue-500/30 px-4 py-2 text-blue-400 transition hover:bg-blue-500/10 flex items-center gap-2"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  Delete Last Node
-                </button>
-              </div>
 
               {/* React Flow Canvas */}
               <div
