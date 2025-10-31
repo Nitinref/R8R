@@ -1,4 +1,4 @@
-// schema.prisma - UPDATED WITH MEMORY MODEL
+// schema.prisma - UPDATED WITH DAG WORKFLOW MODELS
 
 generator client {
   provider = "prisma-client-js"
@@ -20,6 +20,7 @@ model User {
   queryLogs     QueryLog[]
   documents     Document[]
   memories      Memory[]      // NEW: Memory relation
+  workflowDags  WorkflowDag[] // NEW: DAG workflows relation
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
 }
@@ -176,4 +177,129 @@ model Memory {
   @@index([importance])
   @@index([createdAt])
   @@index([lastAccessed])
+}
+
+// ==================== DAG WORKFLOW MODELS ====================
+
+model WorkflowDag {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  status      WorkflowDagStatus @default(DRAFT)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  nodes       WorkflowDagNode[]
+  runs        WorkflowDagRun[]
+  
+  @@map("workflow_dags")
+  @@index([userId])
+  @@index([status])
+}
+
+model WorkflowDagNode {
+  id          String   @id @default(uuid())
+  name        String
+  type        WorkflowNodeType
+  config      Json     // Node-specific configuration
+  workflowId  String
+  order       Int      // Execution order hint
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  workflow    WorkflowDag @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  fromEdges   WorkflowDagConnection[] @relation("WorkflowDagNodeFrom")
+  toEdges     WorkflowDagConnection[] @relation("WorkflowDagNodeTo")
+  runs        WorkflowDagNodeRun[]
+  
+  @@map("workflow_dag_nodes")
+  @@index([workflowId])
+}
+
+model WorkflowDagConnection {
+  id       String @id @default(uuid())
+  fromId   String
+  toId     String
+  createdAt DateTime @default(now())
+  
+  fromNode WorkflowDagNode @relation("WorkflowDagNodeFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  toNode   WorkflowDagNode @relation("WorkflowDagNodeTo", fields: [toId], references: [id], onDelete: Cascade)
+  
+  @@map("workflow_dag_connections")
+  @@unique([fromId, toId])
+  @@index([fromId])
+  @@index([toId])
+}
+
+model WorkflowDagRun {
+  id          String             @id @default(uuid())
+  workflowId  String
+  status      WorkflowDagStatus
+  startedAt   DateTime?
+  finishedAt  DateTime?
+  result      Json?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  
+  workflow    WorkflowDag @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  nodeRuns    WorkflowDagNodeRun[]
+  
+  @@map("workflow_dag_runs")
+  @@index([workflowId])
+  @@index([status])
+}
+
+model WorkflowDagNodeRun {
+  id             String     @id @default(uuid())
+  nodeId         String
+  workflowRunId  String
+  status         WorkflowNodeRunStatus
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  result         Json?
+  error          String?
+  logs           String[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  
+  node           WorkflowDagNode       @relation(fields: [nodeId], references: [id], onDelete: Cascade)
+  workflowRun    WorkflowDagRun @relation(fields: [workflowRunId], references: [id], onDelete: Cascade)
+  
+  @@map("workflow_dag_node_runs")
+  @@index([nodeId])
+  @@index([workflowRunId])
+  @@index([status])
+}
+
+enum WorkflowDagStatus {
+  DRAFT
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum WorkflowNodeRunStatus {
+  PENDING
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+  SKIPPED
+}
+
+enum WorkflowNodeType {
+  LLM_QUERY      // Your existing R8R query execution
+  DATA_PROCESSING
+  API_CALL
+  CONDITIONAL    // Branching logic
+  NOTIFICATION   // Telegram/slack notifications
+  MEMORY_QUERY   // Query memory system
+  MEMORY_STORE   // Store to memory system
+  DOCUMENT_RETRIEVAL // Your existing RAG
+  CUSTOM_SCRIPT
+  DELAY          // Wait for specified time
+  WEBHOOK        // Trigger webhook
 }

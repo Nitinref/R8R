@@ -7,6 +7,18 @@ export declare class WorkflowExecutor {
     constructor();
     executeWorkflow(config: WorkflowConfig, query: string, userId: string, useCache?: boolean): Promise<QueryResponse>;
     /**
+     * Generate final result based on executed steps
+     */
+    private generateFinalResult;
+    /**
+     * Updated validation - no longer requires answer generation step
+     */
+    private validateConfiguration;
+    /**
+     * Calculate confidence for retrieval-only workflows
+     */
+    private calculateRetrievalConfidence;
+    /**
      * Execute workflow as a graph - supports parallel and sequential execution
      */
     private executeWorkflowGraph;
@@ -27,9 +39,29 @@ export declare class WorkflowExecutor {
      */
     private waitForParentSteps;
     /**
-     * Execute a single step
+     * Execute a single step and return output
      */
     private executeSingleStep;
+    /**
+     * Execute query rewrite step
+     */
+    private executeQueryRewrite;
+    /**
+     * Execute retrieval step
+     */
+    private executeRetrieval;
+    /**
+     * Execute rerank step
+     */
+    private executeRerank;
+    /**
+     * Execute answer generation step
+     */
+    private executeAnswerGeneration;
+    /**
+     * Execute post process step
+     */
+    private executePostProcess;
     /**
      * Execute memory retrieval step
      */
@@ -54,12 +86,6 @@ export declare class WorkflowExecutor {
      * Handle memory deduplication
      */
     private handleMemoryDeduplication;
-    private executeQueryRewrite;
-    private executeRetrieval;
-    private executeRerank;
-    private executeAnswerGeneration;
-    private executePostProcess;
     private calculateConfidence;
-    private validateConfiguration;
 }
 //# sourceMappingURL=workflow-executor.service.d.ts.map

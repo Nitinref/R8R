@@ -109,3 +109,11 @@ export interface WorkflowStep {
   };
   nextSteps?: string[];
 }
+
+export enum WorkflowExecutionStatus {
+  PENDING = 'pending',
+  RUNNING = 'running',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  CANCELLED = 'cancelled'
+}

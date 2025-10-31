@@ -155,17 +155,16 @@ export interface WorkflowStep {
             };
         };
         memorySummarize?: {
-            topK: number;
-            similarityThreshold: any;
-            memoryIds: boolean;
-            preserveDetails: boolean;
-            enabled: boolean;
-            triggers: {
+            topK?: number;
+            similarityThreshold?: number;
+            memoryIds?: string[];
+            enabled?: boolean;
+            triggers?: {
                 minMemories: number;
                 maxSimilarity: number;
                 minGroupSize?: number;
             };
-            strategy: {
+            strategy?: {
                 preserveDetails: boolean;
             };
         };
@@ -205,6 +204,7 @@ export interface QueryResponse {
     retrieversUsed: string[];
     rewrittenQuery: Record<string, string>;
     cached?: boolean;
+    workflowType?: string;
     memoryContext?: {
         memoriesUsed?: number;
         memoryRelevance?: number;
@@ -292,11 +292,11 @@ export interface MemoryServiceResponse {
     };
     error?: string;
 }
-export interface MemorySummarizeConfig {
-    enabled?: boolean;
-    memoryIds?: string[];
-    topK?: number;
-    similarityThreshold?: number;
-    preserveDetails?: boolean;
+export declare enum WorkflowExecutionStatus {
+    PENDING = "pending",
+    RUNNING = "running",
+    COMPLETED = "completed",
+    FAILED = "failed",
+    CANCELLED = "cancelled"
 }
 //# sourceMappingURL=workflow.types.d.ts.map

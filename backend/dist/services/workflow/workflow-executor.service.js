@@ -1,4 +1,4 @@
-// workflow-executor.service.ts - COMPLETE VERSION WITH ALL MEMORY OPERATIONS
+// workflow-executor.service.ts - COMPLETE WORKING VERSION
 import { LLMOrchestrator } from '../llm/llm-orchestrator.service.js';
 import { VectorDBService } from '../retrieval/vector-db.service.js';
 import { CacheService } from '../cache.service.js';
@@ -46,38 +46,18 @@ export class WorkflowExecutor {
                     userId: userId,
                     workflowId: config.id,
                     startTime: startTime,
-                    memories: [] // Initialize memories array
+                    memories: [],
+                    stepOutputs: new Map()
                 },
                 stepResults: new Map(),
                 stepOutputs: new Map()
             };
             // Execute workflow graph
             await this.executeWorkflowGraph(config, context, llmsUsed, retrieversUsed);
-            if (!context.answer || context.answer.trim().length === 0) {
-                throw new Error('No answer generated. Ensure workflow includes answer generation step.');
-            }
-            const result = {
-                answer: context.answer,
-                sources: context.documents.slice(0, 10).map(doc => ({
-                    content: doc.content || 'No content',
-                    metadata: doc.metadata || {},
-                    score: doc.score || 0.5
-                })),
-                confidence: context.confidence,
-                latency: Date.now() - startTime,
-                llmsUsed: [...new Set(llmsUsed)],
-                retrieversUsed: [...new Set(retrieversUsed)],
-                cached: false,
-                rewrittenQuery: Array.from(context.rewrittenQueries.entries()).reduce((acc, [key, value]) => {
-                    acc[key] = value;
-                    return acc;
-                }, {}),
-                query: '',
-                documents: [],
-                metadata: {}
-            };
+            // Generate final result based on what steps were executed
+            const result = this.generateFinalResult(context, startTime, llmsUsed, retrieversUsed);
             // Cache result
-            if (useCache && config.cacheEnabled && context.answer) {
+            if (useCache && config.cacheEnabled && (context.answer || context.documents.length > 0 || context.rewrittenQueries.size > 0)) {
                 const cacheKey = this.cache.generateKey(config.id, query);
                 await this.cache.set(cacheKey, result, config.cacheTTL || 3600);
             }
@@ -91,6 +71,151 @@ export class WorkflowExecutor {
             });
             throw error;
         }
+    }
+    /**
+     * Generate final result based on executed steps
+     */
+    generateFinalResult(context, startTime, llmsUsed, retrieversUsed) {
+        const baseResult = {
+            latency: Date.now() - startTime,
+            llmsUsed: [...new Set(llmsUsed)],
+            retrieversUsed: [...new Set(retrieversUsed)],
+            cached: false,
+            rewrittenQuery: Object.fromEntries(context.rewrittenQueries),
+            query: context.originalQuery,
+            documents: context.documents,
+            metadata: {
+                ...context.metadata,
+                finalQuery: context.currentQuery,
+                stepOutputs: Object.fromEntries(context.metadata.stepOutputs),
+                memoriesUsed: context.metadata.memories?.length || 0
+            }
+        };
+        // If answer was generated, use it as primary result
+        if (context.answer && context.answer.trim().length > 0) {
+            return {
+                ...baseResult,
+                answer: context.answer,
+                sources: context.documents.slice(0, 10).map(doc => ({
+                    content: doc.content || 'No content',
+                    metadata: doc.metadata || {},
+                    score: doc.score || 0.5
+                })),
+                confidence: context.confidence,
+                workflowType: 'answer_generation'
+            };
+        }
+        // If no answer but we have documents, return them
+        if (context.documents.length > 0) {
+            return {
+                ...baseResult,
+                answer: `Retrieved ${context.documents.length} relevant documents. No answer generation step was configured.`,
+                sources: context.documents.slice(0, 10).map(doc => ({
+                    content: doc.content || 'No content',
+                    metadata: doc.metadata || {},
+                    score: doc.score || 0.5
+                })),
+                confidence: this.calculateRetrievalConfidence(context.documents),
+                workflowType: 'retrieval_only'
+            };
+        }
+        // If only query rewriting was done, return the enhanced queries
+        if (context.rewrittenQueries.size > 0) {
+            const rewrittenEntries = Array.from(context.rewrittenQueries.entries());
+            const finalQuery = context.currentQuery !== context.originalQuery
+                ? context.currentQuery
+                : rewrittenEntries[rewrittenEntries.length - 1]?.[1] || context.originalQuery;
+            return {
+                ...baseResult,
+                answer: `Query enhanced through ${context.rewrittenQueries.size} rewrite step(s). Final optimized query: "${finalQuery}"`,
+                sources: [],
+                confidence: 0.8,
+                workflowType: 'query_enhancement',
+                metadata: {
+                    ...baseResult.metadata,
+                    enhancedQuery: finalQuery,
+                    totalRewrites: context.rewrittenQueries.size
+                }
+            };
+        }
+        // If only memory operations were performed
+        if (context.metadata.memories && context.metadata.memories.length > 0) {
+            return {
+                ...baseResult,
+                answer: `Memory operations completed. Retrieved ${context.metadata.memories.length} relevant memories from previous conversations.`,
+                sources: [],
+                confidence: 0.6,
+                workflowType: 'memory_operations',
+                metadata: {
+                    ...baseResult.metadata,
+                    memoryOperations: true,
+                    memoryCount: context.metadata.memories.length
+                }
+            };
+        }
+        // Fallback for workflows with minimal output
+        return {
+            ...baseResult,
+            answer: 'Workflow executed successfully. Configure additional steps for answer generation, retrieval, or query enhancement.',
+            sources: [],
+            confidence: 0.3,
+            workflowType: 'minimal_execution'
+        };
+    }
+    /**
+     * Updated validation - no longer requires answer generation step
+     */
+    validateConfiguration(config) {
+        const errors = [];
+        // Validate that workflow has at least one step
+        if (!config.steps || config.steps.length === 0) {
+            errors.push('Workflow must include at least one step');
+        }
+        // Validate LLM configurations
+        const llmProviders = new Set();
+        config.steps.forEach(step => {
+            if (step.config?.llm) {
+                llmProviders.add(step.config.llm.provider);
+                // Validate step-specific configurations
+                if (step.type === 'query_rewrite' && !step.config.llm.model) {
+                    errors.push(`Query rewrite step ${step.id} must have LLM model configured`);
+                }
+                if (step.type === 'answer_generation' && !step.config.llm.model) {
+                    errors.push(`Answer generation step ${step.id} must have LLM model configured`);
+                }
+            }
+            // Validate retriever configurations
+            if (step.type === 'retrieval' && !step.config?.retriever) {
+                errors.push(`Retrieval step ${step.id} must have retriever configuration`);
+            }
+        });
+        // Validate API keys for used providers
+        if (llmProviders.has('openai') && !process.env.OPENAI_API_KEY) {
+            errors.push('OPENAI_API_KEY environment variable is required');
+        }
+        if (llmProviders.has('anthropic') && !process.env.ANTHROPIC_API_KEY) {
+            errors.push('ANTHROPIC_API_KEY environment variable is required');
+        }
+        if (llmProviders.has('google') && !process.env.GOOGLE_API_KEY) {
+            errors.push('GOOGLE_API_KEY environment variable is required');
+        }
+        if (errors.length > 0) {
+            throw new Error(`Configuration errors: ${errors.join(', ')}`);
+        }
+    }
+    /**
+     * Calculate confidence for retrieval-only workflows
+     */
+    calculateRetrievalConfidence(documents) {
+        if (documents.length === 0)
+            return 0.3;
+        const avgScore = documents.reduce((sum, doc) => sum + (doc.score || 0), 0) / documents.length;
+        const hasHighQualityDocs = documents.some(doc => doc.score > 0.8);
+        const hasMultipleSources = documents.length > 2;
+        let confidence = avgScore * 0.6;
+        confidence += hasHighQualityDocs ? 0.2 : 0;
+        confidence += hasMultipleSources ? 0.2 : 0.1;
+        return Math.min(0.95, Math.max(0.1, confidence));
     }
     /**
      * Execute workflow as a graph - supports parallel and sequential execution
@@ -108,10 +233,18 @@ export class WorkflowExecutor {
         const entrySteps = this.findEntrySteps(steps);
         logger.info('Starting workflow execution', {
             totalSteps: steps.length,
-            entrySteps: entrySteps.map(s => s.id)
+            entrySteps: entrySteps.map(s => s.id),
+            hasAnswerGeneration: steps.some(s => s.type === 'answer_generation')
         });
         // Execute from entry points
         await this.executeFromEntryPoints(entrySteps, stepMap, completed, context, llmsUsed, retrieversUsed);
+        logger.info('Workflow execution completed', {
+            completedSteps: completed.size,
+            totalSteps: steps.length,
+            hasAnswer: !!context.answer,
+            documentCount: context.documents.length,
+            rewriteCount: context.rewrittenQueries.size
+        });
     }
     /**
      * Find entry steps (steps with no incoming connections)
@@ -155,7 +288,11 @@ export class WorkflowExecutor {
         }
         // Execute current step
         logger.info(`Executing step: ${step.type}`, { stepId: step.id });
-        await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
+        const stepOutput = await this.executeSingleStep(step, context, llmsUsed, retrieversUsed);
+        // Store step output in metadata
+        if (stepOutput) {
+            context.metadata.stepOutputs.set(step.id, stepOutput);
+        }
         // Mark as completed
         completed.add(step.id);
         // Execute next steps
@@ -197,34 +334,35 @@ export class WorkflowExecutor {
         logger.debug(`All parents completed for step: ${step.id}`, { parentSteps });
     }
     /**
-     * Execute a single step
+     * Execute a single step and return output
      */
     async executeSingleStep(step, context, llmsUsed, retrieversUsed) {
         try {
+            let output = null;
             switch (step.type) {
                 case 'query_rewrite':
-                    await this.executeQueryRewrite(step, context, llmsUsed);
+                    output = await this.executeQueryRewrite(step, context, llmsUsed);
                     break;
                 case 'retrieval':
-                    await this.executeRetrieval(step, context, retrieversUsed);
+                    output = await this.executeRetrieval(step, context, retrieversUsed);
                     break;
                 case 'rerank':
-                    await this.executeRerank(step, context, llmsUsed);
+                    output = await this.executeRerank(step, context, llmsUsed);
                     break;
                 case 'answer_generation':
-                    await this.executeAnswerGeneration(step, context, llmsUsed);
+                    output = await this.executeAnswerGeneration(step, context, llmsUsed);
                     break;
                 case 'post_process':
-                    await this.executePostProcess(step, context);
+                    output = await this.executePostProcess(step, context);
                     break;
                 case 'memory_update':
-                    await this.executeMemoryUpdate(step, context, llmsUsed);
+                    output = await this.executeMemoryUpdate(step, context, llmsUsed);
                     break;
                 case 'memory_retrieve':
-                    await this.executeMemoryRetrieve(step, context, llmsUsed);
+                    output = await this.executeMemoryRetrieve(step, context, llmsUsed);
                     break;
                 case 'memory_summarize':
-                    await this.executeMemorySummarize(step, context, llmsUsed);
+                    output = await this.executeMemorySummarize(step, context, llmsUsed);
                     break;
                 default:
                     throw new Error(`Unknown step type: ${step.type}`);
@@ -232,8 +370,10 @@ export class WorkflowExecutor {
             // Store step result
             context.stepResults.set(step.id, {
                 completed: true,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                output: output
             });
+            return output;
         }
         catch (error) {
             logger.error(`Step execution failed: ${step.type}`, {
@@ -244,13 +384,222 @@ export class WorkflowExecutor {
         }
     }
     /**
+     * Execute query rewrite step
+     */
+    async executeQueryRewrite(step, context, llmsUsed) {
+        if (!step.config?.llm) {
+            throw new Error('No LLM config for query rewrite step');
+        }
+        const prompt = step.config.prompt ||
+            `Improve this search query for better document retrieval. Return only the improved query.\n\nQuery: ${context.currentQuery}`;
+        // @ts-ignore
+        const response = await this.llmOrchestrator.generateCompletion({
+            provider: step.config.llm.provider,
+            model: step.config.llm.model,
+            prompt,
+            temperature: step.config.llm.temperature || 0.3,
+            maxTokens: step.config.llm.maxTokens || 200,
+            fallback: step.config.llm.fallback
+        });
+        const rewrittenQuery = response.content.trim();
+        // Store each rewritten query by step ID (for parallel rewrites)
+        context.rewrittenQueries.set(step.id, rewrittenQuery);
+        // For downstream steps, use the last rewritten query or combine logic
+        context.currentQuery = rewrittenQuery;
+        llmsUsed.push(`${response.provider}:${response.model}`);
+        logger.info('Query rewritten', {
+            stepId: step.id,
+            original: context.originalQuery,
+            rewritten: rewrittenQuery
+        });
+        return {
+            originalQuery: context.originalQuery,
+            rewrittenQuery: rewrittenQuery
+        };
+    }
+    /**
+     * Execute retrieval step
+     */
+    async executeRetrieval(step, context, retrieversUsed) {
+        if (!step.config?.retriever) {
+            throw new Error('No retriever config for retrieval step');
+        }
+        const retrieverConfig = step.config.retriever;
+        const topK = retrieverConfig.config?.topK || 10;
+        try {
+            // @ts-ignore
+            if (retrieverConfig.type === 'qdrant') {
+                const queryToUse = context.currentQuery;
+                const embedding = await this.vectorDB.getEmbedding(queryToUse);
+                const results = await this.vectorDB.searchVectors(embedding, topK, retrieverConfig.config?.filter);
+                context.documents.push(...results);
+                // @ts-ignore
+                retrieversUsed.push(`qdrant:${this.vectorDB.collectionName}`);
+                logger.info('Documents retrieved from Qdrant', {
+                    count: results.length,
+                    totalDocs: context.documents.length
+                });
+                const avgScore = results.length > 0
+                    ? results.reduce((sum, doc) => sum + (doc.score || 0), 0) / results.length
+                    : 0;
+                return {
+                    retrievedCount: results.length,
+                    averageScore: avgScore
+                };
+            }
+            else {
+                throw new Error(`Unsupported retriever type: ${retrieverConfig.type}`);
+            }
+        }
+        catch (error) {
+            logger.error('Retrieval failed', { error: error.message });
+            throw error;
+        }
+    }
+    /**
+     * Execute rerank step
+     */
+    async executeRerank(step, context, llmsUsed) {
+        if (!step.config?.llm) {
+            logger.warn('Skipping rerank - no LLM config');
+            return { selectedQuery: context.currentQuery, totalQueries: 1 };
+        }
+        // Get all rewritten queries from previous steps
+        const rewrittenQueries = Array.from(context.rewrittenQueries.values());
+        if (rewrittenQueries.length === 0) {
+            logger.warn('Skipping rerank - no rewritten queries available');
+            return { selectedQuery: context.currentQuery, totalQueries: 1 };
+        }
+        if (rewrittenQueries.length === 1) {
+            // Only one query, no need to rerank
+            // @ts-ignore
+            context.currentQuery = rewrittenQueries[0];
+            // @ts-ignore
+            return { selectedQuery: rewrittenQueries[0], totalQueries: 1 };
+        }
+        // Rerank multiple queries
+        const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
+    
+Rewritten queries:
+${rewrittenQueries.map((query, i) => `${i + 1}. ${query}`).join('\n')}
+
+Which ONE query is the best for document retrieval? Return only the number (1, 2, 3, etc.):`;
+        try {
+            const response = await this.llmOrchestrator.generateCompletion({
+                provider: step.config.llm.provider,
+                model: step.config.llm.model,
+                prompt,
+                temperature: 0.1,
+                maxTokens: 10
+            });
+            const selectedIndex = parseInt(response.content.trim()) - 1;
+            if (selectedIndex >= 0 && selectedIndex < rewrittenQueries.length) {
+                const bestQuery = rewrittenQueries[selectedIndex];
+                // @ts-ignore
+                context.currentQuery = bestQuery;
+                logger.info('Best query selected by rerank', {
+                    selectedQuery: bestQuery,
+                    totalQueries: rewrittenQueries.length
+                });
+                return {
+                    // @ts-ignore
+                    selectedQuery: bestQuery,
+                    totalQueries: rewrittenQueries.length
+                };
+            }
+        }
+        catch (error) {
+            logger.warn('Reranking failed, using first query', { error: error.message });
+            // @ts-ignore
+            context.currentQuery = rewrittenQueries[0]; // Fallback
+        }
+        return {
+            selectedQuery: context.currentQuery,
+            totalQueries: rewrittenQueries.length
+        };
+    }
+    /**
+     * Execute answer generation step
+     */
+    async executeAnswerGeneration(step, context, llmsUsed) {
+        if (!step.config?.llm) {
+            throw new Error('No LLM config for answer generation step');
+        }
+        const queryForAnswer = context.currentQuery;
+        const hasContext = context.documents.length > 0;
+        const contextText = context.documents
+            .slice(0, 5)
+            .map((doc, i) => `[${i + 1}] ${doc.content}`)
+            .join('\n\n');
+        // Include memory context if available
+        const memoryContext = context.metadata.memories
+            ? `\n\nPrevious conversations:\n${context.metadata.memories.slice(0, 3).map(m => `- ${m.metadata.query}: ${m.metadata.response}`).join('\n')}`
+            : '';
+        const prompt = step.config.prompt || (hasContext
+            ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}${memoryContext}\n\nAnswer:`
+            : `Answer this question:\n\nQuestion: ${queryForAnswer}${memoryContext}\n\nAnswer:`);
+        // @ts-ignore
+        const response = await this.llmOrchestrator.generateCompletion({
+            provider: step.config.llm.provider,
+            model: step.config.llm.model,
+            prompt,
+            temperature: step.config.llm.temperature || 0.7,
+            maxTokens: step.config.llm.maxTokens || 1000,
+            systemPrompt: "You are a helpful assistant that provides accurate answers.",
+            fallback: step.config.llm.fallback
+        });
+        context.answer = response.content.trim();
+        llmsUsed.push(`${response.provider}:${response.model}`);
+        context.confidence = this.calculateConfidence(context.documents, context.answer);
+        logger.info('Answer generated', {
+            answerLength: context.answer.length,
+            confidence: context.confidence,
+            documentsUsed: context.documents.length,
+            memoriesUsed: context.metadata.memories?.length || 0
+        });
+        return {
+            answerLength: context.answer.length,
+            confidence: context.confidence
+        };
+    }
+    /**
+     * Execute post process step
+     */
+    async executePostProcess(step, context) {
+        const modifications = [];
+        if (context.answer) {
+            context.answer = context.answer.trim();
+            modifications.push('trimmed_answer');
+            if (step.config?.addSourceAttribution && context.documents.length > 0) {
+                context.answer += `\n\nSources: ${context.documents.length} document${context.documents.length > 1 ? 's' : ''}`;
+                modifications.push('added_source_attribution');
+            }
+            // Show all rewritten queries if available
+            if (step.config?.showRewrittenQuery && context.rewrittenQueries.size > 0) {
+                const queries = Array.from(context.rewrittenQueries.entries())
+                    .map(([id, query]) => `Step ${id}: "${query}"`)
+                    .join(', ');
+                context.answer += `\n\n[Enhanced queries: ${queries}]`;
+                modifications.push('added_rewritten_queries');
+            }
+            // Show memory usage if available
+            // @ts-ignore
+            if (step.config?.showMemoryUsage && context.metadata.memories?.length > 0) {
+                // @ts-ignore
+                context.answer += `\n\n[Used ${context.metadata.memories.length} relevant memories from previous conversations]`;
+                modifications.push('added_memory_usage');
+            }
+        }
+        return { modifications };
+    }
+    /**
      * Execute memory retrieval step
      */
     async executeMemoryRetrieve(step, context, llmsUsed) {
         const config = step.config?.memoryRetrieve;
         if (!config?.enabled) {
             logger.info('Memory retrieve step disabled, skipping');
-            return;
+            return { memoryCount: 0, hasContext: false };
         }
         try {
             logger.info('Executing memory retrieval', {
@@ -273,9 +622,10 @@ export class WorkflowExecutor {
                     stepId: step.id,
                     error: memoryResult.error
                 });
-                return;
+                return { memoryCount: 0, hasContext: false };
             }
             const memories = memoryResult.data.memories;
+            let hasContext = false;
             if (memories.length > 0) {
                 // Store memories in context for use in answer generation
                 context.metadata.memories = memories;
@@ -287,17 +637,22 @@ export class WorkflowExecutor {
                 if (memoryContext) {
                     // Enhance the current query with memory context
                     context.currentQuery = `${context.currentQuery}\n\nContext from previous conversations:\n${memoryContext}`;
+                    hasContext = true;
                 }
                 logger.info('Memory retrieval successful', {
                     stepId: step.id,
                     memoryCount: memories.length,
                     topScore: memories[0]?.score || 0,
-                    hasContext: !!memoryContext
+                    hasContext: hasContext
                 });
             }
             else {
                 logger.info('No relevant memories found', { stepId: step.id });
             }
+            return {
+                memoryCount: memories.length,
+                hasContext: hasContext
+            };
         }
         catch (error) {
             logger.error('Memory retrieval failed', {
@@ -305,6 +660,7 @@ export class WorkflowExecutor {
                 error: error.message
             });
             // Don't throw - memory retrieval shouldn't break the workflow
+            return { memoryCount: 0, hasContext: false };
         }
     }
     /**
@@ -314,11 +670,12 @@ export class WorkflowExecutor {
         const config = step.config?.memorySummarize;
         if (!config?.enabled) {
             logger.info('Memory summarize step disabled, skipping');
-            return;
+            return { originalCount: 0 };
         }
         try {
             logger.info('Executing memory summarization', {
                 stepId: step.id,
+                // @ts-ignore
                 preserveDetails: config.preserveDetails || false
             });
             // Get memories to summarize (either from context or retrieve new ones)
@@ -346,16 +703,18 @@ export class WorkflowExecutor {
                     stepId: step.id,
                     memoryCount: memoryIds.length
                 });
-                return;
+                return { originalCount: memoryIds.length };
             }
             // Perform summarization
-            const summaryResult = await this.memoryService.summarizeMemories(memoryIds, context.metadata.userId, config.preserveDetails || false);
+            const summaryResult = await this.memoryService.summarizeMemories(memoryIds, context.metadata.userId, 
+            // @ts-ignore
+            config.preserveDetails || false);
             if (!summaryResult.success) {
                 logger.warn('Memory summarization failed', {
                     stepId: step.id,
                     error: summaryResult.error
                 });
-                return;
+                return { originalCount: memoryIds.length };
             }
             // Store summary in context for potential use
             if (summaryResult.data?.summarized) {
@@ -365,7 +724,12 @@ export class WorkflowExecutor {
                     originalCount: summaryResult.data.summarized.original.length,
                     summaryId: summaryResult.data.summarized.summary.id
                 });
+                return {
+                    originalCount: summaryResult.data.summarized.original.length,
+                    summaryId: summaryResult.data.summarized.summary.id
+                };
             }
+            return { originalCount: memoryIds.length };
         }
         catch (error) {
             logger.error('Memory summarization failed', {
@@ -373,6 +737,7 @@ export class WorkflowExecutor {
                 error: error.message
             });
             // Don't throw - memory summarization shouldn't break the workflow
+            return { originalCount: 0 };
         }
     }
     /**
@@ -382,7 +747,7 @@ export class WorkflowExecutor {
         const config = step.config?.memoryUpdate;
         if (!config?.enabled) {
             logger.info('Memory update step disabled, skipping');
-            return;
+            return { importance: 0 };
         }
         try {
             logger.info('Executing memory update', {
@@ -417,7 +782,7 @@ export class WorkflowExecutor {
                     stepId: step.id,
                     error: memoryResult.error
                 });
-                return;
+                return { importance };
             }
             // Handle deduplication if enabled
             if (config.deduplication?.enabled) {
@@ -432,6 +797,11 @@ export class WorkflowExecutor {
                 memoryId: memoryResult.data?.stored?.id,
                 importance
             });
+            // @ts-ignore
+            return {
+                memoryId: memoryResult.data?.stored?.id,
+                importance
+            };
         }
         catch (error) {
             logger.error('Memory update failed', {
@@ -439,6 +809,7 @@ export class WorkflowExecutor {
                 error: error.message
             });
             // Don't throw - memory update shouldn't break the workflow
+            return { importance: 0 };
         }
     }
     /**
@@ -519,170 +890,6 @@ export class WorkflowExecutor {
             logger.warn('Deduplication failed', { error: error.message });
         }
     }
-    async executeQueryRewrite(step, context, llmsUsed) {
-        if (!step.config?.llm) {
-            throw new Error('No LLM config for query rewrite step');
-        }
-        const prompt = step.config.prompt ||
-            `Improve this search query for better document retrieval. Return only the improved query.\n\nQuery: ${context.currentQuery}`;
-        // @ts-ignore
-        const response = await this.llmOrchestrator.generateCompletion({
-            provider: step.config.llm.provider,
-            model: step.config.llm.model,
-            prompt,
-            temperature: step.config.llm.temperature || 0.3,
-            maxTokens: step.config.llm.maxTokens || 200,
-            fallback: step.config.llm.fallback
-        });
-        const rewrittenQuery = response.content.trim();
-        // Store each rewritten query by step ID (for parallel rewrites)
-        context.rewrittenQueries.set(step.id, rewrittenQuery);
-        // For downstream steps, use the last rewritten query or combine logic
-        context.currentQuery = rewrittenQuery;
-        llmsUsed.push(`${response.provider}:${response.model}`);
-        logger.info('Query rewritten', {
-            stepId: step.id,
-            original: context.originalQuery,
-            rewritten: rewrittenQuery
-        });
-    }
-    async executeRetrieval(step, context, retrieversUsed) {
-        if (!step.config?.retriever) {
-            throw new Error('No retriever config for retrieval step');
-        }
-        const retrieverConfig = step.config.retriever;
-        const topK = retrieverConfig.config?.topK || 10;
-        try {
-            // @ts-ignore
-            if (retrieverConfig.type === 'qdrant') {
-                const queryToUse = context.currentQuery;
-                const embedding = await this.vectorDB.getEmbedding(queryToUse);
-                const results = await this.vectorDB.searchVectors(embedding, topK, retrieverConfig.config?.filter);
-                context.documents.push(...results);
-                // @ts-ignore
-                retrieversUsed.push(`qdrant:${this.vectorDB.collectionName}`);
-                logger.info('Documents retrieved from Qdrant', {
-                    count: results.length,
-                    totalDocs: context.documents.length
-                });
-            }
-            else if (retrieverConfig.type === 'pinecone') {
-                // Keep Pinecone as fallback
-                // ... existing Pinecone code
-            }
-        }
-        catch (error) {
-            logger.error('Retrieval failed', { error: error.message });
-            throw error;
-        }
-    }
-    async executeRerank(step, context, llmsUsed) {
-        if (!step.config?.llm) {
-            logger.warn('Skipping rerank - no LLM config');
-            return;
-        }
-        // Get all rewritten queries from previous steps
-        const rewrittenQueries = Array.from(context.rewrittenQueries.values());
-        if (rewrittenQueries.length === 0) {
-            logger.warn('Skipping rerank - no rewritten queries available');
-            return;
-        }
-        if (rewrittenQueries.length === 1) {
-            // Only one query, no need to rerank
-            // @ts-ignore
-            context.currentQuery = rewrittenQueries[0];
-            return;
-        }
-        // Rerank multiple queries
-        const prompt = `You have multiple query rewrites for the original question: "${context.originalQuery}"
-    
-Rewritten queries:
-${rewrittenQueries.map((query, i) => `${i + 1}. ${query}`).join('\n')}
-
-Which ONE query is the best for document retrieval? Return only the number (1, 2, 3, etc.):`;
-        try {
-            const response = await this.llmOrchestrator.generateCompletion({
-                provider: step.config.llm.provider,
-                model: step.config.llm.model,
-                prompt,
-                temperature: 0.1,
-                maxTokens: 10
-            });
-            const selectedIndex = parseInt(response.content.trim()) - 1;
-            if (selectedIndex >= 0 && selectedIndex < rewrittenQueries.length) {
-                const bestQuery = rewrittenQueries[selectedIndex];
-                // @ts-ignore
-                context.currentQuery = bestQuery;
-                logger.info('Best query selected by rerank', {
-                    selectedQuery: bestQuery,
-                    totalQueries: rewrittenQueries.length
-                });
-            }
-        }
-        catch (error) {
-            logger.warn('Reranking failed, using first query', { error: error.message });
-            // @ts-ignore
-            context.currentQuery = rewrittenQueries[0]; // Fallback
-        }
-    }
-    async executeAnswerGeneration(step, context, llmsUsed) {
-        if (!step.config?.llm) {
-            throw new Error('No LLM config for answer generation step');
-        }
-        const queryForAnswer = context.currentQuery;
-        const hasContext = context.documents.length > 0;
-        const contextText = context.documents
-            .slice(0, 5)
-            .map((doc, i) => `[${i + 1}] ${doc.content}`)
-            .join('\n\n');
-        // Include memory context if available
-        const memoryContext = context.metadata.memories
-            ? `\n\nPrevious conversations:\n${context.metadata.memories.slice(0, 3).map(m => `- ${m.metadata.query}: ${m.metadata.response}`).join('\n')}`
-            : '';
-        const prompt = step.config.prompt || (hasContext
-            ? `Answer this question using the context provided:\n\nQuestion: ${queryForAnswer}\n\nContext:\n${contextText}${memoryContext}\n\nAnswer:`
-            : `Answer this question:\n\nQuestion: ${queryForAnswer}${memoryContext}\n\nAnswer:`);
-        // @ts-ignore
-        const response = await this.llmOrchestrator.generateCompletion({
-            provider: step.config.llm.provider,
-            model: step.config.llm.model,
-            prompt,
-            temperature: step.config.llm.temperature || 0.7,
-            maxTokens: step.config.llm.maxTokens || 1000,
-            systemPrompt: "You are a helpful assistant that provides accurate answers.",
-            fallback: step.config.llm.fallback
-        });
-        context.answer = response.content.trim();
-        llmsUsed.push(`${response.provider}:${response.model}`);
-        context.confidence = this.calculateConfidence(context.documents, context.answer);
-        logger.info('Answer generated', {
-            answerLength: context.answer.length,
-            confidence: context.confidence,
-            documentsUsed: context.documents.length,
-            memoriesUsed: context.metadata.memories?.length || 0
-        });
-    }
-    async executePostProcess(step, context) {
-        if (context.answer) {
-            context.answer = context.answer.trim();
-            if (step.config?.addSourceAttribution && context.documents.length > 0) {
-                context.answer += `\n\nSources: ${context.documents.length} document${context.documents.length > 1 ? 's' : ''}`;
-            }
-            // Show all rewritten queries if available
-            if (step.config?.showRewrittenQuery && context.rewrittenQueries.size > 0) {
-                const queries = Array.from(context.rewrittenQueries.entries())
-                    .map(([id, query]) => `Step ${id}: "${query}"`)
-                    .join(', ');
-                context.answer += `\n\n[Enhanced queries: ${queries}]`;
-            }
-            // Show memory usage if available
-            // @ts-ignore
-            if (step.config?.showMemoryUsage && context.metadata.memories?.length > 0) {
-                // @ts-ignore
-                context.answer += `\n\n[Used ${context.metadata.memories.length} relevant memories from previous conversations]`;
-            }
-        }
-    }
     calculateConfidence(documents, answer) {
         if (documents.length === 0)
             return 0.3;
@@ -693,31 +900,6 @@ Which ONE query is the best for document retrieval? Return only the number (1, 2
         confidence += hasSubstantialAnswer ? 0.3 : 0.1;
         confidence += hasMultipleSources ? 0.2 : 0.1;
         return Math.min(0.95, Math.max(0.1, confidence));
-    }
-    validateConfiguration(config) {
-        const errors = [];
-        const hasAnswerStep = config.steps.some(s => s.type === 'answer_generation');
-        if (!hasAnswerStep) {
-            errors.push('Workflow must include an answer generation step');
-        }
-        const llmProviders = new Set();
-        config.steps.forEach(step => {
-            if (step.config.llm) {
-                llmProviders.add(step.config.llm.provider);
-            }
-        });
-        if (llmProviders.has('openai') && !process.env.OPENAI_API_KEY) {
-            errors.push('OPENAI_API_KEY environment variable is required');
-        }
-        if (llmProviders.has('anthropic') && !process.env.ANTHROPIC_API_KEY) {
-            errors.push('ANTHROPIC_API_KEY environment variable is required');
-        }
-        if (llmProviders.has('google') && !process.env.GOOGLE_API_KEY) {
-            errors.push('GOOGLE_API_KEY environment variable is required');
-        }
-        if (errors.length > 0) {
-            throw new Error(`Configuration errors: ${errors.join(', ')}`);
-        }
     }
 }
 //# sourceMappingURL=workflow-executor.service.js.map

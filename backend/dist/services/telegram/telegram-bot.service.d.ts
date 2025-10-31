@@ -1,0 +1,58 @@
+import TelegramBot from 'node-telegram-bot-api';
+export declare class TelegramBotService {
+    private bot;
+    private sessions;
+    private userMapping;
+    private sessionTimeouts;
+    private userRateLimits;
+    private workflowExecutor;
+    constructor(token?: string);
+    private setupHandlers;
+    private startCleanupJobs;
+    private cleanupAbandonedSessions;
+    private cleanupOldRateLimits;
+    private cleanupSession;
+    private isRateLimited;
+    private handleDebugUser;
+    private resetSessionTimeout;
+    private handleStart;
+    private handleLinkAccount;
+    private handleRegister;
+    private isValidEmail;
+    private handleLogin;
+    private handleCreateWorkflow;
+    private handleCancelCreation;
+    private handleListWorkflows;
+    private handleDeleteWorkflow;
+    private handleStatus;
+    private handleRunWorkflow;
+    private handleDirectQuery;
+    executeWorkflowQuery(chatId: number, userId: string, id: string, query: string): void;
+    private handleHelp;
+    private handleMessage;
+    private handleWorkflowName;
+    private handleWorkflowDescription;
+    private handleWorkflowSteps;
+    private validateWorkflowConfiguration;
+    private getWorkflowStepsDescription;
+    private getStandardRAGWorkflow;
+    private getAdvancedRAGWorkflow;
+    private getMemoryRAGWorkflow;
+    private getFastRAGWorkflow;
+    private handleWorkflowConfig;
+    private getWorkflowTypeName;
+    private getWorkflowFlowDescription;
+    private getStepDisplayName;
+    private handleWorkflowConfirm;
+    sendNotification(chatId: number, message: string): Promise<void>;
+    getBot(): TelegramBot;
+    getStats(): {
+        activeSessions: number;
+        loggedInUsers: number;
+        rateLimitedUsers: number;
+    };
+    shutdown(): Promise<void>;
+}
+export declare function getTelegramBot(): TelegramBotService;
+export declare function destroyTelegramBot(): void;
+//# sourceMappingURL=telegram-bot.service.d.ts.map
