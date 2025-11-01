@@ -744,10 +744,8 @@ Special thanks to:
 
 ### Ready to revolutionize your RAG development?
 
-**[Get Started Free](https://r8r.ai/signup)** • **[View Demo](https://demo.r8r.ai)** • **[Read Docs](https://docs.r8r.ai)**
+**[Get Started Free](https://r8r.ai/signup)** • **[View Demo](https://youtu.be/kxToyBtGPZc?si=EW-6iRG_wiWmADAL)** • **[Read Docs](https://docs.r8r.ai)**
 
-Made with 🚀 by [FlowForge AI](https://flowforge.ai)
-
-© 2025 FlowForge AI. All rights reserved.
+© 2025 R8R AI. All rights reserved.
 
 </div>
