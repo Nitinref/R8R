@@ -10,8 +10,6 @@
 
 ### **Stop rebuilding RAG systems from scratch. Deploy production-grade retrieval pipelines in minutes.**
 
-[🚀 Get Started](#-quick-start) • [📖 Documentation](https://docs.r8r.ai) • [💬 Discord](https://discord.gg/r8r) • [🎯 Live Demo](https://demo.r8r.ai)
-
 </div>
 
 ---
