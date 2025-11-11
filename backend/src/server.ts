@@ -120,7 +120,7 @@ function setupMiddleware() {
 
   // CORS configuration
 const allowedOrigins = process.env.NODE_ENV === 'production' 
-  ? ['https://r8r-ai.vercel.app/', 'https://your-frontend.onrender.com']
+  ? ['https://r8r-ai.vercel.app/',  'https://your-frontend.onrender.com']
   : ['http://localhost:3000', 'http://localhost:3001'];
 
 app.use(cors({
