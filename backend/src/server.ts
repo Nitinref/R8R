@@ -21,6 +21,7 @@ import { getTelegramBot } from './services/telegram/telegram-bot.service.js';
 
 // ... rest of your code
 const app = express();
+app.use(cors())
 app.use('/api/memory', memoryRoutes);
 
 const prisma = new PrismaClient({
