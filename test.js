@@ -1,12 +1,12 @@
 const response = await fetch('http://localhost:3001/api/query', {
   method: 'POST',
   headers: {
-    'x-api-key': 'rag_3e61ccdd421f445280bc9ca40d0a1f79',
+    'x-api-key': 'rag_f6ef23f786b840879906938eacaef7d1',
     'Content-Type': 'application/json'
   },
   body: JSON.stringify({
-    workflowId: 'workflow-1761845693139',
-    query: 'What is the objective measure of a "good" or "meaningful" life?'
+    workflowId: 'workflow-1762781172466',
+    query: 'what '
   })
 });
 

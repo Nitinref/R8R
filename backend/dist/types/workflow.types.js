@@ -24,8 +24,6 @@ export var RetrieverType;
     RetrieverType["KEYWORD"] = "keyword";
     RetrieverType["HYBRID"] = "hybrid";
 })(RetrieverType || (RetrieverType = {}));
-// ✅ FIX: Removed the duplicate MemorySummarizeConfig interface that was here.
-// The config is now correctly defined inline in WorkflowStep.
 // Add this to your existing workflow.types.ts file
 export var WorkflowExecutionStatus;
 (function (WorkflowExecutionStatus) {
