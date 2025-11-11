@@ -119,12 +119,25 @@ function setupMiddleware() {
   }));
 
   // CORS configuration
-  app.use(cors({
-    origin: process.env.CORS_ORIGIN || '*',
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
-  }));
+const allowedOrigins = process.env.NODE_ENV === 'production' 
+  ? ['https://r8r-ai.vercel.app/',  'https://your-frontend.onrender.com']
+  : ['http://localhost:3000', 'http://localhost:3001'];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
+}));
 
   // Compression
   app.use(compression());
