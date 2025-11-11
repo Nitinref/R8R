@@ -2,8 +2,12 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import { authStorage } from '../utils/auth';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
+// Instead of localhost
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 
+  (process.env.NODE_ENV === 'production' 
+    ? 'https://your-backend-service.onrender.com'
+    : 'http://localhost:3001');
+    
 class ApiClient {
   private client: AxiosInstance;
 

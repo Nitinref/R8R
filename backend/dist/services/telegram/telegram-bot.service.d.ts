@@ -1,5 +1,5 @@
 import TelegramBot from 'node-telegram-bot-api';
-export declare class TelegramBotService {
+export declare class EnhancedTelegramBotService {
     private bot;
     private sessions;
     private userMapping;
@@ -7,19 +7,42 @@ export declare class TelegramBotService {
     private userRateLimits;
     private workflowExecutor;
     constructor(token?: string);
+    private safeSendMessage;
+    private convertToHtml;
     private setupHandlers;
-    private startCleanupJobs;
-    private cleanupAbandonedSessions;
-    private cleanupOldRateLimits;
-    private cleanupSession;
-    private isRateLimited;
-    private handleDebugUser;
-    private resetSessionTimeout;
+    private handleBuildWorkflow;
+    private handleListNodes;
+    private handleNodeDetails;
+    private handleMessage;
+    private handleModeSelection;
+    private handleTemplateSelection;
+    private handleWorkflowName;
+    private handleWorkflowDescription;
+    private showNodeSelectionMenu;
+    private handleNodeSelection;
+    private handleNodeConfiguration;
+    private showConnectionMenu;
+    private handleNodeConnection;
+    private applyConnections;
+    private handleAdvancedConfig;
+    private handleWorkflowConfirm;
+    private handleViewWorkflow;
+    private handleCloneWorkflow;
+    private buildWorkflowConfig;
+    private visualizeWorkflowFlow;
+    private countConnections;
+    private setNestedProperty;
+    private parseValue;
+    private buildStandardRAGNodes;
+    private buildAdvancedRAGNodes;
+    private buildMemoryRAGNodes;
+    private buildFastRAGNodes;
     private handleStart;
-    private handleLinkAccount;
+    private handleHelp;
     private handleRegister;
     private isValidEmail;
     private handleLogin;
+    private handleLinkAccount;
     private handleCreateWorkflow;
     private handleCancelCreation;
     private handleListWorkflows;
@@ -27,23 +50,13 @@ export declare class TelegramBotService {
     private handleStatus;
     private handleRunWorkflow;
     private handleDirectQuery;
-    executeWorkflowQuery(chatId: number, userId: string, id: string, query: string): void;
-    private handleHelp;
-    private handleMessage;
-    private handleWorkflowName;
-    private handleWorkflowDescription;
-    private handleWorkflowSteps;
-    private validateWorkflowConfiguration;
-    private getWorkflowStepsDescription;
-    private getStandardRAGWorkflow;
-    private getAdvancedRAGWorkflow;
-    private getMemoryRAGWorkflow;
-    private getFastRAGWorkflow;
-    private handleWorkflowConfig;
-    private getWorkflowTypeName;
-    private getWorkflowFlowDescription;
-    private getStepDisplayName;
-    private handleWorkflowConfirm;
+    private executeWorkflowQuery;
+    private isRateLimited;
+    private resetSessionTimeout;
+    private cleanupSession;
+    private startCleanupJobs;
+    private cleanupAbandonedSessions;
+    private cleanupOldRateLimits;
     sendNotification(chatId: number, message: string): Promise<void>;
     getBot(): TelegramBot;
     getStats(): {
@@ -53,6 +66,6 @@ export declare class TelegramBotService {
     };
     shutdown(): Promise<void>;
 }
-export declare function getTelegramBot(): TelegramBotService;
+export declare function getTelegramBot(): EnhancedTelegramBotService;
 export declare function destroyTelegramBot(): void;
 //# sourceMappingURL=telegram-bot.service.d.ts.map
