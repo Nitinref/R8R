@@ -5,7 +5,7 @@ import { authStorage } from '../utils/auth';
 // Instead of localhost
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 
   (process.env.NODE_ENV === 'production' 
-    ? 'https://your-backend-service.onrender.com'
+    ? 'https://r8r-11.onrender.com'
     : 'http://localhost:3001');
     
 class ApiClient {
