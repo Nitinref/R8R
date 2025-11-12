@@ -28,6 +28,9 @@ jobs:
           context: .
           file: ./docker/Dockerfile.frontend
           push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=http://54.197.87.205:3001
+            NEXT_PUBLIC_BACKEND_URL=http://54.197.87.205:3001
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
