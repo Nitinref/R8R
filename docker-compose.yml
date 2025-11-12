@@ -1,5 +1,3 @@
-
-
 services:
   redis:
     image: redis:7-alpine
@@ -18,9 +16,7 @@ services:
       - qdrant_data:/storage
 
   backend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.backend
+    image: $DOCKERHUB_USERNAME/backend:latest  # ← CHANGED TO IMAGE
     ports:
       - "3001:3001"
     environment:
@@ -32,7 +28,7 @@ services:
       - qdrant
 
   frontend:
-    build:
+    build:  # Keep build for frontend if needed
       context: .
       dockerfile: docker/Dockerfile.frontend
     ports:
