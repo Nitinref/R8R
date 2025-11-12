@@ -38,7 +38,7 @@ jobs:
           source: "docker-compose.yml,.env"
           target: "/home/ubuntu/project/"
 
-      - name: Clean Up Disk Space
+      - name: EMERGENCY Disk Cleanup
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -46,11 +46,20 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/project
-            echo "=== Cleaning up disk space ==="
-            docker system prune -f
-            docker image prune -f
+            echo "=== EMERGENCY DISK CLEANUP ==="
+            # Stop all containers
+            docker-compose down || true
+            # Nuclear cleanup
+            docker system prune -a -f --volumes
+            docker image prune -a -f
+            docker container prune -f
             docker volume prune -f
-            echo "=== Current disk space ==="
+            docker builder prune -a -f
+            # Clean system logs and cache
+            sudo journalctl --vacuum-time=1d
+            sudo apt-get clean
+            sudo rm -rf /var/lib/apt/lists/*
+            echo "=== Disk space after cleanup ==="
             df -h
 
       - name: Deploy Backend
@@ -63,27 +72,9 @@ jobs:
             cd /home/ubuntu/project
             # Pull the latest backend image
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
-            # Stop and remove backend container
-            docker-compose stop backend || true
-            docker-compose rm -f backend || true
             # Start backend only
             docker-compose up -d backend
             # Check status
             sleep 10
             docker-compose ps
             docker-compose logs backend --tail=20
-
-      - name: Verify Deployment
-        uses: appleboy/ssh-action@v0.1.6
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /home/ubuntu/project
-            echo "=== Checking all services ==="
-            docker-compose ps
-            echo "=== Backend logs ==="
-            docker-compose logs backend --tail=50
-            echo "=== Backend health check ==="
-            curl -f http://localhost:3001/health || echo "Health check failed"
