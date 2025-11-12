@@ -18,26 +18,27 @@ services:
   backend:
     image: nitinref/backend:latest
     env_file:
-      - .env  # ← THIS LOADS ALL ENV VARIABLES FROM .env FILE
+      - .env
     ports:
       - "3001:3001"
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=redis://redis:6379
       - QDRANT_URL=http://qdrant:6333
+      - CORS_ORIGIN=http://54.197.87.205:3000  # ← Add CORS
+      - ALLOWED_ORIGINS=http://54.197.87.205:3000
     depends_on:
       - redis
       - qdrant
 
   frontend:
-    build:
-      context: .
-      dockerfile: docker/Dockerfile.frontend
+    image: nitinref/frontend:latest
     ports:
       - "3000:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
-      - NEXT_PUBLIC_API_URL=http://localhost:3001
+      - NEXT_PUBLIC_API_URL=http://54.197.87.205:3001  # ← EC2 IP for backend
+      - NEXT_PUBLIC_BACKEND_URL=http://54.197.87.205:3001
     depends_on:
       - backend
 

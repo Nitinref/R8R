@@ -119,11 +119,14 @@ function setupMiddleware() {
     crossOriginEmbedderPolicy: false
   }));
 
-  // CORS configuration
+// CORS configuration
 const allowedOrigins = [
   'https://r8r-ai.vercel.app',  // Your Vercel frontend
-  'http://localhost:3000'
-]; 
+  'http://localhost:3000',      // Local development
+  'http://54.197.87.205:3000',  // Your current frontend IP
+  'http://54.197.87.205'        // Also allow without port
+];
+
 app.use(cors({
   origin: allowedOrigins,
   credentials: true,
