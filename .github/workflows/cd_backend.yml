@@ -29,25 +29,16 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
 
-      - name: Copy docker-compose.yml
+      - name: Copy project files to server
         uses: appleboy/scp-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_IP }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "docker-compose.yml"
+          source: "docker-compose.yml,.env"
           target: "/home/ubuntu/project/"
 
-      - name: Copy Dockerfiles
-        uses: appleboy/scp-action@v0.1.6
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          source: "docker/Dockerfile.backend,docker/Dockerfile.frontend"
-          target: "/home/ubuntu/project/docker/"
-
-      - name: Create .env file on server
+      - name: Clean Up Disk Space
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -55,14 +46,14 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/project
-            cat > .env << 'EOF'
-            DATABASE_URL=postgresql://neondb_owner:npg_8TjRiXy9GmYZ@ep-wild-bar-ad7o2d1l-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
-            REDIS_PASSWORD=your-strong-password
-            JWT_SECRET=your-jwt-secret
-            OPENAI_API_KEY=your-openai-api-key
-            EOF
+            echo "=== Cleaning up disk space ==="
+            docker system prune -f
+            docker image prune -f
+            docker volume prune -f
+            echo "=== Current disk space ==="
+            df -h
 
-      - name: SSH and Deploy Backend
+      - name: Deploy Backend
         uses: appleboy/ssh-action@v0.1.6
         with:
           host: ${{ secrets.SERVER_IP }}
@@ -70,11 +61,29 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/project
-            # Pull the latest image
+            # Pull the latest backend image
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
-            # Stop and start without rebuilding
+            # Stop and remove backend container
             docker-compose stop backend || true
-            docker-compose up -d --no-build backend
+            docker-compose rm -f backend || true
+            # Start backend only
+            docker-compose up -d backend
             # Check status
+            sleep 10
             docker-compose ps
             docker-compose logs backend --tail=20
+
+      - name: Verify Deployment
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/project
+            echo "=== Checking all services ==="
+            docker-compose ps
+            echo "=== Backend logs ==="
+            docker-compose logs backend --tail=50
+            echo "=== Backend health check ==="
+            curl -f http://localhost:3001/health || echo "Health check failed"
