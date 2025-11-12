@@ -16,7 +16,7 @@ services:
       - qdrant_data:/storage
 
   backend:
-    image: $DOCKERHUB_USERNAME/backend:latest  # ← CHANGED TO IMAGE
+    image: nitinref/backend:latest  # ← USE YOUR ACTUAL USERNAME
     ports:
       - "3001:3001"
     environment:
@@ -28,7 +28,7 @@ services:
       - qdrant
 
   frontend:
-    build:  # Keep build for frontend if needed
+    build:
       context: .
       dockerfile: docker/Dockerfile.frontend
     ports:
