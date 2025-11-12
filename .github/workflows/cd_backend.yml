@@ -70,12 +70,11 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             cd /home/ubuntu/project
-            # Pull the latest backend image
+            # Pull the latest image
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
-            # Stop and remove the backend container
+            # Stop and start without rebuilding
             docker-compose stop backend || true
-            docker-compose rm -f backend || true
-            # Start the backend service
-            docker-compose up -d backend
-            # Check if services are running
+            docker-compose up -d --no-build backend
+            # Check status
             docker-compose ps
+            docker-compose logs backend --tail=20
