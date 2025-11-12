@@ -25,8 +25,11 @@ services:
       - DATABASE_URL=${DATABASE_URL}
       - REDIS_URL=redis://redis:6379
       - QDRANT_URL=http://qdrant:6333
-      - CORS_ORIGIN=https://r8r-ai.duckdns.org  # ← Change to HTTPS
-      - ALLOWED_ORIGINS=https://r8r-ai.duckdns.org  # ← Change to HTTPS
+      - CORS_ORIGIN=http://54.197.87.205:3000  # ← Add CORS
+      - ALLOWED_ORIGINS=http://54.197.87.205:3000
+    depends_on:
+      - redis
+      - qdrant
 
   frontend:
     image: nitinref/frontend:latest
@@ -34,10 +37,10 @@ services:
       - "3000:3000"
     environment:
       - DATABASE_URL=${DATABASE_URL}
-      - NEXT_PUBLIC_API_URL=https://r8r-ai.duckdns.org/api  # ← Change to HTTPS + /api
-      - NEXT_PUBLIC_BACKEND_URL=https://r8r-ai.duckdns.org/api  # ← Change to HTTPS + /api
-      - API_URL=https://r8r-ai.duckdns.org/api  # ← Change to HTTPS + /api
-      - BACKEND_URL=https://r8r-ai.duckdns.org/api  # ← Change to HTTPS + /api
+      - NEXT_PUBLIC_API_URL=http://r8r-backend.duckdns.org
+      - NEXT_PUBLIC_BACKEND_URL=http://r8r-backend.duckdns.org
+      - API_URL=http://54.197.87.205:3001
+      - BACKEND_URL=http://54.197.87.205:3001
     depends_on:
       - backend
 
