@@ -10731,3 +10731,72 @@
 {"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-11-01T09:24:15.888Z"}
 {"code":"ETELEGRAM","level":"error","message":"Telegram polling error: ETELEGRAM: 409 Conflict: terminated by other getUpdates request; make sure that only one bot instance is running","response":{"body":{"description":"Conflict: terminated by other getUpdates request; make sure that only one bot instance is running","error_code":409,"ok":false},"headers":{"access-control-allow-origin":"*","access-control-expose-headers":"Content-Length,Content-Type,Date,Server,Connection","connection":"keep-alive","content-length":"143","content-type":"application/json","date":"Sat, 01 Nov 2025 09:24:19 GMT","server":"nginx/1.18.0","strict-transport-security":"max-age=31536000; includeSubDomains; preload"},"request":{"headers":{"content-length":19,"content-type":"application/x-www-form-urlencoded"},"method":"POST","uri":{"auth":null,"hash":null,"host":"api.telegram.org","hostname":"api.telegram.org","href":"https://api.telegram.org/bot8191958880:AAGuYclyguh3GCpbomY7_q9D_bpFTT54ovU/getUpdates","path":"/bot8191958880:AAGuYclyguh3GCpbomY7_q9D_bpFTT54ovU/getUpdates","pathname":"/bot8191958880:AAGuYclyguh3GCpbomY7_q9D_bpFTT54ovU/getUpdates","port":443,"protocol":"https:","query":null,"search":null,"slashes":true}},"statusCode":409},"stack":"Error: ETELEGRAM: 409 Conflict: terminated by other getUpdates request; make sure that only one bot instance is running\n    at C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:316:15\nFrom previous event:\n    at Request.RP$exposed [as then] (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\request-promise-core\\lib\\plumbing.js:145:61)\n    at TelegramBot._request (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:304:8)\n    at TelegramBot.getUpdates (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegram.js:849:17)\n    at C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:194:29\nFrom previous event:\n    at C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:193:39\n    at process.processImmediate (node:internal/timers:491:21)\nFrom previous event:\n    at TelegramBotPolling._getUpdates (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:191:13)\n    at TelegramBotPolling._polling (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:102:8)\n    at Timeout._onTimeout (C:\\Users\\DELL\\yy\\R8R\\backend\\node_modules\\node-telegram-bot-api\\src\\telegramPolling.js:168:56)\n    at listOnTimeout (node:internal/timers:594:17)\n    at process.processTimers (node:internal/timers:529:7)","timestamp":"2025-11-01T09:24:19.873Z"}
 {"level":"error","message":"Forced shutdown after timeout","timestamp":"2025-11-01T09:24:25.651Z"}
+{"level":"info","message":"Starting server initialization...","timestamp":"2025-11-12T05:10:04.403Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.405Z"}
+{"level":"info","message":"Validating environment variables...","timestamp":"2025-11-12T05:10:04.406Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.406Z"}
+{"level":"info","message":"✓ DATABASE_URL is set","timestamp":"2025-11-12T05:10:04.406Z"}
+{"level":"info","message":"✓ JWT_SECRET is set","timestamp":"2025-11-12T05:10:04.407Z"}
+{"level":"info","message":"✓ PORT is set","timestamp":"2025-11-12T05:10:04.407Z"}
+{"level":"info","message":"✓ NODE_ENV is set","timestamp":"2025-11-12T05:10:04.407Z"}
+{"level":"info","message":"✓ JWT_EXPIRY is set","timestamp":"2025-11-12T05:10:04.408Z"}
+{"level":"info","message":"→ REDIS_URL not set, using default: redis://localhost:6379","timestamp":"2025-11-12T05:10:04.408Z"}
+{"level":"info","message":"✓ OPENAI_API_KEY is set","timestamp":"2025-11-12T05:10:04.408Z"}
+{"level":"info","message":"✓ ANTHROPIC_API_KEY is set","timestamp":"2025-11-12T05:10:04.409Z"}
+{"level":"info","message":"✓ GOOGLE_API_KEY is set","timestamp":"2025-11-12T05:10:04.409Z"}
+{"level":"info","message":"✓ PINECONE_API_KEY is set","timestamp":"2025-11-12T05:10:04.409Z"}
+{"level":"info","message":"→ CORS_ORIGIN not set, using default: *","timestamp":"2025-11-12T05:10:04.409Z"}
+{"level":"info","message":"→ LOG_LEVEL not set, using default: info","timestamp":"2025-11-12T05:10:04.409Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-11-12T05:10:04.409Z"}
+{"level":"warn","message":"Environment warnings:","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"warn","message":"⚠ ADMIN_EMAILS is not set: Comma-separated admin emails","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"warn","message":"==================================================","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"✅ Environment validation completed successfully","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"📊 Provider Status","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"🤖 LLM Providers:","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"   ✓ OPENAI","timestamp":"2025-11-12T05:10:04.410Z"}
+{"level":"info","message":"   ✓ ANTHROPIC","timestamp":"2025-11-12T05:10:04.411Z"}
+{"level":"info","message":"   ✓ GOOGLE","timestamp":"2025-11-12T05:10:04.411Z"}
+{"level":"info","message":"🔍 Retrieval Providers:","timestamp":"2025-11-12T05:10:04.411Z"}
+{"level":"info","message":"   ✓ PINECONE","timestamp":"2025-11-12T05:10:04.411Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:04.411Z"}
+{"level":"info","message":"Testing database connection...","timestamp":"2025-11-12T05:10:04.411Z"}
+{"error":{},"level":"error","message":"❌ Memory collection initialization failed","timestamp":"2025-11-12T05:10:05.760Z"}
+{"level":"info","message":"✓ Database connected successfully","timestamp":"2025-11-12T05:10:08.941Z"}
+{"level":"info","message":"Initializing cache service...","timestamp":"2025-11-12T05:10:08.942Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-11-12T05:10:08.943Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-11-12T05:10:08.984Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-11-12T05:10:09.002Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-11-12T05:10:09.002Z"}
+{"level":"info","message":"✓ Redis cache connected successfully","timestamp":"2025-11-12T05:10:09.005Z"}
+{"level":"info","message":"Initializing Telegram bot...","timestamp":"2025-11-12T05:10:09.005Z"}
+{"level":"info","message":"Initializing Redis client...","timestamp":"2025-11-12T05:10:09.020Z","url":"redis://localhost:6379"}
+{"level":"info","message":"Telegram bot handlers registered","timestamp":"2025-11-12T05:10:09.021Z"}
+{"level":"info","message":"Enhanced Telegram bot initialized successfully","timestamp":"2025-11-12T05:10:09.022Z"}
+{"level":"info","message":"✓ Telegram bot initialized successfully","timestamp":"2025-11-12T05:10:09.022Z"}
+{"level":"info","message":"Redis client connecting...","timestamp":"2025-11-12T05:10:09.031Z"}
+{"level":"info","message":"Redis client ready and connected","timestamp":"2025-11-12T05:10:09.039Z"}
+{"level":"info","message":"✓ Redis connected successfully","timestamp":"2025-11-12T05:10:09.040Z"}
+{"level":"info","message":"✓ Telegram bot connected: @RapidRagRuntime_bot","timestamp":"2025-11-12T05:10:10.073Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:10.085Z"}
+{"level":"info","message":"🚀 RAG Workflow Server running on port 3001","timestamp":"2025-11-12T05:10:10.086Z"}
+{"level":"info","message":"📝 Environment: development","timestamp":"2025-11-12T05:10:10.086Z"}
+{"level":"info","message":"🔗 API Base URL: http://localhost:3001/api","timestamp":"2025-11-12T05:10:10.086Z"}
+{"level":"info","message":"🤖 Telegram Bot: ✅ Active","timestamp":"2025-11-12T05:10:10.086Z"}
+{"level":"info","message":"==================================================","timestamp":"2025-11-12T05:10:10.086Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-11-12T05:10:42.218Z"}
+{"body":{"email":"nitinyadav484220@gmail.com","password":"123456"},"ip":"::1","level":"info","message":"POST /api/auth/login","query":{},"timestamp":"2025-11-12T05:11:22.367Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-11-12T05:11:23.966Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-11-12T05:11:23.970Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-11-12T05:11:23.976Z"}
+{"ip":"::1","level":"info","message":"GET /api/analytics/dashboard","query":{},"timestamp":"2025-11-12T05:11:28.729Z"}
+{"ip":"::1","level":"info","message":"GET /api/workflows","query":{},"timestamp":"2025-11-12T05:11:28.964Z"}
+{"ip":"::1","level":"info","message":"GET /api/query/history","query":{"limit":"5"},"timestamp":"2025-11-12T05:11:29.065Z"}
+{"level":"info","message":"SIGINT received, closing server gracefully...","timestamp":"2025-11-12T05:11:41.126Z"}
+{"level":"info","message":"HTTP server closed","timestamp":"2025-11-12T05:11:41.127Z"}
+{"level":"info","message":"Database disconnected","timestamp":"2025-11-12T05:11:41.128Z"}
+{"level":"info","message":"Redis client disconnected","timestamp":"2025-11-12T05:11:41.129Z"}

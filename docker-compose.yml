@@ -16,7 +16,9 @@ services:
       - qdrant_data:/storage
 
   backend:
-    image: nitinref/backend:latest  # ← USE YOUR ACTUAL USERNAME
+    image: nitinref/backend:latest
+    env_file:
+      - .env  # ← THIS LOADS ALL ENV VARIABLES FROM .env FILE
     ports:
       - "3001:3001"
     environment:

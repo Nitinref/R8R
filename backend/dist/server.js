@@ -18,6 +18,7 @@ import { memoryRoutes } from './routes/memory.routes.js';
 import { getTelegramBot } from './services/telegram/telegram-bot.service.js';
 // ... rest of your code
 const app = express();
+app.use(cors());
 app.use('/api/memory', memoryRoutes);
 const prisma = new PrismaClient({
     log: process.env.NODE_ENV === 'development'
@@ -103,8 +104,12 @@ function setupMiddleware() {
         crossOriginEmbedderPolicy: false
     }));
     // CORS configuration
+    const allowedOrigins = [
+        'https://r8r-ai.vercel.app', // Your Vercel frontend
+        'http://localhost:3000'
+    ];
     app.use(cors({
-        origin: process.env.CORS_ORIGIN || '*',
+        origin: allowedOrigins,
         credentials: true,
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
